@@ -7,7 +7,7 @@
 
 ## 1. Mục tiêu của cách phân công
 
-Nhóm có ba người, sử dụng **các cuộc hội thoại Codex riêng**, khả năng lập trình và lịch làm việc khác nhau. Vì vậy, không chia việc chỉ theo số lượng file hoặc để Codex làm hết rồi mới ghi tên người phụ trách.
+Nhóm có ba người, sử dụng công cụ độc lập , khả năng lập trình và lịch làm việc khác nhau. Vì vậy, không chia việc chỉ theo số lượng file hoặc để AI làm hết rồi mới ghi tên người phụ trách.
 
 Mỗi task phải có **Owner** (người làm và chịu trách nhiệm), **Reviewer** (người kiểm chứng độc lập), **Đầu ra**, **Hạn bàn giao**, **Tiêu chí hoàn thành**. Leader chỉ đánh dấu hoàn thành khi đã xem bằng chứng thực tế.
 
@@ -112,7 +112,7 @@ Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đă
 
 Nếu kỹ năng thực tế khác với dự kiến, leader có thể điều chỉnh. Không gán công việc chưa thực hiện cho thành viên trong `CONTRIBUTIONS.md`.
 
-## 6. Cách dùng Codex riêng nhưng không làm lệch thiết kế
+## 6. Cách dùng AI riêng nhưng không làm lệch thiết kế
 
 **Một nguồn chung:** đề thi + Decision Table đúng tag + `PROJECT_GUIDE.md` + `TEAM_PLAN.md` + D04–D10 đã duyệt + D01–D03 pending.
 
@@ -160,14 +160,3 @@ Nếu kỹ năng thực tế khác với dự kiến, leader có thể điều c
 | **Cả nhóm** | Luồng tổng thể, vì sao test pass chưa đủ chứng minh đúng, D01–D03, cách kiểm chứng Codex |
 
 **Không dùng AI khi vấn đáp trực tiếp.** Phải tự hiểu quyết định nhóm đã chốt, không học thuộc câu trả lời sai với code thực tế.
-
-## 10. Checklist sau khi Huy duyệt hai file
-
-- [ ] Đưa `docs/PROJECT_GUIDE.md` và `docs/TEAM_PLAN.md` lên **fork phát triển** qua quy trình an toàn; lấy link.
-- [ ] Huy gửi hai link lên Zalo và thông báo task ID, mốc bàn giao.
-- [ ] Hải xác nhận đã đọc, nhận **M1-02**, thông báo blocker nếu có.
-- [ ] Việt Đức xác nhận đã đọc, nhận **M1-03**, thông báo blocker nếu có.
-- [ ] Huy nhận **M1-01**, điều phối **M1-04**.
-- [ ] Sau khi thống nhất, thực hiện **TASK 02** tạo hồ sơ Checkpoint 1 — **chưa bắt đầu code core**.
-
-**Nguyên tắc cuối:** Chia việc để mọi người có trách nhiệm và đầu ra có thể kiểm chứng; không để leader phải mặc định làm lại mọi thứ.
