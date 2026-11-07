@@ -1,9 +1,11 @@
 # TEAM PLAN — PHÂN CÔNG, BÀN GIAO & REVIEW
 
 > **Nhóm 173820_n27 | Track A — Dr May Day**  
-> Bản dự thảo v0.1, 05/11/2026. **Chưa đăng lên GitHub.**  
+> Bản v0.1 đã đăng lên GitHub; cập nhật đồng bộ D13 ngày 07/11/2026 đang chờ nhóm review.
 > **Huy Đức đã đồng ý hướng chia việc; Hải và Việt Đức chưa xác nhận nhận việc.**  
 > Đọc [`PROJECT_GUIDE.md`](PROJECT_GUIDE.md) trước tài liệu này.
+
+**Yêu cầu hiện hành:** Hải và Việt Đức đối chiếu [`REQUIREMENTS.md`](../REQUIREMENTS.md). Leader đã phê duyệt D13, với boolean thiếu khóa → UNKNOWN nội bộ, boolean null → invalid. Không biến UNKNOWN thành False hoặc đổi invalid thành UNKNOWN. Không tự kết luận không có sốc khi tuổi/HATT còn thiếu. D01–D03 vẫn `PENDING TA CONFIRMATION`, gồm trường hợp bổ sung D03 về người ≥18 tuổi, HATT hiện tại ≥90 mmHg nhưng thiếu HATT nền để xét giảm >30%.
 
 ## 1. Mục tiêu của cách phân công
 
@@ -32,13 +34,13 @@ Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đă
 
 ### M1-01 — Huy Đức: Requirements & Scope
 
-**Đầu ra dự kiến:** bản nháp `REQUIREMENTS.md` (file chính thức chỉ tạo khi TASK 02 được giao).
+**Đầu ra hiện hành:** bản nháp [`REQUIREMENTS.md`](../REQUIREMENTS.md), đã được tạo trong TASK 02A và cập nhật để review Checkpoint 1.
 
 - Mô tả mục tiêu bài, giới hạn trong/ngoài phạm vi.
 - Viết input/output contract chín trường/ba trường đúng bảng quyết định.
 - Diễn giải R01–R03/R-SOC, thứ tự tầng, yêu cầu zero PII.
 - Đối chiếu 11 acceptance criteria, phân biệt yêu cầu từ đề và quyết định của nhóm.
-- Ghi D01–D03 **PENDING TA CONFIRMATION**, D04–D10 **APPROVED BY LEAD**, D11–D12 **SPECIFIED**.
+- Ghi D01–D03 **PENDING TA CONFIRMATION**, D04–D10 và D13 **APPROVED BY LEAD**, D11–D12 **SPECIFIED**.
 - Theo dõi [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15) và cập nhật nếu thầy trả lời.
 
 **Reviewer:** Hải kiểm tra logic rule; Việt Đức kiểm tra AC và điều kiện an toàn.  
@@ -114,7 +116,7 @@ Nếu kỹ năng thực tế khác với dự kiến, leader có thể điều c
 
 ## 6. Cách dùng AI riêng nhưng không làm lệch thiết kế
 
-**Một nguồn chung:** đề thi + Decision Table đúng tag + `PROJECT_GUIDE.md` + `TEAM_PLAN.md` + D04–D10 đã duyệt + D01–D03 pending.
+**Một nguồn chung:** đề thi + Decision Table đúng tag + [`REQUIREMENTS.md`](../REQUIREMENTS.md) + `PROJECT_GUIDE.md` + `TEAM_PLAN.md` + D04–D10 và D13 đã duyệt + D01–D03 pending.
 
 **Quy trình:**
 

@@ -2,13 +2,13 @@
 
 > **Nhóm 173820_n27 | Hack Marathon 2026 | Track A — Dr May Day**  
 > Bản dự thảo v0.1, ngày 05/11/2026. Dành cho Huy Đức, Hải và Việt Đức.  
-> **Đây là tài liệu bàn giao nội bộ**, không thay thế đề thi hay bảng quyết định chính thức. Leader sẽ duyệt trước khi đưa lên GitHub.
+> **Đây là tài liệu bàn giao nội bộ**, không thay thế đề thi hay bảng quyết định chính thức. Leader đã duyệt bản đưa lên GitHub; cập nhật đồng bộ D13 ngày 07/11/2026 đang chờ nhóm review.
 
 ## 1. Bắt đầu từ đâu? (10–15 phút)
 
 1. Đọc toàn bộ mục 2–6 của file này để hiểu bài thi, những việc đã làm và những quyết định đã chốt.
 2. Mở **đề chính thức** và **`docs/decision-table.md`** (link mục 2). Đây là nguồn có thẩm quyền; nếu có mâu thuẫn, dừng lại và hỏi leader.
-3. Đọc `TEAM_PLAN.md` để biết mình phụ trách task nào, đầu ra cần bàn giao và ai review.
+3. Đọc [`REQUIREMENTS.md`](../REQUIREMENTS.md), tài liệu requirements hiện hành để Hải và Việt Đức đối chiếu, và [`TEAM_PLAN.md`](TEAM_PLAN.md) để biết mình phụ trách task nào, đầu ra cần bàn giao và ai review.
 4. Xác nhận nhận việc trong nhóm Zalo. Không để Codex tự quyết định những điểm nhóm đã khóa.
 
 ## 2. Bài thi và nguồn chính thức
@@ -111,7 +111,7 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 ## 4. Đến nay nhóm đã làm được gì?
 
-| Nội dung | Trạng thái ngày 05/11/2026 |
+| Nội dung | Trạng thái cập nhật ngày 07/11/2026 |
 |---|---|
 | Chọn Track A và lập nhóm 3 người | **Xong** |
 | Fork hai repo, tạo nhánh `track-a-development` | **Xong** |
@@ -119,8 +119,10 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 | TASK 01 — Codex đọc starter và viết báo cáo phân tích | **Xong**, đã được leader và AI reviewer rà soát |
 | Đăng Issue #15 hỏi D01–D03 | **Đã gửi; chưa có phản hồi tại thời điểm cập nhật** |
 | Chốt định hướng thiết kế D04–D10 | **Leader đã đồng ý**, thành viên khác cần đọc và hiểu |
+| D13 — đánh giá input một phần | **Leader đã phê duyệt**, xem yêu cầu hiện hành trong `REQUIREMENTS.md` |
 | Thống nhất hướng phân vai | **Leader đồng ý**, chờ Hải và Việt Đức nhận task |
-| `REQUIREMENTS.md`, `DECISIONS.md`, Test Plan chính thức | **Chưa triển khai TASK 02** |
+| `REQUIREMENTS.md` | **Đã có bản nháp hiện hành**, bổ sung D03 và đồng bộ D13 để nhóm review Checkpoint 1 |
+| `DECISIONS.md`, Test Plan chính thức | Tiếp tục theo phần việc được giao, chưa có bằng chứng hoàn thành trong đợt đồng bộ này |
 | `classify()` nghiệp vụ, audit, benchmark, test đầy đủ | **Chưa viết** |
 | CI xanh với test nghiệp vụ; freeze, release, PR nộp | **Chưa thực hiện** |
 
@@ -141,6 +143,10 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 | **D10** | Benchmark `classify()` toàn luồng và phép đo phụ logic thuần; ≥1.000 lượt sau warm-up; báo p50/p95 và máy đo. |
 
 **D11–D12 là ràng buộc từ đề:** Không tự thêm clinical rules/ngưỡng; input chỉ chín trường, output ba trường, audit đúng `Timestamp, User_UUID, Action_Type, Status`; zero PII/PHI/secret.
+
+### D13: Leader đã phê duyệt logic ba trạng thái
+
+Với sáu trường boolean, thiếu khóa → UNKNOWN nội bộ; có khóa với null → invalid. Không biến UNKNOWN thành False hoặc đổi dữ liệu sai thành UNKNOWN. Khi tuổi/HATT còn thiếu, không tự kết luận không có sốc. D01–D03 vẫn `PENDING TA CONFIRMATION`, gồm trường hợp bổ sung D03 về người ≥18 tuổi, HATT hiện tại ≥90 mmHg nhưng thiếu HATT nền để xét giảm >30%. [`REQUIREMENTS.md`](../REQUIREMENTS.md) là tài liệu requirements hiện hành để Hải và Việt Đức đối chiếu chi tiết.
 
 **Chi tiết còn cần thiết kế trong ADR:** miền giá trị số đo không được thầy định nghĩa đầy đủ; cách truyền UUID theo phiên mà không đổi contract; chính sách xử lý lỗi lưu audit; cách thống kê benchmark. Không tự thêm ngưỡng y khoa mới.
 
