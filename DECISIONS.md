@@ -277,7 +277,7 @@ TRUE/FALSE/UNKNOWN dùng cho kết quả điều kiện; raw missing/null không
 
 #### 5.8.2. Rủi ro tương quan của co_di_nguyen_nghi_ngo
 
-S là co_di_nguyen_nghi_ngo, K/H/C/G lần lượt là da-niêm mạc/hô hấp/tim mạch/tiêu hóa, I là sau_tiep_xuc_di_nguyen_trong_2_gio. Ví dụ tuổi 15, HATT 110, S unavailable, K=H=I=TRUE, C=G=FALSE: đánh giá Kleene từng rule cho R01=UNKNOWN, R02=UNKNOWN, R03=FALSE. Nếu S=FALSE, R01 TRUE; nếu S=TRUE, R02 TRUE. Như vậy cả hai hoàn thiện dữ liệu đều có thể PHAN_VE nhưng rule_id khác nhau. Mặc định S=FALSE có thể gán sai rule; fallback THEO_DOI máy móc có thể hạ mức so với kết quả chung của hai hoàn thiện. [D dòng 41–43; TA §5; Q §4.2]
+S là co_di_nguyen_nghi_ngo, K/H/C/G lần lượt là da-niêm mạc/hô hấp/tim mạch/tiêu hóa, I là di_nguyen_qua_duong_hit. Ví dụ tuổi 15, HATT 110, S unavailable, K=H=I=TRUE, C=G=FALSE: đánh giá Kleene từng rule cho R01=UNKNOWN, R02=UNKNOWN, R03=FALSE. Nếu S=FALSE, R01 TRUE; nếu S=TRUE, R02 TRUE. Như vậy cả hai hoàn thiện dữ liệu đều có thể PHAN_VE nhưng rule_id khác nhau. Mặc định S=FALSE có thể gán sai rule; fallback THEO_DOI máy móc có thể hạ mức so với kết quả chung của hai hoàn thiện. [D dòng 41–43; TA §5; Q §4.2]
 
 Đây là rủi ro cần Hải/Việt Đức phản biện khi Leader xem extension, không phải một rule lâm sàng, nhãn output mới hay đáp án do TA chỉ định riêng. Không tự chọn rule_id hoặc thuật toán bổ sung cho ví dụ này trong patch. PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION; công bố rõ policy output-dependent sau khi Leader xác nhận và bổ sung test, không tạo một câu hỏi TA pending mới.
 
