@@ -9,20 +9,20 @@
 | Owner | Huy Đức, Leader, điều phối M1-04 |
 | Technical Owner | Hải |
 | QA / Traceability Owner | Việt Đức |
-| Phiên bản | Draft 0.1 — Revision 03, đồng bộ làm rõ TA ngày 08/11/2026 |
-| Cập nhật | 08/11/2026 |
+| Phiên bản | Revision 04 — D13-E đã được Leader phê duyệt, 09/11/2026 |
+| Cập nhật | 09/11/2026 — TASK 02G |
 | Trạng thái | Draft PR / Awaiting Peer Review — chưa có peer approval của Hải/Việt Đức |
 | Mốc | M1 — Understand, Checkpoint 1 ngày 08/11/2026 |
 | Nhánh làm việc | `docs/m1-decisions-huy` |
 | HEAD nền tích hợp | `b65032f94ec3ce600df07d81b5df6b9b4bd203d1` trên `track-a-development` |
 | Starter khóa | Tag `bkt-2026-v1`, commit `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
-| Requirements tham chiếu | [Revision 03 trên PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/c855c6d4f2135a14ad94485734d4d2e604cb9cff/REQUIREMENTS.md), commit `c855c6d4f2135a14ad94485734d4d2e604cb9cff` đã push và xác minh; PR vẫn Open/Draft, chưa merge |
+| Requirements tham chiếu | [Revision 04 trên PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md), commit a574ce20fbf307ad90f0d60064da394652462aea đã push và đọc lại trước khi chỉnh ADR; PR Open/Draft, chưa merge |
 | Làm rõ TA chính thức | [fossbk-spec — Issue #15 comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), 08/11/2026, áp dụng chung Track A |
-| Trạng thái nguồn khi kiểm tra | TASK 02C.6 ngày 08/11/2026: PR #1 đã nhận Revision 03, PR #2 Open/Draft chưa merge; chưa có peer approval tại preflight. Issue #15 có câu hỏi nhóm và phản hồi chính thức fossbk-spec; D01–D03 đã được trả lời. |
+| Trạng thái nguồn khi kiểm tra | TASK 02G ngày 09/11/2026: PR #1 đã nhận Requirements Revision 04; PR #2 Open/Draft tại preflight, baseline 7a62d90dcd774c3b3e1ffbfa07d60aee695f1b41 trước patch. D01–D03 TA CONFIRMED; D13-E approved team policy; chưa xác nhận peer approval/M1 acceptance/runtime evidence |
 
 ADR ghi vấn đề, lựa chọn, lý do, đánh đổi và bằng chứng cần thu. Nguồn hiện hành theo thứ tự: Decision Table V1 + làm rõ TA [TA] > quyết định nội bộ đã duyệt > đề xuất. TA thay thế các policy cũ trái lời làm rõ; không phê duyệt toàn bộ kiến trúc nhóm. Tám ADR và mười lựa chọn OPEN giữ phần không bị thay thế, còn peer technical review. Chưa có implementation/test/benchmark evidence hoặc nghiệm thu AC.
 
-**PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION:** extension D13 cho boolean missing/null → UNKNOWN, đặc biệt explicit null, và áp dụng cho trường hợp kết quả phụ thuộc unavailable. Quy định TA bắt buộc không raise chỉ vì boolean missing/null đã có hiệu lực; Enum/toán tử là lựa chọn nhóm đã duyệt, còn extension null là đề xuất; TA không chỉ định công nghệ đó.
+**APPROVED BY LEAD — D13-E — 09/11/2026.** Huy Đức phê duyệt D13-E — Evidence-first Boolean Coverage with Canonical Attribution, gồm null/missing→UNKNOWN, definite-first, coverage, Mixed fallback và canonical semantics khi PHAN_VE/Def rỗng. Leader chấp nhận residual risk mã đại diện có thể bị hiểu là rule definite. Đây là APPROVED TEAM POLICY theo quyền TA §§5–6, không là TA rule mới hoặc chứng minh đã triển khai. Chỉ approval D13; default path/internal exception giữ trạng thái riêng.
 
 
 | Nhãn | Ý nghĩa |
@@ -34,7 +34,7 @@ ADR ghi vấn đề, lựa chọn, lý do, đánh đổi và bằng chứng cầ
 | OPEN-01–OPEN-10 | Mã theo dõi được giữ từ Revision 01; không còn biểu thị phương án chưa được chọn |
 | Chi tiết triển khai nhỏ | Tên helper/exception/path thực tế sẽ hoàn thiện khi triển khai, trong approved policy |
 
-Ký hiệu nguồn E, D, TA, Q, Q2, Q0, G, P, C, T, W, R, I, L ở phần 11. Q là Requirements Revision 03 đã đọc lại từ GitHub tại c855c6d4f2135a14ad94485734d4d2e604cb9cff; Q2/Q0 là snapshot lịch sử. Mã FR/NFR/AC giữ nguyên. Dùng URL theo commit cho tài liệu ở hai nhánh PR độc lập. Các câu D01–D03 từng pending hoặc null từng invalid chỉ còn có nghĩa lịch sử trước phản hồi TA.
+Ký hiệu nguồn ở §11. Q là Requirements Revision 04 đã xác minh trên GitHub tại a574ce20fbf307ad90f0d60064da394652462aea; Q3/Q2/Q0 là snapshot lịch sử. Các phát biểu D13 từng proposed ở Revision 03 không phải trạng thái hiện hành. FR/NFR/AC giữ nguyên; link liên tài liệu dùng SHA cố định trên hai nhánh PR độc lập.
 
 ## 2. Bối cảnh và vấn đề thiết kế
 
@@ -70,31 +70,33 @@ M1 tập trung phân tích và thiết kế. Theo E §4, M2 là 09–15/11, M3 l
 | D10 | perf_counter_ns(); warm-up 100; ≥1.000 mẫu; nearest-rank p50/p95; full-path với open/write/close audit thực | APPROVED BY LEAD | Hiệu năng | NFR-01; A-10 |
 | D11 | Giữ clinical rules/ngưỡng theo bảng đã khóa | FACT / SPECIFIED | Giới hạn nghiệp vụ | FR-02–FR-06; A-01, A-03 |
 | D12 | Giữ schema input/output/audit và giới hạn privacy | FACT / SPECIFIED | Contract và an toàn | FR-01, FR-07–FR-09; NFR-02, NFR-03, NFR-08; A-04–A-06, A-11 |
-| D13 | Enum, toán tử/T-U giữ nguyên; extension missing/null boolean → UNKNOWN cần Leader xác nhận | APPROVED CORE; NULL EXTENSION PROPOSED | Input một phần | FR-02–FR-08; NFR-04, NFR-05; A-01, A-03–A-05, A-07 |
+| D13 | Enum/Kleene/T-U; missing/null→UNKNOWN; definite-first, AllPV, Mixed fallback; PHAN_VE/Def rỗng chọn canonical Poss với disclosure | APPROVED BY LEAD — D13-E — 09/11/2026 | Input một phần / attribution | FR-02–FR-08; NFR-04, NFR-05, NFR-07; A-01, A-03–A-05, A-07 |
 
 Nguồn trạng thái gồm D + TA, Q và L; G/P là snapshot lịch sử/phân công. D01–D03 đã TA CONFIRMED; D04/D13 được thay thế một phần như §5.1/§5.8. Mười OPEN vẫn là lựa chọn đã duyệt, không thêm D14–D23. D11–D12 là FACT / SPECIFIED. Không coi làm rõ TA hoặc publish tài liệu là bằng chứng triển khai.
 
-## 4. Tổng quan kiến trúc Revision 03 — chưa triển khai
+## 4. Tổng quan kiến trúc Revision 04 — chưa triển khai
 
 Public classify(patient) giữ trách nhiệm validation, rule evaluation, lựa chọn classification/explanation và audit kể cả direct call. Logic rule tách file I/O, writer riêng; không thay signature hoặc thêm input. Cập nhật TA nằm ở phân biệt unavailable/invalid và lựa chọn kết quả, không viết lại audit architecture. [TA; Q FR-01–FR-09; L]
 
 ```text
 Provider ngoài input: explicit session hoặc UUID tạm một call, reset an toàn
 classify(patient)
-  -> validate mọi trường: unavailable được phép khác invalid thực sự
-     + invalid thực sự -> audit INVALID_INPUT -> TypeError/ValueError
-     + valid -> tuổi missing/null? -> THEO_DOI / null, nêu thiếu tuổi
-             -> tuổi có -> đánh giá R01/R02/R03 và bằng chứng sốc
-                 + Tầng 2 TRUE và điều kiện HATT sốc TRUE -> SOC_PHAN_VE / R-SOC
-                 + rule Tầng 2 TRUE, chưa xác nhận sốc -> PHAN_VE
-                     chọn một rule TRUE: R01 > R02 > R03
-                 + mọi rule FALSE -> THEO_DOI / null
-                 + phụ thuộc boolean unavailable -> policy D13 đề xuất ở §5.8
-  -> audit SUCCESS cho kết quả phân loại hợp lệ, rồi return ba trường
-Mọi audit failure -> lỗi vận hành audit an toàn; không return thành công
+  -> validate mọi trường theo D04, unavailable hợp lệ khác invalid
+     + invalid -> audit INVALID_INPUT -> TypeError/ValueError nếu ghi thành công
+     + valid -> tuổi missing/null? -> THEO_DOI/null, nêu thiếu tuổi
+             -> tuổi có -> Enum/helpers + mọi completion original R01/R02/R03
+                  Def / Poss / AllPV / AnyPV
+                  + Def có -> ưu tiên rule definite (DIRECT)
+                  + Def rỗng, AllPV -> positive bằng coverage
+                       PHAN_VE dùng canonical ưu tiên trong Poss, disclose uncertainty
+                  + Mixed hoặc all-negative -> THEO_DOI/null, reason phân biệt
+                  positive + hypotension TRUE -> SOC_PHAN_VE/R-SOC
+                  positive, chưa có bằng chứng sốc -> PHAN_VE
+  -> hoàn tất audit SUCCESS rồi return đúng ba trường
+Audit failure kể cả lỗi kép -> lỗi audit an toàn, không return thành công
 ```
 
-Nhánh policy đề xuất là ghi chú thiết kế để Leader review, không là return/exception runtime mới. Không chặn các kết quả TA đã xác định chỉ vì extension còn chờ xác nhận. Một field invalid khác vẫn bị validation phát hiện trước khi chọn kết quả.
+D13-E là policy đã duyệt, chưa code. Completions chỉ hoàn thiện boolean chưa biết để suy luận; không fill raw patient, không suy numeric. Rule possible không đẩy rule definite. CANONICAL là provenance nội bộ, MUST disclose trong ly_do; không thêm public field/nhãn. Mọi unrelated invalid vẫn được validation phát hiện trước selector.
 
 **Vòng đời UUID.** Phiên tường minh được mở/kết thúc ngoài input; nhiều call trong cùng scope dùng một UUID synthetic hợp lệ. Nếu không có scope, mỗi call độc lập là một phiên đơn thao tác, có UUID tạm mới; reset bằng token trong `finally` cả khi validation hoặc audit lỗi. Hai call độc lập không dùng lại UUID tạm. Cách này tránh gắn nhầm thao tác của các phiên khác nhau; UUID không phải định danh bệnh nhân hoặc danh tính thật. ContextVar không tự quản lý toàn bộ vòng đời phiên hay bảo đảm ghi file đồng thời. [L OPEN-01–OPEN-02; PY1]
 
@@ -128,12 +130,12 @@ Các phương án thay thế và lập luận dưới đây là phân tích ki�
 | Thành phần ADR | Nội dung |
 |---|---|
 | Bối cảnh / vấn đề | Sai kiểu và unavailable khác nhau. Ép kiểu có thể biến dữ liệu chưa xác nhận thành bằng chứng. TA cho phép null/thiếu ở tuổi, HATT và boolean; không được giữ validation cũ loại null tuổi/boolean. TypedDict chưa validation runtime. |
-| Quyết định | Giữ tuổi int/float hữu hạn ≥0, cho số lẻ, loại bool; current BP int ≥0; baseline int >0; HATT loại bool/float/chuỗi. Missing/null ở cả ba số là unavailable. Sáu boolean: True/False hợp lệ; missing/null không tự gây lỗi theo TA, extension → UNKNOWN mang nhãn PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION. Non-null sai kiểu → TypeError, sai miền/khóa thừa → ValueError; kiểm tra mọi trường, không ép kiểu hoặc đổi invalid thành UNKNOWN/THEO_DOI. Invalid thực sự vẫn audit D08. |
+| Quyết định | Giữ tuổi int/float hữu hạn ≥0, cho số lẻ, loại bool; current BP int ≥0; baseline int >0; HATT loại bool/float/chuỗi. Missing/null ba số unavailable. Boolean True/False hợp lệ, missing/null→UNKNOWN theo D13-E đã Leader duyệt; non-null sai kiểu TypeError, sai miền/khóa thừa ValueError. Kiểm mọi field, không ép kiểu/đổi invalid thành UNKNOWN hoặc THEO_DOI; invalid vẫn audit D08. |
 | Phương án khác | Tự chuyển chuỗi/số thành kiểu mong muốn để nhận được nhiều dạng dữ liệu hơn. Phương án này giảm lỗi tích hợp ban đầu nhưng cần quy ước diễn giải và có thể che lỗi bên gọi. |
 | Lý do lựa chọn | Đầu vào nhỏ, cố định và giả lập cho phép yêu cầu bên gọi cung cấp đúng kiểu. Validation nghiêm giúp tìm lỗi sớm và giữ bằng chứng phân loại theo dữ liệu thực nhận. Các miền số là policy dữ liệu của nhóm, tách khỏi ngưỡng lâm sàng trong D. |
 | Hệ quả / đánh đổi | Giữ kiểm tra số hữu hạn, loại bool khỏi miền số và phân biệt unavailable với invalid thực sự. Tuổi missing/null có output TA quy định; thiếu current BP/nền không tự hạ Tầng 2 đã xác nhận. Không tự đổi current BP=0 thành invalid; baseline=0 vẫn ValueError theo policy số đã duyệt. |
 | Rủi ro / giảm thiểu | Validator cũ có thể nhận bool như số hoặc còn loại age/boolean null. Kiểm tra toàn bộ input, không bỏ qua field invalid không liên quan dù đã chứng minh rule; giữ message/chaining không chứa giá trị lâm sàng thô. Không gán INVALID_INPUT chỉ vì missing/null được phép. |
-| Kiểm chứng dự kiến | Test riêng missing/null/non-null sai kiểu, miền số, tuổi lẻ, khóa thừa, unrelated invalid và privacy. Tính lại chín ca null cũ trong Q §8.1; 35 invalid còn lại giữ mapping TypeError/ValueError. Invalid + audit thành công mới INVALID_INPUT/lỗi validation; lỗi kép ưu tiên audit theo OPEN-03. Chưa có test runtime evidence. |
+| Kiểm chứng dự kiến | Test missing/null/non-null invalid, miền số/tuổi lẻ/khóa lạ/unrelated invalid và privacy. Nguồn Hải hiện có 36 invalid=28 TypeError+8 ValueError khi audit thành công; INV nullable và AUD-002 fixture đã thay được bàn giao ở §9.3. Lỗi kép vẫn OPEN-03. Chưa implementation/test evidence. |
 | Truy vết | Q FR-07; NFR-02, NFR-03, NFR-05; A-04, A-07. |
 | Nguồn / trạng thái | APPROVED BY LEAD — PARTIALLY SUPERSEDED BY TA. TA §§2–5 thay chính sách null tuổi/boolean cũ; mapping lỗi, miền số và OPEN-03 giữ phần đã duyệt. [TA](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248); Q §§3, 4.3, 8.1; L. Không coi toàn bộ D04 bị hủy. |
 
@@ -156,12 +158,12 @@ Các phương án thay thế và lập luận dưới đây là phân tích ki�
 | Thành phần ADR | Nội dung |
 |---|---|
 | Bối cảnh / vấn đề | Output phải cho biết rule nào dẫn đến kết quả và giải thích ngắn. Nội dung tự do có thể đưa dữ liệu thô hoặc lời khuyên điều trị vào `ly_do`. |
-| Quyết định | Dùng template tất định theo rule/kết quả. Tuổi missing/null: nêu thiếu tuổi nên chưa chọn được ngưỡng sốc. Current BP unavailable: nêu chưa xác nhận sốc, vẫn nêu rule Tầng 2 đã chứng minh. Người lớn thiếu nền: nêu chưa đánh giá được giảm >30% khi cần nhánh tương đối. Không raw input/điều trị hoặc LLM cho classification/explanation. |
+| Quyết định | Giữ template tất định, không LLM/raw clinical input/điều trị. DIRECT nêu rule definite; CANONICAL chỉ ở PHAN_VE/Def rỗng/AllPV, MUST nêu mã đại diện và chưa xác nhận rule độc lập, không claim unknown=False đã quan sát. Mixed nêu insufficient information; thiếu tuổi/current BP/nền diễn đạt theo TA. Không thêm output key. |
 | Phương án khác | Ghép câu từ toàn bộ triệu chứng và số đo tạo nhiều chi tiết nhưng tăng nguy cơ rò dữ liệu. Sinh câu linh hoạt làm tăng độ biến thiên và khó kiểm chứng nội dung đúng giới hạn. |
 | Lý do lựa chọn | Bộ mã rule nhỏ, output cố định và dữ liệu synthetic đủ để dùng template. Reviewer đối chiếu được mã rule với câu giải thích mà không cần tái tạo dữ liệu input trong output. |
 | Hệ quả / đánh đổi | Template ổn định và dễ đối chiếu một rule_id. D01 đã có priority chính thức R01 > R02 > R03; trường hợp overlap có thể nêu thêm rule khớp trong ly_do nhưng không thêm mã output. Cần phân biệt thiếu tuổi, thiếu current BP và thiếu baseline. |
 | Rủi ro / giảm thiểu | Không diễn đạt THEO_DOI thành an toàn, hoặc chưa xác nhận sốc thành bằng chứng không có sốc. Nêu lý do unavailable theo TA, không suy số đo hay lộ input qua explanation/lỗi. D01–D03 không còn phụ thuộc phản hồi TA cho ca đã trả lời. |
-| Kiểm chứng dự kiến | Ba khóa output, một rule_id đúng priority, nội dung ly_do phù hợp TA-EX-01–12, không raw input/điều trị. Kiểm tra reason riêng tuổi/current BP/baseline unavailable. Chưa có output nghiệp vụ đã chạy. |
+| Kiểm chứng dự kiến | Ba output keys, priority/attribution theo D13-E, TA-EX-01–13 và sáu expected §9.4; negative reason assertions bắt câu khẳng định S=False hoặc R01 definite ở canonical. Missing age/BP/nền đúng TA. Chưa có output runtime được nghiệm thu. |
 | Truy vết | Q FR-08; NFR-07; A-05, liên quan A-01. |
 | Nguồn / trạng thái | Template APPROVED BY LEAD theo L; nội dung kỳ vọng D01–D03 theo TA §§1–5 và Q FR-08. D dòng 49–55/E A-05 giữ contract; TA không phê duyệt công nghệ template. |
 
@@ -208,12 +210,12 @@ Kiểm chứng M2: direct call không cấu hình path; đổi working directory
 | Thành phần ADR | Nội dung |
 |---|---|
 | Bối cảnh / vấn đề | Một số biểu thức gần giống nhau nhưng khác ngoặc, đường hít, số hệ hoặc dấu so sánh. Test mẫu chỉ mong đợi `NotImplementedError`, chưa kiểm tra nghiệp vụ. |
-| Quyết định | Giữ nhóm normal/boundary/missing/invalid/overlap/tuổi lẻ/output/audit privacy/D13. Thay/chỉnh test stub NotImplementedError bằng test nghiệp vụ M2; tmp_path và fixture reset context kể cả lỗi, file riêng/độc lập thứ tự. D01–D03 dùng expected TA đã xác nhận, bao phủ TA-EX-01–12. Trường hợp boolean phụ thuộc unavailable theo extension đề xuất phải được Leader xác nhận trước khi đóng expected. |
+| Quyết định | Giữ normal/boundary/missing/null/invalid/overlap/tuổi lẻ/output/audit/privacy. Stub NotImplementedError thay/chỉnh bằng business tests M2. tmp_path/fixtures/reset/file riêng/độc lập thứ tự giữ nguyên. Expected D01–D03 theo TA; sáu D13-E §9.4 đã được Leader chốt policy, không còn awaiting approval. Thêm coverage/select/explanation tests, TA-EX-01–13. |
 | Phương án khác | Chỉ dùng ca điển hình và một ví dụ cho mỗi nhãn nhanh hơn nhưng dễ bỏ qua sai dấu và dữ liệu thiếu. Chỉ đo tỷ lệ dòng code được chạy cũng chưa chứng minh các điều kiện rule được hiểu đúng. |
 | Lý do lựa chọn | Nhóm ca bám yêu cầu A-07 và các đường rủi ro thực tế. Giá trị bằng ngưỡng thất bại nhánh so sánh nghiêm ngặt, nên các ca tại/sát biên cần được review, kể cả biên tuổi và giảm đúng 30%. |
 | Hệ quả / đánh đổi | Dễ phát hiện lỗi nhỏ làm đổi kết quả, nhưng cần thời gian lập kỳ vọng và bảo trì dữ liệu synthetic. Kiểm tra helper hỗ trợ chẩn đoán lỗi, vẫn cần kiểm tra từ interface công khai. |
-| Rủi ro / giảm thiểu | Không sao chép công thức lỗi từ implementation, giữ expected cũ cho null hoặc tự gán nhóm pending thành PASS. Hải cập nhật 135-case plan theo D + TA; Việt Đức review QA/AC và audit SUCCESS/INVALID_INPUT. Leader chỉ duyệt policy nhóm còn đề xuất, không duyệt lại kết luận TA. |
-| Kiểm chứng dự kiến | Giữ public/core/audit/context/fixture/error-precedence coverage, Enum AND/OR/NOT và R02 T/U. Q §8.1 chỉ rõ bảy PEND đã có đáp án, chín null cũ cần rời invalid, 35 invalid còn lại cần giữ strict mapping. Sau code cần pytest -q từ clean checkout với business tests và PR CI evidence riêng; chưa có bằng chứng đạt. |
+| Rủi ro / giảm thiểu | Không copy implementation thành oracle, giữ null expected cũ hoặc coi approval là PASS runtime. Hải cập nhật 157-case plan và D13 coverage; Việt Đức review QA/AC/status, canonical reason và current source. Leader chỉ phê duyệt policy; peer/runtime verification chưa có. |
+| Kiểm chứng dự kiến | Giữ public/core/audit/context/error/fixture coverage, 81 Enum/count rows. Thêm raw normalization, Def trước Poss, AllPV/Def rỗng, Mixed, numeric crossovers và đủ six approved expected. Sau code cần pytest -q từ clean checkout với business tests và PR CI evidence riêng; không nghiệm thu từ số hàng tài liệu. |
 | Truy vết | Q FR-01–FR-09; NFR-05, NFR-06; A-01–A-09. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D09, Q NFR-05, L; OPEN-06 ngày 08/11/2026 đã được chọn, PENDING PEER TECHNICAL REVIEW. E A-07–A-09, T dòng 9–17, W dòng 1–12 là căn cứ hiện trạng. Hải và Việt Đức review chéo fixture/đường lỗi. |
 
@@ -231,19 +233,19 @@ Kiểm chứng M2: direct call không cấu hình path; đổi working directory
 | Truy vết | Q NFR-01; A-10. Phụ thuộc D05, D07, D08 và đường gọi FR-01/FR-09. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D10, Q NFR-01 và L; OPEN-09/10 được chốt ngày 08/11/2026, PENDING PEER TECHNICAL REVIEW. E A-10 là nguồn tối thiểu mẫu, p50/p95 và p95 <100 ms; 100 warm-up/nearest-rank là protocol nội bộ đã duyệt. |
 
-### 5.8. D13 — Đánh giá input một phần với logic ba trạng thái
+### 5.8. D13-E — Evidence-first Boolean Coverage with Canonical Attribution
 
 | Thành phần ADR | Nội dung |
 |---|---|
-| Bối cảnh / vấn đề | Missing/null boolean không tự gây exception theo TA. Một rule được chứng minh bằng dữ liệu hiện có không được hạ mức chỉ vì boolean khác unavailable; riêng tuổi missing/null theo TA vẫn THEO_DOI. S=co_di_nguyen_nghi_ngo xuất hiện cả dương và âm trong các rule, cần review tương quan khi S UNKNOWN. |
-| Quyết định | Giữ Enum nội bộ TRUE/FALSE/UNKNOWN, AND/OR/NOT tường minh và R02 T/U đã duyệt; không Python truthiness. True→TRUE, False→FALSE. Mapping missing→UNKNOWN đã có trước; extension kết hợp missing/null→UNKNOWN, đặc biệt explicit null, là PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION. Bỏ quy tắc cũ null boolean invalid theo TA; non-null sai kiểu vẫn D04. Không thêm field/nhãn hoặc thay biểu thức. |
-| Phương án khác | Mặc định missing/null=False có thể tạo bằng chứng âm, sai rule hoặc hạ mức đã chứng minh; bắt đủ sáu khóa hoặc reject null trái TA. Không mở lại Enum/toán tử đã duyệt. Chi tiết mapping explicit null và fallback ca output-dependent là đề xuất tối thiểu để Leader review, không phải duy nhất được TA chỉ định. |
-| Lý do lựa chọn | UNKNOWN giữ khác biệt chưa biết với FALSE. TRUE OR UNKNOWN vẫn TRUE nên không chặn rule độc lập đã chứng minh. Enum/Kleene/T-U là thiết kế nội bộ đã duyệt; TA chỉ quy định hành vi và quyền công bố policy, không yêu cầu công nghệ hay xác nhận mapping này là duy nhất. |
-| Hệ quả / đánh đổi | Giữ biểu thức và cấu trúc helper, cần mở rộng null cases thay invalid expectations cũ. Kết quả TA đã rõ phải áp dụng ngay; phần output phụ thuộc boolean unavailable cần policy nhóm công bố/test được và Leader xác nhận. Không dùng đề xuất còn chờ để giữ các expected trái TA. |
-| Rủi ro / giảm thiểu | UNKNOWN bị ép False, làm mất rule; hoặc chỉ nhìn từng rule Kleene mà bỏ tương quan S giữa NOT S ở R01 và S ở R02. Phân tích ví dụ §5.8.2, không chốt output mơ hồ thành quy tắc mới. Không suy không có sốc chỉ từ tuổi/HATT thiếu; lựa chọn nhãn theo TA khác trạng thái điều kiện nội bộ. |
-| Kiểm chứng dự kiến | Bảng AND/OR/NOT và R02 T/U giữ nguyên, không truthiness; missing/null tương đương theo mapping đề xuất; non-null sai kiểu vẫn lỗi. TA-EX-10/11 giữ rule chắc chắn; TA-EX-12 và S-correlation cần Leader review policy trước khi đóng expected. Tuổi/BP unavailable có test TA-EX-02–09, không còn TA-pending. Chưa triển khai. |
-| Truy vết | Q FR-02–FR-08; NFR-04, NFR-05, NFR-07; A-01, A-03–A-05, A-07. |
-| Nguồn / trạng thái | APPROVED CORE: Enum/toán tử/R02 T-U và OPEN-08 theo L. TA §§2–5 thay null-invalid và quyết định D01–D03. Extension explicit null→UNKNOWN / policy ca phụ thuộc unavailable: PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION. [TA](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248); Q §§3.2, 4.2–4.3, 9. |
+| Bối cảnh / vấn đề | Missing/null boolean được TA cho phép; S xuất hiện âm ở R01 và dương ở R02/R03. Rule riêng UNKNOWN chưa chứng minh disjunction không khớp. Có AllPV nhưng không rule riêng definite nên phải định nghĩa cả selection level lẫn attribution. |
+| Quyết định | APPROVED BY LEAD — D13-E — 09/11/2026. Boolean missing/null→UNKNOWN; giữ Enum/Kleene/T-U và strict D04 cho non-null invalid. Duyệt 1–64 consistent completions bằng original R01/R02/R03; Def trước Poss. Def có: chọn rule definite ưu tiên. Def rỗng/AllPV: giữ positive; PHAN_VE dùng canonical ưu tiên trong Poss, MUST disclose chưa xác nhận rule độc lập. Mixed/all-negative→THEO_DOI/null với reason khác nhau; positive+hypotension→SOC_PHAN_VE/R-SOC; age/BP theo TA. |
+| Phương án khác | Đã cân nhắc: A chỉ Kleene fallback làm mất positive bất biến; B chọn false representative tương đương output hiện tại nhưng dễ bị hiểu imputation; C possible-first có thể bỏ definite; D PV/null hợp kiểu nhưng semantics không được current mapping chọn. Không mở lại Enum/toán tử hoặc các architecture khác. |
+| Lý do lựa chọn | E giữ definite evidence, bảo toàn disjunction bất biến mà không tạo clinical criterion mới; lựa chọn canonical tất định, công bố attribution uncertainty. Quyền công bố policy theo TA §§5–6; convention không do TA chỉ định cho từng missing case. |
+| Hệ quả / đánh đổi | Thêm coverage/selector/explanation tests; chỉ dùng mã canonical ở PHAN_VE khi Def rỗng/AllPV, DIRECT/CANONICAL là provenance private. Không schema/field/status mới, không fill raw input hoặc numeric. Thiếu tuổi vẫn TD/null; thiếu BP không chặn positive đã chứng minh. |
+| Rủi ro / giảm thiểu | Leader chấp nhận residual risk strict activated-rule semantics: rule canonical chỉ possible, consumer bỏ ly_do có thể hiểu quá mức. Disclosure và negative assertions bắt buộc nhưng không biến possible thành definite/TA approval. Mixed fallback có thể bỏ một positive completion, không gọi là an toàn. |
+| Kiểm chứng dự kiến | Giữ 81 helper rows; thêm null/missing, Def/Poss/AllPV/Mixed, canonical reason, all-worlds/order/multi-U/max64, age/BP crossovers. Sáu expected §9.4 approved policy. Phân tích độc lập 729 states/18 cấu hình số là bằng chứng thiết kế, không runtime; cần business tests, clean checkout/CI và benchmark audit thật. |
+| Truy vết | Q FR-02–FR-08; NFR-04, NFR-05, NFR-07; A-01, A-03–A-05, A-07. Q §§3.2,4.2,5,8.2. |
+| Nguồn / trạng thái | APPROVED BY LEAD — D13-E — 09/11/2026; Huy Đức phê duyệt trong TASK 02G sau khuyến nghị TASK 02F, chấp nhận risk canonical. TA §§5–6 cho quyền policy, không TA-approved convention. Các trạng thái D13 proposed ở Revision 03 là lịch sử; chưa peer approval/M1 acceptance/implementation verification. |
 
 Bảng dưới mô tả ngữ nghĩa đã được Leader duyệt, không phải test case hoặc API mới.
 
@@ -267,20 +269,30 @@ Bảng dưới mô tả ngữ nghĩa đã được Leader duyệt, không phải
 
 Đối với phần ít nhất hai trong bốn hệ của R02, T là số TRUE và U là số UNKNOWN. T ≥2 cho điều kiện đếm TRUE. T + U <2 cho điều kiện đếm FALSE. Còn lại UNKNOWN. Kết quả đếm vẫn phải AND với `co_di_nguyen_nghi_ngo` đúng biểu thức D dòng 42. [Q §4.2; L]
 
-TRUE xác nhận rule khớp, FALSE xác nhận không khớp, UNKNOWN giữ chưa đủ thông tin. Rule chắc chắn TRUE vẫn TRUE dù boolean không liên quan UNKNOWN. Với tuổi có và chưa đủ bằng chứng sốc, rule Tầng 2 TRUE cho PHAN_VE, chọn R01 > R02 > R03; sốc đã xác nhận ưu tiên SOC_PHAN_VE/R-SOC. Tuổi missing/null theo TA là THEO_DOI/null dù Tầng 2 TRUE. Các trường hợp mọi rule FALSE cho THEO_DOI/null; fallback THEO_DOI/null khi còn rule UNKNOWN và không rule TRUE thuộc extension policy đề xuất, phải phân biệt thiếu thông tin với không khớp. [TA §§1–5; Q §§4.2, 5.1]
+**Định nghĩa và thứ tự lựa chọn đã duyệt.** C(p) gồm mọi assignment True/False cho boolean unavailable, giữ known values; numeric không được completion. Def là giao tập rule TRUE qua C(p); Poss là hợp; AllPV là mọi completion có ít nhất một rule; AnyPV là tồn tại completion có rule. Không dùng OR các UNKNOWN riêng lẻ thay phép kiểm coverage. Không dùng Python truthiness của Enum.
 
-#### 5.8.1. Trạng thái nội bộ của điều kiện huyết áp và lựa chọn output
+1. Validate mọi trường; tuổi missing/null → THEO_DOI/null theo TA.
+2. Def có: chọn ưu tiên R01 > R02 > R03 trong Def, attribution DIRECT. Possible ưu tiên cao hơn không thay definite.
+3. Def rỗng/AllPV: positive đã chứng minh bằng disjunction; nếu PHAN_VE thì chọn rule ưu tiên trong Poss làm CANONICAL.
+4. Positive theo bước 2/3 + bằng chứng hypotension TRUE → SOC_PHAN_VE/R-SOC; low BP đơn độc không đủ.
+5. Mixed (AnyPV, không AllPV): THEO_DOI/null, nêu insufficient information; không AnyPV: THEO_DOI/null theo không khớp.
+6. PHAN_VE/CANONICAL MUST nói mã đại diện theo policy và chưa xác nhận rule riêng; không claim unavailable=False là quan sát. Giữ đúng ba output; audit status theo thao tác.
 
-TRUE/FALSE/UNKNOWN dùng cho kết quả điều kiện; raw missing/null không phải Enum và không đổi schema. Thiếu tuổi chưa chọn được ngưỡng; TA quy định output THEO_DOI/null, không phải TypeError. Tuổi có, thiếu current BP thì chưa chứng minh sốc; Tầng 2 TRUE vẫn PHAN_VE/selected rule. Không diễn đạt chưa xác nhận sốc thành chắc chắn không sốc. [TA §§2–3,5; Q FR-05–FR-08]
+DIRECT/CANONICAL là nhãn nội bộ hỗ trợ ly_do, không public key, mã rule hoặc audit status mới. Canonical dùng cùng thứ tự priority là convention nhóm, không chứng minh các possible rules đồng thời TRUE. Q §5 ghi chính xác nghĩa rule_id; không chọn PHAN_VE/null theo policy này.
 
-Ở người ≥18 tuổi, giữ HATT <90 HOẶC giảm >30%, tức current <0.7×baseline. Nhánh tuyệt đối TRUE đủ chứng minh dù thiếu nền; khi Tầng 2 TRUE thì SOC_PHAN_VE/R-SOC. Nếu current ≥90 và thiếu nền, nhánh tương đối chưa xác nhận, trạng thái đánh giá nội bộ có thể UNKNOWN; theo TA xem nhánh này chưa thỏa để chọn Tầng 1, không chặn PHAN_VE đã chứng minh. Không đổi mọi UNKNOWN thành FALSE. Giảm đúng 30% không đạt. [D dòng 35; TA §4; Q §§4,5.1]
+#### 5.8.1. Trạng thái HATT và output theo TA/D13-E
 
-#### 5.8.2. Rủi ro tương quan của co_di_nguyen_nghi_ngo
+Raw missing/null khác Enum. Tuổi missing/null không chọn được ngưỡng: THEO_DOI/null dù AllPV. Tuổi có, positive definite hoặc coverage nhưng current BP unavailable: chưa chứng minh sốc, vẫn PHAN_VE theo DIRECT/CANONICAL; không diễn đạt thành chắc chắn không có sốc. [TA §§2–3,5; Q FR-05–FR-08]
 
-S là co_di_nguyen_nghi_ngo, K/H/C/G lần lượt là da-niêm mạc/hô hấp/tim mạch/tiêu hóa, I là di_nguyen_qua_duong_hit. Ví dụ tuổi 15, HATT 110, S unavailable, K=H=I=TRUE, C=G=FALSE: đánh giá Kleene từng rule cho R01=UNKNOWN, R02=UNKNOWN, R03=FALSE. Nếu S=FALSE, R01 TRUE; nếu S=TRUE, R02 TRUE. Như vậy cả hai hoàn thiện dữ liệu đều có thể PHAN_VE nhưng rule_id khác nhau. Mặc định S=FALSE có thể gán sai rule; fallback THEO_DOI máy móc có thể hạ mức so với kết quả chung của hai hoàn thiện. [D dòng 41–43; TA §5; Q §4.2]
+Adult giữ HATT <90 HOẶC giảm >30%, tức current <0.7×baseline (BP int có thể so 10×current <7×baseline). Absolute TRUE đủ dù thiếu nền; positive + absolute TRUE→SOC_PHAN_VE/R-SOC. Current ≥90, baseline unavailable: relative chưa xác nhận, không tính là đã thỏa khi chọn Tier1, không chặn PHAN_VE đã chứng minh. Đúng30 không đạt. Không ép mọi UNKNOWN thành FALSE, không đổi ngưỡng/miền số hoặc suy numeric. [D dòng 35; TA §4]
 
-Đây là rủi ro cần Hải/Việt Đức phản biện khi Leader xem extension, không phải một rule lâm sàng, nhãn output mới hay đáp án do TA chỉ định riêng. Không tự chọn rule_id hoặc thuật toán bổ sung cho ví dụ này trong patch. PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION; công bố rõ policy output-dependent sau khi Leader xác nhận và bổ sung test, không tạo một câu hỏi TA pending mới.
+#### 5.8.2. S-correlation và attribution đã được Leader chọn
 
+S=co_di_nguyen_nghi_ngo; I=di_nguyen_qua_duong_hit; K/H/C/G=da/hô hấp/tuần hoàn/tiêu hóa. Tuổi15/HATT110, S unavailable, K=H=I=TRUE,C=G=FALSE: Kleene R01=R02=UNKNOWN,R03=FALSE. S=False khớp R01; S=True khớp R02, nên AllPV và Def rỗng. D13-E trả PHAN_VE/R01-PV CANONICAL theo priority trong Poss. Không sửa helper R01 thành TRUE hoặc nói S=False đã biết. ly_do phải công bố đại diện R01/R02 và attribution chưa độc lập. [D dòng 41–43; Q §4.2/§5.1 TA-EX-13; L]
+
+Cùng boolean + hypotension được chứng minh→SOC_PHAN_VE/R-SOC; thiếu BP→PHAN_VE canonical; thiếu tuổi→THEO_DOI/null. Nếu có rule definite như R03 và R02 chỉ possible thì chọn R03, không áp possible-first. Mixed ví dụ G hoặc I quyết định có rule hay không thì TD/null với lý do thiếu thông tin.
+
+Residual risk vẫn tồn tại dù đã approved: mã representative có thể bị consumer đọc là rule thật đã khớp. Leader chấp nhận risk này ngày 09/11/2026; disclosure/test bắt buộc, không claim TA đã trả lời riêng ví dụ hoặc peer review đã xong. Không cần một approval D13 mới trước khi cập nhật task tiếp theo; các thay đổi policy sau này vẫn cần review.
 
 ## 6. Ràng buộc chính thức — D11 và D12
 
@@ -316,7 +328,7 @@ Ngày 08/11/2026, fossbk-spec trả lời toàn bộ nhóm câu hỏi tại [com
 
 [Bình luận D03 của nhóm](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6719840642) đăng 09:31:14 UTC ngày 08/11/2026, Huy-duc-1211. Trước phản hồi 14:01:50 UTC, Revision 02 ghi câu hỏi chờ TA; trạng thái đó chỉ là lịch sử và đã được Revision 03 thay thế. Ví dụ tuổi 25/current 110/nền giả định 140 so với 160 minh họa nhánh giảm khác nhau, không cho phép suy số đo nền. TA đã xác nhận current 110/nền unavailable/Tầng 2 TRUE → PHAN_VE theo rule khớp. Không cần Leader duyệt lại kết luận này.
 
-Phần còn chờ là extension boolean-null→UNKNOWN/policy output-dependent mang nhãn **PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION**, cùng peer review mười lựa chọn đã duyệt và residual implementation risks. Không tạo D01–D03 pending mới hoặc nhãn runtime “pending”.
+D13-E đã được Leader phê duyệt ngày 09/11/2026, không còn pending Leader/TA cho normalization/coverage/fallback/canonical. Phần còn chờ là peer technical review và evidence triển khai, default path/internal exception theo trạng thái riêng. Không tạo nhãn runtime pending hoặc mở lại D01–D03.
 
 ## 8. Detailed Design Register — mười lựa chọn đã chốt
 
@@ -324,7 +336,7 @@ Phần còn chờ là extension boolean-null→UNKNOWN/policy output-dependent m
 
 Cả 10 lựa chọn dưới đây được Huy Đức phê duyệt ngày 08/11/2026 trong L. Giữ mã OPEN-01–OPEN-10 để truy vết lịch sử; không còn pending lựa chọn kiến trúc. Tất cả là **APPROVED BY LEAD — PENDING PEER TECHNICAL REVIEW**. Chưa có code/test evidence, không phải TA approval. Hải/Việt Đức phản biện chéo; Huy chịu trách nhiệm quyết định cuối khi có phát hiện cần thay policy, AI không phê duyệt.
 
-TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed và bốn trường/giá trị audit đã duyệt tiếp tục có hiệu lực. TA thay ngữ nghĩa unavailable và D01–D03; không mở lại mười lựa chọn. Extension boolean-null→UNKNOWN thuộc §5.8 chờ Leader, không được gán APPROVED bởi trạng thái Enum OPEN-08. Các “alternatives considered” là phân tích phương án từng cân nhắc, không mở lại chính sách. Các lựa chọn Python tối giản này nằm trong phạm vi module synthetic.
+TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed và bốn trường/giá trị audit đã duyệt tiếp tục có hiệu lực. TA thay ngữ nghĩa unavailable và D01–D03; không mở lại mười lựa chọn. D13-E §5.8 đã được Leader phê duyệt riêng trong TASK 02G; OPEN-08 representation không tự tạo approval cho các kiến trúc ngoài D13. Phần khác của mười lựa chọn giữ nguyên. Các “alternatives considered” là phân tích phương án từng cân nhắc, không mở lại chính sách. Các lựa chọn Python tối giản này nằm trong phạm vi module synthetic.
 
 | ID | Selected Approach | Leader Status | Technical Owner | Reviewer | Verification |
 |---|---|---|---|---|---|
@@ -431,8 +443,8 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 - **Alternatives considered:** Bool kèm sentinel UNKNOWN hoặc tuple giá trị/độ xác định ít cấu trúc nhưng trộn kiểu, dễ đảo nghĩa và dùng nhầm truthiness. Không chọn.
 - **Rationale:** Một Enum trạng thái cho kết quả điều kiện boolean/HATT giúp đọc và review theo bảng logic; giữ raw input riêng.
 - **Trade-offs:** Thêm kiểu/toán tử nội bộ; Enum Python vẫn có truthiness nên phải so sánh trạng thái tường minh, không dùng if state hoặc and/or/not của Python để suy diễn Enum.
-- **Residual risk:** Raw missing/null bị nhầm với Enum hoặc UNKNOWN lọt vào output. Trạng thái HATT UNKNOWN khác lựa chọn output TA đã quy định: thiếu tuổi → THEO_DOI; tuổi có/thiếu BP vẫn giữ Tầng 2 TRUE. Review tương quan S tại §5.8.2 và extension null còn đề xuất.
-- **Tests / evidence required:** Toàn bộ AND/OR/NOT, R02 T≥2 / T+U<2 / còn lại rồi AND dị nguyên; boolean missing/null không exception theo TA, mapping UNKNOWN là extension chờ Leader. Điều kiện HATT unavailable không tự thành FALSE hoặc hạ Tầng 2 đã chứng minh; TA-EX-01–12. Không thêm input/nhãn muc_do.
+- **Residual risk:** Raw missing/null khác Enum; UNKNOWN không lọt output. HATT UNKNOWN khác lựa chọn output theo TA; D13-E giữ Def/Poss và canonical provenance, không nói rule đại diện là definite. Peer review/test chưa chứng minh runtime.
+- **Tests / evidence required:** Giữ AND/OR/NOT/R02 T-U; mapping missing/null→UNKNOWN đã duyệt D13-E; test Def trước Poss, AllPV/Def rỗng, Mixed, canonical explanation và age/BP. TA-EX-01–13/sáu expected §9.4; không field/output/status mới, không truthiness.
 - **Owner and reviewer:** Hải chủ trì; Việt Đức, Huy Đức review. Huy Đức đã phê duyệt hướng, giữ quyền quyết định cuối khi phát hiện cần thay đổi.
 
 ### 8.10. OPEN-09 — Vòng đời ghi audit
@@ -465,7 +477,7 @@ Mười hướng đều đã chọn; không còn yêu cầu “chờ quyết đ�
 
 OPEN-10 cũng đã chốt protocol ngay trong M1. Chạy benchmark và thu bằng chứng đầy đủ có thể thực hiện M3; không trì hoãn phê duyệt protocol sang M3. Hoàn thiện coverage, clean-checkout và CI evidence tiếp tục theo kế hoạch nhóm. Concurrency mở rộng không là nhiệm vụ M3 bắt buộc.
 
-D01–D03 đã TA CONFIRMED phần 7; không còn gate WAITING FOR TA cho ca đã trả lời. Extension null policy cần Leader xác nhận trước code phần bị ảnh hưởng; default path chờ peer/Leader review như §5.4.1, lỗi nội bộ còn residual implementation review. Các mốc review là quản lý công việc nội bộ, không phải AC/deadline mới. Tên helper, tên exception audit, path thực tế, hoặc UTC dùng Z/+00:00 là chi tiết nhỏ cần nhất quán khi code, không thành vòng phê duyệt kiến trúc mới nếu giữ approved policy.
+D01–D03 đã TA CONFIRMED phần 7; không còn gate WAITING FOR TA cho ca đã trả lời. D13-E đã chốt policy, còn cần peer/test review trước triển khai phần tương ứng; default path chờ peer/Leader review như §5.4.1, lỗi nội bộ còn residual implementation review. Các mốc review là quản lý công việc nội bộ, không phải AC/deadline mới. Tên helper, tên exception audit, path thực tế, hoặc UTC dùng Z/+00:00 là chi tiết nhỏ cần nhất quán khi code, không thành vòng phê duyệt kiến trúc mới nếu giữ approved policy.
 
 ## 9. Truy vết quyết định đến yêu cầu
 
@@ -476,16 +488,16 @@ Bằng chứng implementation/test/benchmark dưới đây là DỰ KIẾN hoặ
 | D01 | FR-03, FR-04, FR-06, FR-08; NFR-07 | A-01, A-05, A-07 | TA đã xác nhận priority; cần test overlap R01/R02/R03, R02/R03 và shock override; TA-EX-01 | Hải logic / Huy, Việt Đức truy vết |
 | D02 | FR-05–FR-07; NFR-05 | A-01, A-04, A-07 | TA đã xác nhận; test tuổi missing/null tương đương THEO_DOI/null, reason thiếu tuổi, không TypeError; TA-EX-02/03 | Huy / Hải, Việt Đức |
 | D03 | FR-05–FR-07; NFR-05 | A-01, A-04, A-07 | TA đã xác nhận current BP/baseline missing/null; test giữ Tầng 2, absolute <90 thiếu nền, strict >30%, reason đúng; TA-EX-04–09 | Huy / Hải, Việt Đức |
-| D04 | FR-07; NFR-02, NFR-03, NFR-05 | A-04, A-07 | Chưa triển khai; test strict invalid thực sự và validation mọi trường, 35 invalid cũ giữ 27 TypeError/8 ValueError nếu audit thành công; chín null cũ không còn invalid chỉ vì null, xem Q §8.1 | Hải / Huy, Việt Đức |
+| D04 | FR-07; NFR-02, NFR-03, NFR-05 | A-04, A-07 | Chưa triển khai: strict invalid/unrelated invalid; nguồn Hải hiện có 36 invalid (28 TypeError/8 ValueError nếu writer thành công), nullable INV và AUD-002 đổi fixture theo §9.3 | Hải / Huy, Việt Đức |
 | D05 | FR-01–FR-09; NFR-04, NFR-05 | A-01, A-02, A-07–A-09 | Chưa triển khai: direct classify vẫn audit; helper thuần; explicit scope dùng chung UUID, hai call độc lập UUID mới; reset kể cả exception | Hải phần core/public orchestration, Việt Đức audit/CI / Huy và review chéo |
-| D06 | FR-08; NFR-07 | A-05 | Chưa triển khai; template/reason thiếu tuổi, current BP, baseline theo TA; priority một rule_id và privacy | Hải / Huy, Việt Đức |
+| D06 | FR-08; NFR-07 | A-05 | Chưa runtime: template DIRECT/CANONICAL, canonical disclosure không claim independent evidence; thiếu tuổi/BP/nền theo TA; sáu expected §9.4 | Hải / Huy, Việt Đức |
 | D07 | FR-09; NFR-02, NFR-03, NFR-04 | A-06 | Chưa triển khai: bốn trường/UTC/UUID hợp lệ; JSONL; ContextVar/token, path ngoài input độc lập cwd, file riêng/ghi tuần tự, open/write/close thực và lỗi an toàn | Hải provider, Việt Đức writer / Huy và review chéo |
 | D08 | FR-07, FR-09; NFR-02, NFR-03 | A-04, A-06 | Chưa triển khai: allowed missing/null sau phân loại/audit thành công → SUCCESS; invalid thực sự → INVALID_INPUT nếu ghi được. Giữ ba ca lỗi OPEN-03, audit ưu tiên lỗi kép, privacy/fail-closed và không giả định record tồn tại | Việt Đức / Hải, Huy |
 | D09 | FR-01–FR-09; NFR-05, NFR-06 | A-01–A-07, A-08, A-09 | Chưa có bằng chứng: cần Test Plan/QA Matrix, tmp_path/fixture teardown, độc lập thứ tự và public/audit tests. Riêng A-08: `pytest -q` phải chạy đạt từ clean checkout với test nghiệp vụ đã thay/chỉnh stub `NotImplementedError`; lưu lệnh, môi trường và kết quả thực chạy trước khi đánh dấu VERIFIED. A-09 cần PR CI riêng | Hải test logic, Việt Đức QA/CI / Huy và review chéo |
 | D10 | NFR-01 | A-10 | Chưa thực đo: perf_counter_ns(), 100 warm-up loại khỏi N≥1.000, nearest-rank ceil(p×N) chỉ số 1, ns→ms, full-path I/O thật; môi trường, p50/p95 và p95<100 ms | Việt Đức / Hải, Huy |
 | D11 | FR-02–FR-06; NFR-04 | A-01, A-03, A-07 | Dự kiến review biểu thức/ngưỡng theo tag và test biên | Hải / Huy, Việt Đức |
 | D12 | FR-01, FR-07–FR-09; NFR-02, NFR-03, NFR-07, NFR-08 | A-04–A-06, A-11 | Dự kiến review schema, audit, dữ liệu, disclaimer và hồ sơ bàn giao | Huy tài liệu, Việt Đức privacy / Hải và review chéo |
-| D13 | FR-02–FR-08; NFR-04, NFR-05, NFR-07 | A-01, A-03–A-05, A-07 | Chưa triển khai: giữ Enum AND/OR/NOT/R02 T-U; TA cấm reject null/hạ rule đã chứng minh. Extension null→UNKNOWN/fallback output-dependent chờ Leader; test TA-EX-10–12 và S-correlation §5.8.2, raw input khác state HATT | Hải / Huy, Việt Đức |
+| D13 | FR-02–FR-08; NFR-04, NFR-05, NFR-07 | A-01, A-03–A-05, A-07 | D13-E approved policy, chưa triển khai: giữ Enum/T-U; missing/null→UNKNOWN; Def trước Poss; AllPV positive; Mixed TD/null; canonical MUST disclosure và risk đã chấp nhận. TA-EX-01–13, sáu approved expected §9.4 và coverage crossovers | Hải / Huy, Việt Đức |
 
 Các ID hiện có FR-01–FR-09, NFR-01–NFR-08 và A-01–A-11 đều được liên kết trong ma trận. NFR-08/A-11 cần bằng chứng tài liệu riêng, không chỉ code. Chưa có bằng chứng để đóng các AC từ ADR này. Chi tiết test ID và ma trận QA sẽ thuộc công việc Hải/Việt Đức. [Q §§6–8; P §3]
 
@@ -506,14 +518,14 @@ Các ID hiện có FR-01–FR-09, NFR-01–NFR-08 và A-01–A-11 đều đượ
 | Writer/path và tài nguyên | Path cấu hình ngoài input độc lập cwd; thử open/write/flush/close lỗi; JSONL đúng bốn trường | OPEN-04/09; D07/D08 |
 | Isolation/ghi tuần tự | tmp_path riêng, fixture reset kể cả test lỗi, độc lập thứ tự; không suy ra file concurrent-safe | OPEN-05/06; D09 |
 | Enum và R02 T/U | Đủ bảng AND/OR/NOT, không truthiness; T≥2 TRUE, T+U<2 FALSE, còn lại UNKNOWN rồi AND dị nguyên | OPEN-08; D13 |
-| Raw boolean và điều kiện huyết áp | Missing/null đều được TA cho phép; null→UNKNOWN là extension đề xuất. Tuổi thiếu có output riêng, HATT unavailable không tự chặn Tầng 2 TRUE; kiểm tra §5.8.1 | D04/D13; TA-EX-02–12 |
+| Raw boolean và điều kiện huyết áp | Missing/null→UNKNOWN theo approved D13-E; age override/BP unavailable đúng TA; không suy HATT bình thường; DIRECT/CANONICAL khác public field | D04/D13-E; TA-EX-02–13 |
 | Benchmark protocol và thực đo | 100 warm-up ngoài mẫu, N≥1.000, nearest-rank kiểm tra độc lập chỉ số/đơn vị; public path có open/write/close thật, báo đủ môi trường | OPEN-09/10; D10; A-10 |
 
 Fixture và error-path cần Hải/Việt Đức review chéo. Bằng chứng runtime, benchmark và CI sẽ được thu trong task triển khai/kiểm chứng riêng, không chạy trong task tài liệu này.
 
-### 9.2. Ma trận đối chiếu tài liệu theo TA
+### 9.2. Ma trận đối chiếu tài liệu theo TA và D13-E
 
-Mười hai hàng dưới giống Q §5.1, dùng để review expected bằng nguồn; không phải engine tests đã chạy hoặc AC đã VERIFIED. TA-EX-12 kiểm tra việc công bố đề xuất, không tuyên bố Leader đã chấp thuận expected cuối.
+Mười ba hàng dưới giống Q §5.1. TA-EX-01–11 đối chiếu TA; TA-EX-12–13 theo approved D13-E, không gán là TA đã định danh. Đây là kiểm expected tài liệu, chưa phải engine tests hoặc AC VERIFIED.
 
 | ID | Tình huống synthetic | Expected / yêu cầu | Giải thích và ánh xạ bàn giao |
 |---|---|---|---|
@@ -528,59 +540,75 @@ Mười hai hàng dưới giống Q §5.1, dùng để review expected bằng ng
 | TA-EX-09 | Tuổi 25, HATT 140, nền 200, R01 TRUE | PHAN_VE / R01-PV | Giảm đúng 30%, không HATT tuyệt đối thấp; BP-022 |
 | TA-EX-10 | Tuổi 15, HATT 110, S=FALSE, K=H=TRUE, C=FALSE, G=null | PHAN_VE / R01-PV; không exception/hạ mức | Fixture bổ sung; INV-037/043 chịu thay policy nhưng phải tính lại riêng |
 | TA-EX-11 | Như TA-EX-10, G thiếu khóa | PHAN_VE / R01-PV; không exception/hạ mức | Không đổi UNKNOWN thành bằng chứng âm; MISS-007 |
-| TA-EX-12 | Tuổi 15, HATT 110, S=TRUE, I=TRUE, K=TRUE, H=C=FALSE, G thiếu/null | Không exception; expected cuối theo policy nhóm được công bố | Đề xuất UNKNOWN và fallback THEO_DOI/null khi R02 UNKNOWN, chờ Leader; MISS-012 và null tương ứng |
+| TA-EX-12 | Tuổi 15, HATT 110, S=TRUE, I=TRUE, K=TRUE, H=C=FALSE, G thiếu/null | THEO_DOI / null | Mixed: G=False không rule, G=True R02; fallback D13-E đã duyệt; MISS-012 |
+| TA-EX-13 | Tuổi 15, HATT 110, S thiếu/null, I=TRUE, K=H=TRUE, C=G=FALSE | PHAN_VE / R01-PV | CANONICAL: AllPV/Def rỗng; ly_do bắt buộc nêu mã đại diện R01/R02, không xác nhận S=False; MISS-009/TA15-BOOL1-* |
 
-### 9.3. Bàn giao tác động M1-02/M1-03, chưa sửa file của thành viên
+### 9.3. Bàn giao TASK 02E cho M1-02/M1-03 — chưa sửa file thành viên
 
-Nguồn đối chiếu Test Plan: nhánh docs/m1-tests-hai, commit 2c6685e55af47eea55ffeea63c250272a4e71fe3, 135 ca. Q §8.1 ghi ánh xạ chi tiết. PEND-001→PHAN_VE/R02-PV; PEND-002/007→THEO_DOI/null; PEND-003/004→PHAN_VE/R01-PV; PEND-005/006→PHAN_VE/R02-PV. Các nhãn PENDING_TA_CONFIRMATION cho những ca này phải được Hải cập nhật, không dùng để chỉ lỗi implementation.
+Nguồn Hải hiện hành: docs/m1-tests-hai, commit 768f196e6a9ec3b1142c44399ce8288f7cc2e87e, 157 main cases và 81 internal cases. Bảy PEND đã TA-confirmed: 001 PV/R02; 002/007 TD/null; 003/004 PV/R01; 005/006 PV/R02. Không đặt lại pending TA.
 
-Chín ca cũ không còn invalid chỉ vì null: INV-001, INV-017/021/025/029/033/037, INV-043 và AUD-002. Theo input hiện có, INV-043 có tuổi 15/HATT 80/R01 TRUE → SOC_PHAN_VE/R-SOC; tám ca còn lại THEO_DOI/null, không TypeError. Audit SUCCESS sau khi phân loại và ghi thành công, không INVALID_INPUT. Không suy kết quả từ tên test: Hải phải tính lại từng fixture, exception expectation và status từ D + TA.
+Tám nullable INV hợp lệ: INV-001/017/021/025/029/033/037/043. Với fixture hiện tại, INV-043 SOC_PHAN_VE/R-SOC, bảy ca khác THEO_DOI/null. AUD-002 đã đổi null thành chuỗi "true", nay TypeError/INVALID_INPUT khi audit thành công. Hiện có 36 invalid=28 TypeError+8 ValueError; lỗi kép vẫn audit precedence. Tám ValueError INV-002/005/006/007/008/012/016/041 không đổi.
 
-35 ca invalid thực sự còn lại trong nhóm 44 vẫn giữ strict validation: 27 TypeError, 8 ValueError nếu audit thành công; lỗi kép vẫn ưu tiên audit. Tám ValueError: INV-002/005/006/007/008/012/016/041. Non-null boolean sai kiểu, invalid unrelated và extra keys không được bỏ qua. Hải bổ sung TA-EX-01–12, giữ truth tables/T-U và đưa MISS-009/MISS-012 cùng null variants vào review extension/S-correlation.
+Lịch sử baseline 2c6685e55af47eea55ffeea63c250272a4e71fe3 từng có 35 invalid+9 nullable trong nhóm 44 cũ; đổi fixture AUD-002 giải thích khác biệt với 36 invalid hiện tại. Không gọi dữ liệu audit cũ là nguồn hiện hành.
 
-Việt Đức cập nhật QA workbook A-01–A-11 theo expected mới/ID Hải xác nhận, nhất là A-04 null/missing và A-06 SUCCESS/INVALID_INPUT; giữ GAP/pending cho thiếu test/CI/benchmark evidence, không giữ pending TA cho câu đã trả lời. Peer review schema/privacy/fixture/exception precedence như trước. TASK 02C.6 không sửa nhánh Hải, CSV, RULE_DESIGN, TEST_PLAN hoặc QA spreadsheet, không tuyên bố các file đó đã đồng bộ.
+Hải cập nhật source approval, Policy review, assertions cho sáu ID §9.4, giữ helpers UNKNOWN ở correlation nhưng approved positive/canonical ở public selector; thêm Def-vs-Poss, multi-U/64 worlds, numeric crossovers, explanation negative assertions. Việt Đức map A-01–A-11/test IDs, nguồn Revision 04, SUCCESS/INVALID_INPUT và gap evidence. TASK 02G không sửa CSV/RULE_DESIGN/TEST_PLAN/QA hoặc kết luận họ đã review; việc này thuộc TASK 02E và task kiểm chứng tiếp theo.
+
+### 9.4. Sáu expected D13-E đã được Leader phê duyệt — bàn giao TASK 02E
+
+**APPROVED BY LEAD — D13-E — 09/11/2026.** Với đúng fixture tại nhánh Hải commit 768f196e6a9ec3b1142c44399ce8288f7cc2e87e, tuổi/HATT đủ như đang có, các expected sau được chốt ở mức policy. Chưa sửa CSV/QA, chưa chạy engine hoặc xác nhận Hải/Việt Đức đã review.
+
+| Test ID | muc_do | rule_id | Attribution / explanation bắt buộc |
+|---|---|---|---|
+| MISS-009 | PHAN_VE | R01-PV | CANONICAL: AllPV qua R01/R02, Def rỗng; nêu mã đại diện và thiếu attribution, không claim S=False/riêng R01 đã được xác nhận |
+| TA15-BOOL1-NULL | PHAN_VE | R01-PV | CANONICAL như MISS-009; null tương đương missing; không chỉ generic reason |
+| TA15-BOOL1-MISSING | PHAN_VE | R01-PV | CANONICAL như cặp null; không bắt UUID/reason nguyên văn bằng nhau |
+| MISS-012 | THEO_DOI | null | Mixed do G unavailable; nêu chưa đủ thông tin, không nói G=False hoặc R02 chắc chắn FALSE |
+| TA15-DEPENDENT_INHALATION-NULL | THEO_DOI | null | Mixed do I unavailable; không ép I hoặc kết luận an toàn |
+| TA15-DEPENDENT_INHALATION-MISSING | THEO_DOI | null | Cùng fallback/uncertainty như cặp null |
+
+SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các dòng trên không tạo status audit mới. TASK 02E cần giữ R01/R02 UNKNOWN ở helper MISS-009, không đổi thành TRUE để hợp rule_id canonical; cập nhật Policy review/source/current oracle và negative explanation assertions. Ba cặp mức/mã đề xuất của Hải không đổi giá trị, nay có approval Leader, không phải TA định danh.
 
 ## 10. Hệ quả, rủi ro và bước tiếp theo
 
 | Rủi ro còn lại sau phê duyệt | Kiểm soát đã chọn và trách nhiệm review |
 |---|---|
-| Giữ expected trước TA hoặc sai ngoặc/ngưỡng | Hải đối chiếu D + TA/Q Revision 03, Việt Đức kiểm tra TA-EX-01–12; D01–D03 đã có expected, không gọi pending. Thiếu BP khác thiếu tuổi; không gán không sốc từ unavailable |
-| Extension null→UNKNOWN/fallback hoặc S-correlation bị hiểu đã approved | Leader xác nhận extension sau phản biện Hải/Việt Đức; giữ nhãn PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION, không thêm rule/nhãn hay mặc định FALSE; §5.8.2 |
+| Giữ expected trước TA hoặc sai ngoặc/ngưỡng | Hải đối chiếu D+TA/Q Revision 04, Việt Đức kiểm TA-EX-01–13; D01–D03 đã rõ, D13-E approved team policy. Missing BP khác missing age, không suy không sốc từ unavailable |
+| Extension null→UNKNOWN/fallback hoặc S-correlation bị hiểu đã approved | D13-E thực sự đã được Leader duyệt và risk chấp nhận ngày 09/11/2026. Rủi ro còn lại là canonical bị hiểu thành definite/TA-approved; MUST disclosure, negative tests và review. Không tạo field/clinical rule mới |
 | UUID tạm tồn tại sau lỗi hoặc bị kế thừa nhầm context | Hải thiết kế token/finally và explicit/single-call scope; Việt Đức review privacy, cách ly tests/contexts |
 | Rò input qua message/chaining hoặc exception logging | Việt Đức kiểm tra public error boundary, Hải review propagation và error precedence OPEN-03 |
 | Writer lỗi, dòng chưa hoàn chỉnh, cấu hình path sai | Fail-closed; không cam kết đã lưu; file riêng/vùng sinh dữ liệu; Việt Đức review open/write/flush/close và path, Hải review thời điểm public trả/lỗi |
 | Direct call chưa có audit path | Cơ chế mặc định ở phần 5.4.1 chỉ PROPOSED — AWAITING PEER REVIEW; Hải/Việt Đức review gốc ổn định, override ngoài input, đích ngoài repository và README; không thay OPEN-04 đã duyệt |
 | Input hợp lệ nhưng rule/helper gặp unexpected internal exception trước audit thành công | Residual implementation risk / review item: không coi là SUCCESS hoặc tự phân loại INVALID_INPUT; không thêm ERROR/FAILED/INTERNAL_ERROR, không đổi bốn trường và không ghi raw patient payload/exception nhạy cảm. Nghĩa vụ audit đã duyệt vẫn giữ nguyên; cách audit/propagate cho lỗi nội bộ chưa chốt, Hải/Việt Đức review chéo, không suy rộng từ policy validation/audit failure |
 | Dùng cùng file đồng thời ngoài phạm vi | V1 tuần tự, ownership rõ; ContextVar không bảo đảm file atomicity. Nhu cầu shared-file concurrency phải review riêng |
-| Test phản chiếu implementation, null cũ bị giữ invalid hoặc fixture không reset | Hải tính kỳ vọng từ D + TA, review lại 44 ca cũ theo §9.3; Việt Đức kiểm tra tmp_path/teardown/QA. Tách chờ Leader policy khỏi chờ bằng chứng runtime |
+| Test phản chiếu implementation, null cũ bị giữ invalid hoặc fixture không reset | Hải dùng D+TA+D13-E, source 157 cases hiện hành và §9.3/§9.4; Việt Đức review tmp_path/QA/canonical assertions. Approval không thay evidence runtime |
 | Benchmark sai chỉ số/đơn vị, bỏ I/O hoặc tối ưu ngầm | Protocol 100 warm-up/nearest-rank đã chốt; Việt Đức soạn phép đo thật, Hải review timing/full-path; không số liệu giả |
-| Tài liệu Draft PR bị hiểu nhầm đã được tích hợp/nghiệm thu | Requirements Revision 03 đã xác minh tại c855c6d4f2135a14ad94485734d4d2e604cb9cff; ADR nhánh độc lập. Publish không chứng minh peer approval/AC; không merge trong task này |
+| Tài liệu Draft PR bị hiểu nhầm đã được tích hợp/nghiệm thu | Requirements Revision 04 đã xác minh tại a574ce20fbf307ad90f0d60064da394652462aea; ADR nhánh độc lập. Publish và approved D13 không chứng minh peer approval/M1 acceptance/AC; không merge trong TASK 02G |
 
 **Chi tiết nhỏ còn hoàn thiện khi triển khai:** tên/số lượng helper tối thiểu, tên exception audit, đường dẫn log được cấu hình thực tế, cách biểu diễn UTC hợp lệ nhất quán. Hải và Việt Đức đề xuất trong approved policy; không cần mở lại một vòng lựa chọn kiến trúc lớn nếu không đổi contract/phạm vi. Mọi thay đổi policy cần báo Huy; AI không quyết định thay.
 
-Trước code M2, Hải/Việt Đức cần peer review các lựa chọn và lập Test Plan/QA Matrix theo phần 9.1. Bằng chứng runtime/CI/benchmark vẫn chưa có; có thể hoàn thiện thực đo trong M3 theo phân công đã có. D01–D03 đã TA CONFIRMED; extension boolean-null→UNKNOWN vẫn chờ Leader, còn default path và unexpected internal exception giữ đúng trạng thái review riêng. Đây chưa phải lệnh triển khai M2.
+Trước code M2, Hải/Việt Đức cần peer review các lựa chọn và lập Test Plan/QA Matrix theo phần 9.1. Bằng chứng runtime/CI/benchmark vẫn chưa có; có thể hoàn thiện thực đo trong M3 theo phân công đã có. D01–D03 đã TA CONFIRMED; D13-E đã approved và còn cần test/review kỹ thuật, còn default path và unexpected internal exception giữ đúng trạng thái review riêng. Đây chưa phải lệnh triển khai M2.
 
-### 10.1. Đối chiếu nguồn và đồng bộ tài liệu
+### 10.1. Đối chiếu nguồn và provenance
 
 | Phát hiện | Cách xử lý và giới hạn |
 |---|---|
-| G/P hoặc Q2/Q0 còn pending TA/null invalid | G/P dùng cho phân công và lịch sử; Q2/Q0 là snapshot trước phản hồi. D + TA và Q Revision 03 hiện hành thay phát biểu trái TA. Không sửa Guide/Plan ngoài phạm vi |
-| D ghi tuổi float, nhóm nhận int/float hữu hạn | Giữ D04 nội bộ và miền số đã duyệt; age null/missing nay unavailable, không tự TypeError |
-| Q2/ADR Revision 02 từng giữ D01–D03 pending, null tuổi/boolean invalid | Revision 03 sửa register, contract, flow, ADR, OPEN-08 verification, traceability/risks/sources; history ghi rõ trạng thái trước 14:01:50 UTC |
-| Q2 trước đây đồng bộ context/audit/protocol | Giữ ContextVar/hai scope UUID, JSONL/fail-closed/error precedence/isolation/benchmark đã duyệt; không mở lại 10 OPEN. Link Q đã đổi sang Requirements Revision 03 c855c6d4f2135a14ad94485734d4d2e604cb9cff |
-| TA cho phép policy khoảng trống và nêu ví dụ BP≤0 | Không tự biến ví dụ thành yêu cầu mới: current BP=0 vẫn valid, baseline=0 vẫn invalid theo D04; không đổi threshold y khoa |
-| Tách writer khỏi rule dễ bị hiểu benchmark bỏ audit | Benchmark chính vẫn toàn public path/open-write-close thực; logic thuần báo riêng |
-| R03 tiêu đề dị nguyên đã biết nhưng biểu thức dùng nghi ngờ | Giữ biểu thức chính thức/chín input; không thêm field |
-| Hai tài liệu ở hai nhánh Draft độc lập | Link nguồn Q theo commit cố định đã xác minh, không liên kết tương đối đến file chưa tồn tại trên branch đó |
-| Stub/CI đã tồn tại ở starter | Không suy từ kiểm tra tài liệu rằng business tests/clean-checkout/PR CI/benchmark đã đạt |
+| G/P và snapshots Q3/Q2/Q0 có policy/trạng thái cũ | Giữ snapshot lịch sử; D+TA/Q Revision 04 hiện hành và approval D13-E ưu tiên đúng lớp thẩm quyền. Không sửa Guide/Plan |
+| Tuổi float theo D, nhóm nhận int/float hữu hạn | Giữ D04 không bị thay thế, age null/missing unavailable; không thay miền số khi approve D13 |
+| Revision 03 giữ extension/fallback/canonical là đề xuất | TASK 02G thay bằng APPROVED BY LEAD — D13-E — 09/11/2026; history giữ tình trạng tại thời điểm cũ. Không gán approval cho TA hoặc peer review |
+| Q current khác branch ADR | Q pin a574ce20fbf307ad90f0d60064da394652462aea, Requirements Revision 04 đã push/read-back trước khi chỉnh ADR. Không dùng SHA tương lai của chính ADR hoặc link tương đối đến file thiếu trên branch |
+| Nguồn Hải đã có 157 cases, AUD-002 đổi fixture | §9.3 và Q §8.1 phản ánh 36 invalid hiện hành; giữ baseline 135/44 như lịch sử, không tự sửa deliverable Hải/QA |
+| TA cho quyền policy trong khoảng trống | D13-E là lựa chọn nhóm, không đổi clinical expression/ngưỡng/schema. Canonical/priority Poss là convention có risk, không claim possible=definite |
+| Tách writer khỏi rule | Benchmark vẫn full public path/open-write-close thật, protocol đã duyệt không đổi |
+| Stub/CI tồn tại | Không suy từ doc checks rằng business tests/clean checkout/CI/benchmark đã đạt |
 
-### 10.2. Review và phê duyệt còn cần
+### 10.2. Review/evidence và các quyết định còn lại
 
-- Hải review nguồn TA + Q Revision 03, core/helpers/provider và cập nhật 135-case plan theo §9.3; đặc biệt null/unavailable, overlap, strict validation và S-correlation.
-- Việt Đức review audit/privacy/error paths/isolation và QA A-01–A-11; tính lại status theo input thực, đối chiếu ID Hải sửa; benchmark protocol giữ nguyên, evidence chưa có.
-- Hải/Việt Đức review chéo mười lựa chọn đã duyệt; default path §5.4.1 vẫn PROPOSED — AWAITING PEER REVIEW, unexpected internal exception vẫn residual implementation review, không tự nâng thành approved.
-- Huy xác nhận extension explicit boolean null→UNKNOWN và policy output-dependent sau phản biện. Không yêu cầu Huy duyệt lại kết luận TA hoặc gán TA đã duyệt Enum/Kleene. Nếu đổi policy khác đã duyệt phải review riêng.
-- Kiểm tra Markdown/UTF-8/liên kết/Git scope và ma trận §9.2 chỉ chứng minh nhất quán tài liệu. Peer review/merge và nghiệm thu triển khai là các việc riêng; TASK 02C.6 không merge hoặc bắt đầu code.
+- Hải review implementation plan theo D13-E đã duyệt; TASK 02E cập nhật source/157-case plan/81-case linkage, sáu expected và coverage/explanation assertions. Không cần phê duyệt D13 lần nữa chỉ để đồng bộ.
+- Việt Đức review chéo core/audit, privacy/error paths/isolation; map QA A-01–A-11 theo nguồn Revision 04 và chốt evidence cần thu, không tự gán VERIFIED.
+- Huy đã approve D13-E và chấp nhận risk canonical; tiếp tục xem peer feedback và quyết định tích hợp/merge riêng. Không claim M1 acceptance hoặc peer approval từ TASK 02G.
+- Default path §5.4.1 vẫn PROPOSED — AWAITING PEER REVIEW, chưa được Leader duyệt; unexpected internal exception vẫn residual implementation review. Giữ fail-closed, error precedence và schema, không tự giải quyết thay bằng approval D13.
+- Mười lựa chọn OPEN đã duyệt, ContextVar/UUID/writer/isolation/benchmark giữ nguyên; kiểm chứng thực tế thực hiện sau. Nếu đổi policy đã duyệt cần review riêng.
+- Markdown/UTF-8/link/Git scope và ma trận chỉ kiểm tài liệu. Không code/tests/CI hoặc sửa file thành viên trong task này.
 
 ## 11. Nguồn và lịch sử thay đổi
 
@@ -589,8 +617,9 @@ Trước code M2, Hải/Việt Đức cần peer review các lựa chọn và l�
 | E | [Đề chính thức](https://fossbk-spec.github.io/ktpmud-book/exams/KTPMUD_Hack_Marathon_2026_De_Thi_Chinh_Thuc_v1.0.0_20261103.html), tiêu đề v1.0.2, tên URL v1.0.0. §§4–7, 9, 11–12, đối chiếu ngày 08/11/2026 qua HTML xuất bản trên nhánh gh-pages của fossbk-spec/ktpmud-book. |
 | D | [Decision Table V1](https://github.com/fossbk-spec/ktpmud-bkt-ruleengine-starter/blob/bkt-2026-v1/docs/decision-table.md), tag `bkt-2026-v1` trỏ commit `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469`. |
 | TA | [Phản hồi chính thức fossbk-spec — comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), tạo/cập nhật 08/11/2026 14:01:50 UTC, đọc đầy đủ cả sáu nhóm trả lời và đối chiếu issue/comments trong TASK 02C.6. Làm rõ hành vi Track A, không chỉ định Enum/Kleene hoặc thay schema/ngưỡng. |
-| Q | [REQUIREMENTS.md Revision 03 trên PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/c855c6d4f2135a14ad94485734d4d2e604cb9cff/REQUIREMENTS.md), commit c855c6d4f2135a14ad94485734d4d2e604cb9cff đã push và đọc lại từ GitHub trong TASK 02C.6 ngày 08/11/2026 trước khi sửa ADR. PR #1 Open/Draft/chưa merge; ID FR/NFR/AC không đổi. |
-| Q2 | [Requirements Revision 02 lịch sử](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/662c47be9eba076bf9ca551403cc3e961f421d42/REQUIREMENTS.md), HEAD preflight PR #1 trước patch, trước phản hồi TA; mọi pending/null-invalid trái TA đã được Q Revision 03 thay thế. |
+| Q | [REQUIREMENTS.md Revision 04 trên PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md), commit a574ce20fbf307ad90f0d60064da394652462aea đã push và đọc lại trước khi chỉnh ADR trong TASK 02G, 09/11/2026. PR Open/Draft/unmerged; FR/NFR/AC giữ ID, D13-E approved team policy. |
+| Q3 | [Requirements Revision 03 lịch sử](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/c855c6d4f2135a14ad94485734d4d2e604cb9cff/REQUIREMENTS.md), trước approval D13-E; normalization/fallback/canonical khi đó còn chờ Leader, không phải current policy. |
+| Q2 | [Requirements Revision 02 lịch sử](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/662c47be9eba076bf9ca551403cc3e961f421d42/REQUIREMENTS.md), HEAD preflight PR #1 trước patch, trước phản hồi TA; mọi pending/null-invalid trái TA đã được Revision 03 (Q3) thay thế; nguồn hiện hành Q là Revision 04 với D13-E. |
 | Q0 | [REQUIREMENTS.md baseline trước đồng bộ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/673aaef3c320475196366103289c7c174e2d3b54/REQUIREMENTS.md), Revision 01 có D03 bổ sung, commit lịch sử `673aaef3c320475196366103289c7c174e2d3b54`; không phải HEAD sau publish. |
 | G | [PROJECT_GUIDE.md tại integration](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/docs/PROJECT_GUIDE.md), đọc cùng [bản cập nhật trong PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/673aaef3c320475196366103289c7c174e2d3b54/docs/PROJECT_GUIDE.md). |
 | P | [TEAM_PLAN.md tại integration](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/docs/TEAM_PLAN.md), đọc cùng [bản cập nhật trong PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/673aaef3c320475196366103289c7c174e2d3b54/docs/TEAM_PLAN.md). |
@@ -599,14 +628,14 @@ Trước code M2, Hải/Việt Đức cần peer review các lựa chọn và l�
 | W | [test.yml](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/.github/workflows/test.yml), baseline tích hợp. |
 | R | [README.md](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/README.md), baseline tích hợp. |
 | I | [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15), vẫn mở, hai comments tại preflight Revision 03: [câu hỏi D03 của nhóm](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6719840642), Huy-duc-1211, 09:31:14 UTC ngày 08/11/2026; [câu trả lời fossbk-spec](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), 14:01:50 UTC cùng ngày. D01–D03 đã trả lời; TASK 02C.6 không đăng/sửa comment. |
-| L | Phê duyệt Leader qua TASK 02A Revision 01/02A.5/02C.1/02C.3 ngày 08/11/2026; 02C.3 chọn mười OPEN, 02C.4 final patch, 02C.5 publish Draft peer review. TASK 02C.6 cho sửa/publish đúng Requirements và ADR Revision 03, cập nhật hai PR descriptions; không merge/code/tests/CI/Issue comment. TA thay policy trái làm rõ; extension null→UNKNOWN vẫn PROPOSED TEAM POLICY — AWAITING LEADER CONFIRMATION. Nguồn hội thoại không có URL repository. |
+| L | Phê duyệt Leader qua các task trước cho architecture và mười OPEN; TASK 02G 09/11/2026 phê duyệt D13-E theo khuyến nghị TASK 02F, chấp nhận residual risk canonical semantics. Nhãn APPROVED BY LEAD — D13-E — 09/11/2026. Chỉ D13, không approval default path/internal exception/peer review/M1 acceptance/runtime. Cho commit/push đúng Requirements/ADR lên hai PR hiện có, không merge/code/tests/CI/sửa file thành viên/Guide/Plan. Nguồn hội thoại không có URL repository. |
 | PY1 | [Python 3.12 — contextvars](https://docs.python.org/3.12/library/contextvars.html), đối chiếu get/set/reset và token. Nguồn kỹ thuật phục vụ phương án OPEN-01, không phải nguồn clinical rule. |
 | PY2 | [pytest — tmp_path](https://docs.pytest.org/en/stable/how-to/tmp_path.html), đối chiếu thư mục riêng cho từng test. Dùng làm căn cứ phương án isolation, chưa cài hoặc thay đổi pytest. |
 | PY3 | [Python 3.12 — I/O](https://docs.python.org/3.12/library/io.html), đối chiếu flush/close. Nguồn kỹ thuật cho chi tiết writer, không tạo yêu cầu durability mới. |
 | PY4 | [Python 3.12 — perf_counter_ns](https://docs.python.org/3.12/library/time.html#time.perf_counter_ns), đồng hồ đo thời gian độ phân giải cao bằng số nguyên nanosecond, phù hợp công cụ đo Leader đã chọn. |
-| PR | [Draft PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1) đã kiểm tra head c855c6d4f2135a14ad94485734d4d2e604cb9cff, Open/Draft/unmerged, base track-a-development; [Draft PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2) Open/Draft/unmerged tại preflight, baseline trước Revision 03 d6ba079df62a9494160ca4224f87439d5b9e7ae6. Integration b65032f94ec3ce600df07d81b5df6b9b4bd203d1. Không coi publish là peer approval hoặc bằng chứng nghiệm thu. |
+| PR | [PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1), head a574ce20fbf307ad90f0d60064da394652462aea đã xác minh Open/Draft/unmerged, base track-a-development. [PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2) Open/Draft/unmerged tại preflight, baseline trước Revision 04 là 7a62d90dcd774c3b3e1ffbfa07d60aee695f1b41. Integration b65032f94ec3ce600df07d81b5df6b9b4bd203d1. Không dùng trạng thái publish làm peer approval/evidence nghiệm thu. |
 
-Các hàng trước Revision 03 là snapshot lịch sử; mọi từ pending trong các hàng đó mô tả thời điểm trước phản hồi TA, không phải trạng thái hiện hành.
+Các hàng trước Revision 04 là snapshot lịch sử tại mốc tương ứng. D01–D03 từng chờ TA trước phản hồi 08/11; D13 extension/fallback/canonical từng proposed trước approval Leader 09/11. Không dùng trạng thái lịch sử làm current policy.
 
 | Phiên bản | Nội dung | Trạng thái |
 |---|---|---|
@@ -616,3 +645,5 @@ Các hàng trước Revision 03 là snapshot lịch sử; mọi từ pending tro
 | Revision 02 — final patch TASK 02C.4, 08/11/2026 | Bổ sung đề xuất tích hợp audit path cho direct call, residual risk của unexpected internal exception, A-08 tường minh; đồng bộ metadata Q-local và rút gọn bản chép comment D03 thành tóm tắt/liên kết | Snapshot lịch sử: Awaiting peer review; đề xuất path chưa được Leader duyệt, xử lý lỗi nội bộ còn review; khi đó chưa commit/push |
 | Revision 02 — xuất bản peer review TASK 02C.5, 08/11/2026 | Chuẩn hóa trạng thái Draft PR và nguồn Q theo Requirements Revision 02 đã xác minh tại 662c47be9eba076bf9ca551403cc3e961f421d42; giữ Q0 cho baseline, giữ nguyên thiết kế/constraints/pending và chuẩn bị ADR ở nhánh độc lập | Draft PR / Awaiting Peer Review; chưa merge, chưa có implementation/test/benchmark evidence |
 | Revision 03 — TASK 02C.6, 08/11/2026 | Áp dụng đầy đủ TA §§1–6; D01–D03 chuyển TA CONFIRMED; thay một phần D04/D13 null-invalid, giữ strict validation/Enum/toán tử và 10 OPEN. Đồng bộ nguồn Q Revision 03, flow/tám ADR/traceability/risks/history, 12 ví dụ và bàn giao 135-case/QA. | Draft PR / Awaiting Peer Review; extension boolean-null→UNKNOWN chờ Leader; default path còn đề xuất, internal error còn review; không code/tests/CI/benchmark evidence hoặc merge |
+| Revision 03 — editorial patch TASK 02C.7 | Sửa tên trường đường hít trong S-correlation; giữ policy proposal tại thời điểm đó, commit 7a62d90dcd774c3b3e1ffbfa07d60aee695f1b41 | Snapshot trước D13-E approval, không implementation evidence |
+| Revision 04 — TASK 02G, 09/11/2026 | APPROVED BY LEAD — D13-E — 09/11/2026; update register/flow/tám ADR liên quan/D13-E, định nghĩa Def/Poss/AllPV, DIRECT/CANONICAL, sáu approved expected, source Q Revision 04 a574ce20fbf307ad90f0d60064da394652462aea và handoff TASK 02E | Draft PR / Awaiting Peer Review; risk canonical được Leader chấp nhận, chưa M1 acceptance/implementation verification; default path/internal exception giữ unresolved |
