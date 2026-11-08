@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "nonfinite_age_fixture_registry",
+  "base_patient": {
+    "tuoi": 15,
+    "huyet_ap_tam_thu": 110,
+    "huyet_ap_tam_thu_nen": null,
+    "co_di_nguyen_nghi_ngo": false,
+    "di_nguyen_qua_duong_hit": false,
+    "co_ton_thuong_da_niem_mac": false,
+    "co_trieu_chung_ho_hap": false,
+    "co_trieu_chung_tuan_hoan": false,
+    "co_trieu_chung_tieu_hoa_nang": false
+  },
+  "fixtures": {
+    "INV-005": {
+      "override_field": "tuoi",
+      "float_token": "NAN"
+    },
+    "INV-006": {
+      "override_field": "tuoi",
+      "float_token": "POSITIVE_INFINITY"
+    },
+    "INV-007": {
+      "override_field": "tuoi",
+      "float_token": "NEGATIVE_INFINITY"
+    }
+  }
+}
