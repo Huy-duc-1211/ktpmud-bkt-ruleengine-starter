@@ -1,6 +1,6 @@
 # D10 — Kế hoạch đo benchmark
 
-Nguồn Q NFR-01/§6; A §§5.7,8.10–8.11. T15 không thay protocol benchmark; phần nullable/selection theo ISSUE15_SYNC.md. 100 warm-up/nearest-rank là lựa chọn Leader đã duyệt, không còn là đề xuất cần chọn. Ở M1, tôi chỉ đối chiếu protocol và công thức; chưa có số đo để kết luận A-10 đạt.
+Nguồn Q/A Revision 04 pin ở [sources](../M1/sources/README.md), Q NFR-01/§6; A §§5.7,8.10–8.11. T15 không thay protocol benchmark; phần nullable/selection theo [ISSUE15_SYNC](../M1/ISSUE15_SYNC.md) và D13-E đã duyệt. 100 warm-up/nearest-rank là lựa chọn Leader đã duyệt, không còn là đề xuất cần chọn. Ở M1, tôi chỉ đối chiếu protocol và công thức; chưa có số đo để kết luận A-10 đạt.
 
 ## Phép đo chính M3
 
@@ -27,4 +27,4 @@ Logic thuần là phép đo phụ tách nhãn, không thay full-path audit. Nế
 | BENCH-005 | Failure lúc writer đang ghi | Run không đủ điều kiện nghiệm thu; không drop duration lỗi rồi nhận đạt |
 | BENCH-006 | So evidence môi trường, dataset, audit delta và samples | Có đủ metadata/số đo thật mới đánh giá A-10; pure-logic báo riêng |
 
-Theo phân công trong ADR (A), Việt Đức chủ trì benchmark và QA Matrix. Tôi sẽ review phạm vi timing của public call và context. Hiện chưa có matrix; các ID BENCH được chuẩn bị để đối chiếu A-10 khi triển khai, chưa phải kết quả chạy test.
+Theo phân công trong ADR (A), Việt Đức chủ trì benchmark và QA Matrix; Hải review phạm vi timing của public call và context. Nguồn TASK 02E chưa cung cấp/xác minh QA Matrix; các ID BENCH cần Việt Đức đối chiếu A-10. Chưa có bằng chứng benchmark/runtime; protocol trong mục Phép đo chính M3 giữ nguyên.

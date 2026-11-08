@@ -1,0 +1,1906 @@
+{
+  "task": "02E",
+  "date": "2026-11-09",
+  "owner": "Huy Đức — Leader-owned, AI-assisted",
+  "base_sha": "768f196e6a9ec3b1142c44399ce8288f7cc2e87e",
+  "requirements_sha": "a574ce20fbf307ad90f0d60064da394652462aea",
+  "adr_sha": "7af011f3f95e21ac829a163ee4be36200c1e7d88",
+  "main_cases": 175,
+  "original_cases_preserved": 157,
+  "added_cases": 18,
+  "classification_cases": 139,
+  "invalid_classes": {
+    "ValueError": 8,
+    "TypeError": 28
+  },
+  "six_approved_policy_cases": [
+    "MISS-009",
+    "MISS-012",
+    "TA15-BOOL1-MISSING",
+    "TA15-BOOL1-NULL",
+    "TA15-DEPENDENT_INHALATION-MISSING",
+    "TA15-DEPENDENT_INHALATION-NULL"
+  ],
+  "internal_math_rows": 81,
+  "internal_operations": {
+    "AND": 9,
+    "OR": 9,
+    "NOT": 3,
+    "R02_COUNT": 15,
+    "R02_AND_ALLERGEN": 45
+  },
+  "null_missing_groups": 18,
+  "explanation_profiles": 30,
+  "canonical_explanation_profiles": 9,
+  "safe_and_unsafe_design_examples_checked": true,
+  "boolean_states": 729,
+  "numeric_comparisons": 13122,
+  "source_snapshots_unchanged": true,
+  "registry_unchanged": true,
+  "clinical_formulas_thresholds_unchanged": true,
+  "benchmark_protocol_unchanged": true,
+  "markdown_links_valid": true,
+  "discrepancies": [],
+  "runtime_classifier_tests": "NOT_EXECUTED",
+  "runtime_helper_tests": "NOT_EXECUTED",
+  "integration_tests": "NOT_EXECUTED",
+  "ci": "NOT_EXECUTED",
+  "benchmark": "NOT_EXECUTED",
+  "peer_review": "NOT_CONFIRMED",
+  "leader_acceptance": "PENDING",
+  "cases": [
+    {
+      "id": "RULE-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-006",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-007",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-008",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-009",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-010",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-011",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-012",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-013",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PAIR-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PAIR-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PAIR-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PAIR-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PAIR-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PAIR-006",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-014",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-015",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-016",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-017",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-018",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-019",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-020",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-021",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "RULE-022",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-006",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-007",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-008",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-009",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-010",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-011",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-012",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-013",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-014",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-015",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-016",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-017",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-018",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-019",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-020",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-021",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-022",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-023",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-024",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-025",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-026",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-027",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-028",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "BP-029",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-006",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-007",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-008",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-009",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-010",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-011",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-012",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-013",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-014",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-015",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-016",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-017",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-018",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-019",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "MISS-020",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PEND-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PEND-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PEND-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PEND-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PEND-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PEND-006",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "PEND-007",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-006",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-007",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-008",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-009",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-010",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-011",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-012",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-013",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-014",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-015",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-016",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-017",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-018",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-019",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-020",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-021",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-022",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-023",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-024",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-025",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-026",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-027",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-028",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-029",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-030",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-031",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-032",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-033",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-034",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-035",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-036",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-037",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-038",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-039",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-040",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-041",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "ValueError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-042",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "INV-043",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "CON-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "CON-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "CON-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "CON-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "CON-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "AUD-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "AUD-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "exception_class": "TypeError",
+        "audit_status_if_writer_succeeds": "INVALID_INPUT"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "AUD-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "NO_RULE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-AGE-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-AGE-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-CURRENT_BP-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-CURRENT_BP-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BASELINE_BP-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BASELINE_BP-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R02-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL1-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL1-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL2-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL2-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL3-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL3-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R03-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL4-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL4-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL5-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL5-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL6-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-BOOL6-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-NO_DOWNGRADE_SHOCK-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-NO_DOWNGRADE_SHOCK-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-DEPENDENT_INHALATION-NULL",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "TA15-DEPENDENT_INHALATION-MISSING",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-001",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-002",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-003",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-004",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-005",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-006",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-007",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "AGE_OVERRIDE",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-008",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-009",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-010",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-011",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-012",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-013",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "THEO_DOI",
+        "rule_id": null,
+        "mode": "MIXED",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-014",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-015",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-016",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "CANONICAL",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-017",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "PHAN_VE",
+        "rule_id": "R01-PV",
+        "mode": "DIRECT",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    },
+    {
+      "id": "D13E-018",
+      "static_oracle_status": "PASS",
+      "independently_derived": {
+        "muc_do": "SOC_PHAN_VE",
+        "rule_id": "R-SOC",
+        "mode": "TIER1",
+        "audit_status_if_writer_succeeds": "SUCCESS"
+      },
+      "runtime_status": "NOT_EXECUTED"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Kế hoạch public integration, context và audit
 
-Nguồn Q §§4.4,6; A §§4,5.4.1,8,9.1. Đây là kế hoạch chuẩn bị ở M1 để triển khai sau, **chưa thực thi**. Tên helper/session factory/exception audit là chi tiết triển khai, không đổi signature `classify(patient)`. T15 ưu tiên diễn giải nullable/selection mới; không coi null tuổi hoặc boolean là invalid. Xem ISSUE15_SYNC.md.
+Nguồn Q/A Revision 04 pin trong [sources](../M1/sources/README.md): Q §§4.4,6,8.2; A §§4,5.4.1,8,9.4. Đây là kế hoạch chuẩn bị ở M1 để triển khai sau, **chưa thực thi**. Tên helper/session factory/exception audit là chi tiết triển khai, không đổi signature `classify(patient)`. T15 ưu tiên diễn giải nullable/selection mới; không coi null tuổi hoặc boolean là invalid. D13-E đã Leader duyệt, canonical không phải TA-defined rule; xem [ISSUE15_SYNC](../M1/ISSUE15_SYNC.md).
 
 ## 1. Fixture và oracle chung
 
@@ -31,12 +31,16 @@ Nguồn Q §§4.4,6; A §§4,5.4.1,8,9.1. Đây là kế hoạch chuẩn bị �
 | INT-014 | Thêm UUID/path như khóa input synthetic | ValueError khóa thừa khi audit INVALID_INPUT thành công; cấu hình phải ở context/provider, không mở rộng PatientInput | D04/D12; Hải |
 | INT-015 | Synthetic canary trong giá trị lỗi/cause; thu audit/log/public error | Không raw clinical input/canary nhạy cảm qua audit, stdout/stderr, message hoặc rendered chain; không trường/status ngoài allowlist | D06/D07/D08; Việt Đức |
 | INT-016 | Review README runtime sau M2 | Mô tả nơi lưu/cấu hình/override, lỗi ghi và disclaimer; cơ chế default path chỉ mô tả như đã chọn sau khi Huy duyệt | A §5.4.1; Huy/Việt Đức |
-| INT-017 | Chạy các cặp numeric/boolean null-vs-missing T15; writer thật thành công | Không raise vì nullable; đúng mức/mã theo T15, không hạ SOC khi đã đủ bằng chứng; record CLASSIFY/SUCCESS, không INVALID_INPUT do null. AUD-002 invalid dùng chuỗi, không null | T15 §§2–5; Hải/Việt Đức review |
+| INT-017 | Chạy các cặp numeric/boolean null-vs-missing T15; writer thật thành công | Không raise vì nullable; đúng mức/mã theo T15 và D13-E, disclosure canonical khi tương ứng; không hạ SOC khi đã đủ bằng chứng; record CLASSIFY/SUCCESS, không INVALID_INPUT do null. AUD-002 invalid dùng chuỗi, không null | T15 §§2–5; D13-E theo Q/A Revision 04; Hải/Việt Đức review |
+| INT-018 | MISS-009/TA15-BOOL1 và D13E-001/002; writer thật | PV/R01 canonical và SUCCESS; helper R01/R02 UNKNOWN không bị đổi TRUE; ly_do nói đại diện/chưa độc lập, không observed S=False; 3 output/4 audit keys | D13-E APPROVED; Hải, Việt Đức review |
+| INT-019 | MISS-012, TA15-DEPENDENT_INHALATION và D13E-008–013 | Mixed TD/null, insufficient information; không khẳng định an toàn hoặc unavailable=False; SUCCESS nếu writer hoàn tất | D13-E APPROVED; Hải/Việt Đức |
+| INT-020 | D13E-003–007/015–018 và RULE-020, các cặp null/missing | AllPV+HATT proof SOC; missing BP PV; missing age TD; lowBP/noPV TD; 17.99/18 không làm tròn; TIER1_MATCH không lẫn HATT evidence | TA + D13-E; Hải |
+| INT-021 | Actual ly_do của DIRECT/CANONICAL/MIXED; positive và mutated unsafe message | Áp required_patterns_all/forbidden_patterns_any, đúng rule/provenance; không tự coi regex là proof ngôn ngữ tự nhiên; peer review raw-data/privacy | D06/D13-E; Việt Đức, Hải review |
 
 Tên exception audit không bị tự đặt ở tài liệu này; M2 assert theo lớp public an toàn đã được chọn khi triển khai. Không mở lại precedence. Với explicit session, reset ở scope ngoài, không làm mất UUID phiên sau mỗi successful call; với UUID tạm phải reset sau từng call.
 
 ## 3. Đối chiếu QA Matrix
 
-Việt Đức chưa có QA Matrix. Tôi chuẩn bị bảng trên theo phân công A §8 để đối chiếu khi matrix có. Các ID INT/AUD-001–003 cần được map sang A-04/A-06/A-07/A-08 và nơi lưu kết quả. Tôi sẽ review provider, helper và phạm vi public call; Việt Đức review writer, privacy, lỗi kép và isolation. Các phát hiện cần đổi policy sẽ chuyển Huy xem xét.
+QA Matrix chưa được cung cấp/xác minh trong nguồn TASK 02E. Bảng chuẩn bị theo A §8, còn cần Việt Đức review/map khi nhận nguồn. Các ID INT/AUD-001–003 cần được map sang A-04/A-06/A-07/A-08 và nơi lưu kết quả. Hải review provider/helpers/public path theo phân công; Việt Đức review writer/privacy/lỗi kép/isolation. Bản remediation là Leader-owned, không tuyên bố hai bạn đã review. Các phát hiện cần đổi policy sẽ chuyển Huy xem xét.
 
 Khi có matrix, giữ cùng ID, fixture và expected; bổ sung link commit của matrix cùng kết quả review vào HANDOFF. Phần đối chiếu này hiện còn chờ, chưa tính là đã hoàn tất review chéo.

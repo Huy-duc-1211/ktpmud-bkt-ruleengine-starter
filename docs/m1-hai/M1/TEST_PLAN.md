@@ -2,17 +2,19 @@
 
 **Phạm vi hiện tại là thiết kế/test case M1.** Các phần nhắc thực thi pytest/audit/benchmark là dự kiến cho giai đoạn sau; tài liệu chi tiết đã ở M2, chưa cần thực hiện khi review M1.
 
-Nguồn chính thức bổ sung T15 tại [ISSUE15_SYNC.md](ISSUE15_SYNC.md), ưu tiên hơn diễn giải mâu thuẫn trong Q/A Revision 02. Tôi đã review bộ test case M1 trước khi bàn giao. **157 ca trong CSV chung đều DRAFT_NOT_EXECUTED; 0 ca còn PENDING_TA_CONFIRMATION; chưa chạy engine nghiệp vụ.**
+Nguồn hiện hành: [Requirements Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) (Q), [ADR Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md) (A), Decision Table (D) và [TA comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15). D13-E là **APPROVED BY LEAD — D13-E — 09/11/2026**, không phải canonical rule do TA định danh. Bản sửa TASK 02E do Leader Huy Đức sở hữu, AI hỗ trợ; chưa xác nhận Hải/Việt Đức peer review hoặc Leader nghiệm thu bản sửa.
+
+**175 ca DRAFT_NOT_EXECUTED; 0 ca PENDING_TA_CONFIRMATION.** Static data/oracle checks không phải kết quả classifier.
 
 ## 1. Dữ liệu và expected
 
-- Giữ 135 ca gốc đầu file và gộp 22 ca T15 phía sau. Test ID đã trở về mã gốc RULE-/INV-/TA15-/D13-, không đổi input hoặc expected. Có 11 nhóm Equivalence group để tra các cặp null/missing. Cột Pending hiện trống; cột Resolved decision ghi D01/D02/D03 cho bảy ID PEND đã được làm rõ. Prefix PEND/INV không phải trạng thái runtime.
+- Giữ nguyên 157 Test ID/input baseline và level/ID/exception đúng, thêm 18 D13E-001–018 có gap rõ. Có 18 nhóm Equivalence group (11 cũ+7 mới), mỗi nhóm null/missing có cùng level/ID. Cột Pending hiện trống; cột Resolved decision ghi D01/D02/D03 cho bảy ID PEND đã được làm rõ. Prefix PEND/INV không phải trạng thái runtime.
 - 36 ca invalid còn lại: **28 TypeError+8 ValueError** theo D04 không mâu thuẫn T15. Tám ca null trước kia bị coi invalid đã chuyển thành kiểm dữ liệu thiếu hợp lệ. AUD-002 dùng chuỗi boolean thay null để tiếp tục kiểm audit invalid.
 - Expected TypeError/ValueError public có precondition audit INVALID_INPUT thành công; lỗi kép vẫn audit precedence, không đổi vì T15.
 - Tuổi thiếu/null: THEO_DOI/null. Có tuổi và Tầng 2 đủ, thiếu HATT/nền cần thiết: PHAN_VE với mã rule và reason thiếu dữ liệu; không tự gán nền. Overlap chọn R01 > R02 > R03; có bằng chứng sốc luôn R-SOC.
 - Boolean thiếu/null không gây exception vì nullable và không hạ mức khi đã đủ kết luận. Số/chuỗi khác null vẫn sai kiểu theo policy nhóm.
 - Fixture encoding=json/fixture_ref và registry nonfinite giữ trong repo, không eval. [FIXTURE_CONTRACT.md](../M2/FIXTURE_CONTRACT.md)
-- Internal assertions là notation helper, không field PatientInput/output/audit. HYPOTENSION UNKNOWN diễn đạt thiếu thông tin, SHOCK_EVIDENCE FALSE là chưa chứng minh sốc; không khiến final output pending.
+- Internal assertions là notation helper, không field PatientInput/output/audit. HYPOTENSION có thể UNKNOWN; HYPOTENSION_EVIDENCE chỉ bằng chứng số đo, TIER1_MATCH kết hợp TIER2_COVERAGE với HYPOTENSION; không suy SOC từ HATT thấp đơn độc.
 
 ## 2. Các nhóm kiểm thử
 
@@ -26,31 +28,49 @@ Nguồn chính thức bổ sung T15 tại [ISSUE15_SYNC.md](ISSUE15_SYNC.md), ư
 | Audit/context | AUD +INT kế hoạch | Direct call audit SUCCESS với nullable hợp lệ, UUID/session/reset, lỗi thật/failure stages/privacy/isolation |
 | Benchmark | BENCH-001–006 | 100 warm-up, N>=1.000, nearest-rank/ns-ms, full-path audit I/O thật, chưa thực đo |
 
-## 3. Policy nhóm còn chờ review
+## 3. D13-E đã duyệt và explanation contract
 
-Giữ Enum UNKNOWN cho boolean thiếu/null và THEO_DOI khi kết luận thực sự phụ thuộc dữ liệu thiếu là policy nhóm, không phải T15 bắt buộc cách biểu diễn này. Khi thiếu S mà mọi completion đều phản vệ, không để mất kết luận chỉ vì từng rule riêng UNKNOWN. Đề xuất BOOL-COVERAGE bảo toàn mức; mã đại diện R01-PV ở MISS-009 và cặp TA15-BOOL1 được đánh dấu **PROPOSED FOR LEADER REVIEW** trong cột Policy review. Mã đại diện này vẫn cần Huy duyệt. [ISSUE15_SYNC §4]
+**APPROVED BY LEAD — D13-E — 09/11/2026.** Cột Policy review của đủ sáu ID MISS-009, TA15-BOOL1-NULL/MISSING, MISS-012 và TA15-DEPENDENT_INHALATION-NULL/MISSING ghi approval; source Q/A Revision 04. D13-E là policy nhóm, không TA chỉ định mã canonical.
+
+C(p) là mọi True/False completion của boolean UNKNOWN, giữ known values; không fill patient hoặc numeric. Def là rule TRUE trong mọi completion; Poss là rule TRUE ở ít nhất một completion; AllPV là mọi completion khớp ít nhất một original rule; AnyPV là tồn tại completion positive. Có 1–64 completion.
+
+1. Validation mọi trường theo D04 trước selector; tuổi missing/null → THEO_DOI/null theo TA.
+2. Có Def: chọn priority R01 > R02 > R03 trong Def, attribution DIRECT; possible rule không được đẩy definite.
+3. Def rỗng/AllPV: giữ positive. PHAN_VE chọn canonical priority trong Poss, MUST disclosure mã đại diện và chưa xác nhận rule độc lập, không nói UNKNOWN=False đã được quan sát.
+4. Positive definite/coverage + HYPOTENSION TRUE → SOC_PHAN_VE/R-SOC. HATT thấp đơn độc không đủ; thiếu BP hoặc adult thiếu nền không hạ positive đã chứng minh khi tuổi có.
+5. Mixed → THEO_DOI/null kèm insufficient-information reason; không AnyPV → THEO_DOI/null theo không khớp. Không gọi Mixed là chắc chắn không phản vệ hoặc an toàn.
+
+DIRECT/CANONICAL là provenance private, không public key hoặc status mới. Canonical dùng priority trong Poss là convention nhóm đã duyệt, không TA priority giữa rules đã đồng thời TRUE. Giữ Enum/Kleene/T-U; không suy mức bằng all-UNKNOWN=False. Leader đã chấp nhận residual risk consumer hiểu representative như rule definite; disclosure và negative tests vẫn bắt buộc.
+
+Expected.explanation_assertions là metadata harness, không key thứ tư của output. Trước khi so ClassificationResult chỉ assert đúng muc_do/rule_id/ly_do; không trả ly_do_contract, patterns hoặc attribution_kind ra public. required_patterns_all phải cùng khớp ly_do, forbidden_patterns_any không được khớp; không ép reason nguyên văn. Chúng bao phủ controlled template families tiếng Việt, không chứng minh mọi câu tự nhiên đều đúng; Việt Đức cần review semantics và privacy trên output thực.
+
+CANONICAL phải nêu R01/R02, đại diện, mức bất biến/bảo toàn và chưa xác nhận rule riêng. Negative patterns bắt observed S=True/False, câu xác nhận riêng R01 hoặc “không có dị nguyên”. MIXED cần insufficient information, không “không phản vệ/an toàn” hay gán boolean chưa biết. DIRECT phải nhắc đúng mã definite và không tự gọi canonical. Các field unavailable không được diễn đạt thành dữ kiện đã quan sát.
+
+RULE-020 giữ HYPOTENSION_EVIDENCE TRUE nhưng TIER1_MATCH FALSE; xem [INTERNAL_STATE_TEST_PLAN](../M2/INTERNAL_STATE_TEST_PLAN.md). Đây là tên assertion nội bộ, không API helper mới bắt buộc.
 
 ## 4. Đối chiếu tiêu chí nghiệm thu
 
 | AC | Test/hoạt động | Trạng thái |
 |---|---|---|
-| A-01/A-03 | 157 ca, priority/nullable T15, direct call | Thiết kế, chưa runtime |
-| A-02 | CON-005 + source review fixture independence | Chưa review implementation |
-| A-04 | 36 invalid, nullable/missing, bảy D01–D03 đã resolve và 22 regression | Contract thầy rõ; policy BOOL-COVERAGE riêng còn cần Leader review |
-| A-05 | CON + reason_must_mention, không raw values/điều trị | Chưa output runtime |
-| A-06 | AUD/INT, nullable hợp lệ -> SUCCESS | Chưa audit thật; QA Matrix chưa có |
-| A-07 | 157 +81 hàng dữ liệu, plans INT | Số hàng không phải pytest pass |
-| A-08/A-09 | Clean checkout/PR CI suite nghiệp vụ | GAP, chưa làm trong M1 này |
-| A-10 | BENCH protocol giữ nguyên | Chưa có latency/I/O benchmark |
-| A-11 | README runtime/disclaimer | Tài liệu M1 không thay bằng chứng README dự án |
+| A-01/A-03 | 175 main cases; definite/coverage, age/BP/shock và priority | Oracle thiết kế, chưa runtime |
+| A-02 | CON-005 và review fixture independence | Implementation chưa kiểm; Test ID chỉ là harness metadata |
+| A-04 | 36 invalid, nullable/missing, 18 cặp equivalence, sáu approved D13 cases | Policy đã duyệt; static oracle kiểm độc lập, không runtime PASS |
+| A-05 | CANONICAL/DIRECT/MIXED patterns và negative semantic assertions | Kiểm thiết kế bằng safe/unsafe examples, actual ly_do NOT EXECUTED |
+| A-06 | AUD/INT, nullable SUCCESS và invalid INVALID_INPUT với precondition writer thành công | Chưa audit runtime/QA mapping |
+| A-07 | 175+81 rows và INT plans | Không tính số dòng thành pytest pass |
+| A-08/A-09 | Clean checkout/PR CI business suite | GAP runtime/CI, không yêu cầu có ở bản sửa M1 |
+| A-10 | BENCH-001–006 protocol không đổi | Chưa đo full-path I/O latency |
+| A-11 | Disclaimer README dự án | Không sửa README runtime hoặc tự xác minh acceptance ở task này |
 
-## 5. Review và phạm vi
+## 5. Review, ownership và phụ thuộc
 
-Tôi bàn giao phần tài liệu và test case M1 trên nhánh `docs/m1-tests-hai`, không tạo PR hoặc merge. Q/A Revision 02 được giữ làm nguồn lịch sử; việc đồng bộ Requirements/ADR thực hiện ở nhánh nguồn. Việt Đức chưa có QA Matrix nên phần đối chiếu QA còn chờ. Cơ chế default audit path, unexpected internal exception và mã đại diện BOOL-COVERAGE vẫn cần review theo trạng thái đã ghi.
+TASK 02E do Leader sở hữu trên review/m1-02-leader-remediation từ SHA 768f196e6a9ec3b1142c44399ce8288f7cc2e87e, AI hỗ trợ. Không gán bản sửa cho Hải hoặc tuyên bố hai thành viên đã peer review. Nguồn Q/A Revision 04 đã xuất bản; không giao lại việc sửa Requirements/ADR. Snapshots cũ giữ lịch sử, không current oracle.
 
-## 6. Chỉ mục 157 ca trong CSV chung
+Default audit path còn PROPOSED — AWAITING PEER REVIEW; unexpected internal exception residual; CON-004 nonmutation vẫn là đề nghị kỹ thuật chưa được phê duyệt riêng. Approval D13-E không tự approve các mục đó. QA Matrix chưa được cung cấp/xác minh trong task, còn cần Việt Đức review. Không tạo PR/merge; Huy quản lý riêng.
 
-Test ID dùng mã gốc. Tiền tố PEND/INV là lịch sử phân nhóm, không tự quyết định trạng thái hoặc expected hiện tại.
+## 6. Chỉ mục 175 ca trong CSV chung
+
+157 Test ID/input gốc và muc_do/rule_id/exception_class đúng được giữ. Bổ sung metadata validation/provenance không đổi input/schema. Prefix PEND/INV giữ lịch sử. Mọi ca DRAFT_NOT_EXECUTED.
 
 | Test ID | Scenario | Expected tóm tắt | AC | Trạng thái |
 |---|---|---|---|---|
@@ -119,7 +139,7 @@ Test ID dùng mã gốc. Tiền tố PEND/INV là lịch sử phân nhóm, khôn
 | MISS-006 | Thiếu boolean co_trieu_chung_tieu_hoa_nang, không có rule chắc chắn TRUE | THEO_DOI / null | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
 | MISS-007 | Thiếu tiêu hóa nhưng R01 đã chắc chắn TRUE | PHAN_VE / R01-PV | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
 | MISS-008 | Thiếu đường hít nhưng tuần hoàn xác nhận R03 | PHAN_VE / R03-PV | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
-| MISS-009 | Thiếu dị nguyên, da và hô hấp TRUE | PHAN_VE / R01-PV [đề xuất mã nhóm] | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
+| MISS-009 | Thiếu dị nguyên, da và hô hấp TRUE | PHAN_VE / R01-PV | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
 | MISS-010 | R02 đủ hai hệ TRUE dù còn hệ UNKNOWN | PHAN_VE / R02-PV | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
 | MISS-011 | R02 T=0 U=1: chắc chắn không đủ hai hệ | THEO_DOI / null | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
 | MISS-012 | R02 T=1 U=1: chưa đủ kết luận | THEO_DOI / null | A-01, A-03, A-07 | DRAFT_NOT_EXECUTED |
@@ -195,8 +215,8 @@ Test ID dùng mã gốc. Tiền tố PEND/INV là lịch sử phân nhóm, khôn
 | TA15-CURRENT_BP-MISSING | huyết áp hiện tại thiếu khóa — thiếu huyết áp vẫn giữ phản vệ | PHAN_VE / R01-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
 | TA15-BASELINE_BP-NULL | huyết áp nền null — người lớn thiếu nền vẫn giữ phản vệ | PHAN_VE / R02-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
 | TA15-BASELINE_BP-MISSING | huyết áp nền thiếu khóa — người lớn thiếu nền vẫn giữ phản vệ | PHAN_VE / R02-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
-| TA15-BOOL1-NULL | dị nguyên nghi ngờ null — mọi khả năng dị nguyên đều dẫn đến phản vệ | PHAN_VE / R01-PV [đề xuất mã nhóm] | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
-| TA15-BOOL1-MISSING | dị nguyên nghi ngờ thiếu khóa — mọi khả năng dị nguyên đều dẫn đến phản vệ | PHAN_VE / R01-PV [đề xuất mã nhóm] | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
+| TA15-BOOL1-NULL | dị nguyên nghi ngờ null — mọi khả năng dị nguyên đều dẫn đến phản vệ | PHAN_VE / R01-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
+| TA15-BOOL1-MISSING | dị nguyên nghi ngờ thiếu khóa — mọi khả năng dị nguyên đều dẫn đến phản vệ | PHAN_VE / R01-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
 | TA15-BOOL2-NULL | dị nguyên đường hít null — tuần hoàn đã đủ R03 | PHAN_VE / R03-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
 | TA15-BOOL2-MISSING | dị nguyên đường hít thiếu khóa — tuần hoàn đã đủ R03 | PHAN_VE / R03-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
 | TA15-BOOL3-NULL | da niêm mạc null — tuần hoàn đã đủ R03 | PHAN_VE / R03-PV | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
@@ -211,3 +231,48 @@ Test ID dùng mã gốc. Tiền tố PEND/INV là lịch sử phân nhóm, khôn
 | TA15-NO_DOWNGRADE_SHOCK-MISSING | tiêu hóa nặng thiếu khóa — không hạ mức sốc đã đủ bằng chứng | SOC_PHAN_VE / R-SOC | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
 | TA15-DEPENDENT_INHALATION-NULL | dị nguyên đường hít null — kết quả phụ thuộc đường hít chưa biết | THEO_DOI / null | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
 | TA15-DEPENDENT_INHALATION-MISSING | dị nguyên đường hít thiếu khóa — kết quả phụ thuộc đường hít chưa biết | THEO_DOI / null | A-01, A-03, A-04, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-001 | AllPV với bốn UNKNOWN, null | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-002 | AllPV với bốn UNKNOWN, thiếu khóa | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-003 | AllPV với bốn UNKNOWN và HATT thấp | SOC_PHAN_VE / R-SOC | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-004 | AllPV với HATT hiện tại null | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-005 | AllPV với HATT hiện tại thiếu khóa | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-006 | AllPV nhưng thiếu tuổi | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-007 | AllPV nhưng tuổi null | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-008 | Sáu UNKNOWN với tuổi có, 64 completions | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-009 | Sáu boolean thiếu khóa với tuổi có | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-010 | Mixed phụ thuộc S null | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-011 | Mixed phụ thuộc S thiếu khóa | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-012 | Mixed phụ thuộc đồng thời K và I null | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-013 | Mixed phụ thuộc đồng thời K và I thiếu khóa | THEO_DOI / null | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-014 | DIRECT R01 với ba UNKNOWN không liên quan | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-015 | AllPV adult thiếu nền null | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-016 | AllPV adult thiếu khóa nền | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-017 | 17.99 không áp nhánh giảm tương đối | PHAN_VE / R01-PV | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+| D13E-018 | 18 áp nhánh giảm tương đối | SOC_PHAN_VE / R-SOC | A-01, A-03, A-04, A-05, A-07 | DRAFT_NOT_EXECUTED |
+
+## 7. Ca bổ sung theo F04 và lý do không trùng mục tiêu
+
+| Test ID | Gap cần phát hiện | Expected | Vì sao cần thêm |
+|---|---|---|---|
+| D13E-001 | AllPV với bốn UNKNOWN, null | PHAN_VE / R01-PV | F04: không chỉ enumerate S; 16 completions |
+| D13E-002 | AllPV với bốn UNKNOWN, thiếu khóa | PHAN_VE / R01-PV | F04: null/missing tương đương khi nhiều UNKNOWN |
+| D13E-003 | AllPV với bốn UNKNOWN và HATT thấp | SOC_PHAN_VE / R-SOC | F04: coverage positive kết hợp Tier1 |
+| D13E-004 | AllPV với HATT hiện tại null | PHAN_VE / R01-PV | F04: không hạ AllPV vì thiếu BP |
+| D13E-005 | AllPV với HATT hiện tại thiếu khóa | PHAN_VE / R01-PV | F04: BP null/missing tương đương |
+| D13E-006 | AllPV nhưng thiếu tuổi | THEO_DOI / null | F04: age override trước coverage |
+| D13E-007 | AllPV nhưng tuổi null | THEO_DOI / null | F04: age null/missing override tương đương |
+| D13E-008 | Sáu UNKNOWN với tuổi có, 64 completions | THEO_DOI / null | F04: MISS-020 thiếu tuổi short-circuit, không kiểm max64 |
+| D13E-009 | Sáu boolean thiếu khóa với tuổi có | THEO_DOI / null | F04: max64 missing/null tương đương |
+| D13E-010 | Mixed phụ thuộc S null | THEO_DOI / null | F04: unknown allergen thật sự đổi có/không phản vệ |
+| D13E-011 | Mixed phụ thuộc S thiếu khóa | THEO_DOI / null | F04: mixed S null/missing |
+| D13E-012 | Mixed phụ thuộc đồng thời K và I null | THEO_DOI / null | F04: nhiều UNKNOWN có cả positive/negative worlds |
+| D13E-013 | Mixed phụ thuộc đồng thời K và I thiếu khóa | THEO_DOI / null | F04: không promote chỉ từ một completion positive |
+| D13E-014 | DIRECT R01 với ba UNKNOWN không liên quan | PHAN_VE / R01-PV | F04: DIRECT nhiều UNKNOWN, không canonical khi đã có definite |
+| D13E-015 | AllPV adult thiếu nền null | PHAN_VE / R01-PV | F04: coverage kết hợp adult baseline unavailable |
+| D13E-016 | AllPV adult thiếu khóa nền | PHAN_VE / R01-PV | F04: baseline null/missing dưới coverage |
+| D13E-017 | 17.99 không áp nhánh giảm tương đối | PHAN_VE / R01-PV | F04: phát hiện làm tròn 17.99 thành 18 |
+| D13E-018 | 18 áp nhánh giảm tương đối | SOC_PHAN_VE / R-SOC | F04: cặp sát biên 18 với giảm >30% |
+
+MISS-013/014 và TA15-BOOL3 đã có definite R03 vs possible R02: tăng selection/explanation assertions ở ca cũ, không thêm fixture trùng. PEND-001 đã kiểm overlap R02/R03, RULE-020 đã kiểm low-BP-only: giữ input/oracle và tăng assertion thay vì nhân số ca. Hai ca D13E-017/018 dùng BP100/nền200 để phân biệt 17.99 và 18, phát hiện rounding áp nhánh người lớn; chỉ so BP89/90 ở 17.99 sẽ không bắt lỗi này vì hai nhóm đều có absolute threshold90.
+
+M2 cần property checks mọi 729 boolean states, mọi u từ0..6 (1–64 completions), permutation enumeration/key-order, idempotence selection và null/missing symmetry; không sinh Expected bằng code classifier. Xem kế hoạch nội bộ; mô hình review độc lập không phải bộ test runtime đã thực hiện.

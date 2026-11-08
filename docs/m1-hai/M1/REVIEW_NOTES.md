@@ -1,31 +1,32 @@
-# Ghi chú review sau Issue #15
+# Ghi chú remediation TASK 02E — Leader-owned
 
-[T15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) là nguồn chính thức mới; [ISSUE15_SYNC](ISSUE15_SYNC.md) ghi cụ thể các phần thay Q/A Revision 02. Các source snapshot cũ giữ nguyên lịch sử.
+Nguồn hiện hành: [Requirements Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) (Q), [ADR Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md) (A), Decision Table (D) và [TA comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15). D13-E là **APPROVED BY LEAD — D13-E — 09/11/2026**, không phải canonical rule do TA định danh. Bản sửa TASK 02E do Leader Huy Đức sở hữu, AI hỗ trợ; chưa xác nhận Hải/Việt Đức peer review hoặc Leader nghiệm thu bản sửa.
 
-## 1. D01–D03 đã được trả lời
+## 1. Finding được tái hiện ở baseline và bản sửa
 
-R01>R02>R03 cho mã Tầng 2; Tầng 1 thắng. Tuổi thiếu/null -> THEO_DOI/null. Có tuổi/đủ phản vệ nhưng thiếu HATT hoặc nền cần thiết -> PHAN_VE/mã Tầng 2; không gán nền. Bảy ID PEND hiện có expected và clear Pending, không còn PENDING_TA_CONFIRMATION.
+| Finding | Baseline 768f196 | Repair / tiêu chí static cần kiểm |
+|---|---|---|
+| F01 P1 | MISS-012, TA15-DEPENDENT_INHALATION-* Policy review trống; chỉ representative có proposal tag | Đủ sáu rows ghi approval D13-E/current source; giữ original Input/level/ID; tách policy approval khỏi runtime/peer acceptance |
+| F02 P2 | ISSUE15_SYNC/HANDOFF/REVIEW_RESPONSE còn giao Leader sync Q/A cũ | Q/A Revision 04 là current source; Q2/A2/Q0 archived, không overwrite snapshots; không yêu cầu làm lại TASK 02G |
+| F03 P2 | TA15-BOOL1-* thiếu representative uncertainty assertions | Cả ba canonical rows có required/forbidden explanation patterns; safe sample khớp, unsafe S=False/independent-R01 claim phải fail; actual ly_do chưa chạy |
+| F04 P2 | Chỉ S single-U coverage; thiếu multi-U/max64/numeric crossover | 18 D13E-001–018 mới có mục tiêu; thêm property plan729, giữ ca cũ DefR03/PossR02 và tăng selection assertions; boundary17.99/18 có nhánh relative phân biệt |
 
-## 2. Các policy đã cập nhật
+Revision 04 đã giải quyết quyết định chính sách của F01; việc sửa labels/source/assertions trong file Hải vẫn cần và được thực hiện ở nhánh này. Không chỉ đổi chữ APPROVED để che các gap F03/F04. Đây là kết quả remediation cần Leader kiểm tra, không review chéo/final acceptance đã hoàn tất.
 
-- Null tuổi không còn TypeError; numeric null và missing cùng không có dữ liệu.
-- Null boolean không invalid và không gây exception; giữ Enum UNKNOWN như thiếu khóa trong policy nhóm, không chuyển toàn bộ unknown thành False trước khi kiểm bằng chứng.
-- HYPOTENSION UNKNOWN không thể giữ final classification pending: chỉ bằng chứng TRUE mới làm thỏa sốc; có tuổi/đủ Tầng 2 thì PHAN_VE nếu chưa có bằng chứng sốc.
-- Tám ca null chuyển từ invalid sang nullable/missing hợp lệ. Còn 36 invalid (28 TypeError+8 ValueError). AUD-002 dùng chuỗi để không coi null là invalid.
-- Audit nullable hợp lệ là SUCCESS, không INVALID_INPUT. Audit failure/error precedence riêng vẫn giữ policy đã duyệt.
+## 2. RULE-020 và các trạng thái
 
-## 3. Đề xuất cần Huy review
+SHOCK_EVIDENCE baseline=TRUE có nghĩa bằng chứng HATT, không sai oracle theo contract helper cũ. Bản sửa dùng tên HYPOTENSION_EVIDENCE và TIER1_MATCH để loại nhập nhằng: RULE-020 có HATT evidence TRUE nhưng Tier2 FALSE/Tier1 FALSE, output THEO_DOI/null. Không đổi input, output hoặc ngưỡng. TIER1_MATCH là Kleene AND của coverage-state và HATT-state, có thể UNKNOWN, không status runtime mới.
 
-T15 cho phép nhóm công bố policy khi kết luận thực sự phụ thuộc boolean thiếu. Giữ D13 UNKNOWN/THEO_DOI cho phần thực sự phụ thuộc; công bố rủi ro hạ mức khi thiếu dữ liệu. Riêng S xuất hiện ở cả nhánh phủ định và khẳng định: MISS-009 mọi completion phản vệ dù không rule riêng TRUE; không bỏ sót kết luận do mất tương quan.
+## 3. D13-E approved, không còn current approval gate
 
-Đề xuất BOOL-COVERAGE bảo toàn mức và chọn mã đại diện theo completion UNKNOWN=False chỉ khi mọi completion đều phản vệ nhưng mã khác nhau. MISS-009/cặp TA15-BOOL1 đánh dấu PROPOSED FOR LEADER REVIEW. Mức không được hạ; mã đại diện R01 là đề xuất nhóm, không thầy/Leader đã duyệt. [ISSUE15_SYNC §4]
+Boolean missing/null UNKNOWN, Def trước Poss, AllPV positive, canonical disclosure khi PV/Def rỗng, Mixed TD/null. MISS-009 helpers vẫn UNKNOWN/UNKNOWN/FALSE; mã public R01 không làm helper thành TRUE. Source/current oracle theo Q §8.2/A §9.4. Canonical risk đã được Leader chấp nhận; TA chỉ cho quyền policy, không định danh canonical rule.
 
-## 4. Các quyết định giữ theo Requirements/ADR
+## 4. Phần giữ nguyên và còn chờ
 
-Enum/toán tử, ContextVar/hai scope UUID, public orchestration, audit fields/lifecycle/fail-closed, isolation và benchmark 100 warm-up/nearest-rank giữ Q/A. Sai kiểu/miền không phải null và khóa lạ giữ D04 nhóm theo T15 §6. Không đổi clinical expressions/ngưỡng, không tự đặt cutoff mới.
+D01–D03 TA-confirmed; strict D04, Enum/Kleene/count và D05–D10 không đổi. ContextVar/UUID, audit schema/error precedence/isolation/benchmark giữ nguyên. 36 invalid (28 TypeError/8 ValueError), INV nullable và AUD-002 chuỗi giữ expected. Không có runtime test/CI/benchmark hoặc QA acceptance mới.
 
-Default path mechanism A §5.4.1 còn PROPOSED; unexpected internal exception còn residual review item. CON-004 đã sửa định dạng, không mutate input vẫn là đề nghị kỹ thuật chưa được phê duyệt riêng. T15 không phê duyệt thay các điểm này.
+Default path còn PROPOSED — AWAITING PEER REVIEW; unexpected internal exception residual. CON-004 nonmutation vẫn đề nghị kỹ thuật, không được approval D13 tự nâng thành AC bắt buộc.
 
-## 5. Trạng thái review và QA
+## 5. Attribution và nghiệm thu
 
-Tôi đã review phần tài liệu và test case M1. Việt Đức chưa có QA Matrix; các ID INT/BENCH/TA15 được giữ để đối chiếu khi matrix có. Phần review chéo QA và phê duyệt policy BOOL-COVERAGE của Huy còn chờ. Chưa chạy test nghiệp vụ trên classifier và chưa nghiệm thu runtime.
+Baseline là đóng góp của Hải; remediation do Huy Đức sở hữu, AI hỗ trợ trên nhánh mới. Không gán Hải/Việt Đức đã review bản sửa. QA Matrix chưa được cung cấp/xác minh trong task; chờ Việt Đức map/review. Leader tự kiểm checklist HANDOFF và quyết định acceptance/tích hợp/PR/merge riêng.

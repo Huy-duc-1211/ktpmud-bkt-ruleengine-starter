@@ -1,19 +1,11 @@
-# M1-02 — Thiết kế logic và test case
+# M1-02 — Bản sửa Leader-owned sau approval D13-E
 
-## Nội dung review M1
+Nguồn hiện hành: [Requirements Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) (Q), [ADR Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md) (A), Decision Table (D) và [TA comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15). D13-E là **APPROVED BY LEAD — D13-E — 09/11/2026**, không phải canonical rule do TA định danh. Bản sửa TASK 02E do Leader Huy Đức sở hữu, AI hỗ trợ; chưa xác nhận Hải/Việt Đức peer review hoặc Leader nghiệm thu bản sửa.
 
-Tôi tập hợp phần cần review ở M1 theo thứ tự dưới đây:
+1. [ISSUE15_SYNC](ISSUE15_SYNC.md): TA và sáu approved policy oracles.
+2. [RULE_DESIGN](RULE_DESIGN.md): formulas/ngưỡng giữ nguyên, D13-E selection/provenance.
+3. [TEST_PLAN](TEST_PLAN.md) và [TEST_CASES.csv](TEST_CASES.csv): 175 ca, giữ 157 input/ID gốc, thêm 18 focused regressions.
+4. [REVIEW_NOTES](REVIEW_NOTES.md), [REVIEW_RESPONSE](REVIEW_RESPONSE.md): F01–F04 và R01–R11, không tự xác nhận final acceptance.
+5. [HANDOFF](HANDOFF.md), [VALIDATION_REPORT](VALIDATION_REPORT.md), [sources](sources/README.md).
 
-1. [Phản hồi Issue #15 và delta logic](ISSUE15_SYNC.md).
-2. [Thiết kế rule](RULE_DESIGN.md).
-3. [Kế hoạch test M1](TEST_PLAN.md).
-4. [CSV chung 157 ca](TEST_CASES.csv): giữ mã gốc, input/expected không đổi.
-5. [Nhận xét cần review](REVIEW_NOTES.md) và [phản hồi R01–R11](REVIEW_RESPONSE.md).
-6. [Bàn giao M1](HANDOFF.md) và [kết quả kiểm tra tài liệu](VALIDATION_REPORT.md).
-7. [Nguồn và lịch sử](sources/README.md).
-
-Các file kế hoạch chi tiết test nội bộ, integration, fixture và benchmark đã chuyển sang M2. Đây là chuẩn bị cho giai đoạn sau, không phải yêu cầu triển khai hoặc thực đo ở M1.
-
-## Trạng thái nguồn và policy
-
-Enum UNKNOWN và cách trả kết quả khi thiếu dữ liệu là policy nhóm; T15 cho phép nhóm công bố cách xử lý ở phần chưa quy định. **Mã đại diện BOOL-COVERAGE ở MISS-009/cặp TA15-BOOL1 là đề xuất chờ Huy Đức review**; phần bảo toàn mức và bảy kết quả D01–D03 không bị gán là còn chờ TA. Cơ chế default audit path và unexpected internal exception vẫn còn điểm cần review theo ADR (A).
+M1 review cần đọc kế hoạch [M2](../M2/README.md) cho 81 internal rows, integration/fixture/benchmark; đó là design dependency, không đòi code/runtime ở M1. Mọi classifier test, CI và benchmark NOT EXECUTED. D13 policy đã approved; bản sửa, QA/peer review và nghiệm thu vẫn do người kiểm soát.
