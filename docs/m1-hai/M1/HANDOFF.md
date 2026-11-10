@@ -24,7 +24,9 @@ MISS-012 và TA15-DEPENDENT_INHALATION-NULL/MISSING → THEO_DOI/null MIXED, ins
 
 Static CSV/JSON parse, independent oracle và 81 mathematical rows được kiểm riêng, không gọi classify. 175 classifier cases, pytest/clean-checkout, actual helper/Enum tests, integration/audit/privacy/error paths, CI và benchmark đều NOT EXECUTED trong task này.
 
-Chưa xác nhận Hải/Việt Đức peer review, QA Matrix mapping hoặc Huy final acceptance. Default audit path PROPOSED — AWAITING PEER REVIEW; unexpected internal exception residual; CON-004 nonmutation là đề nghị riêng. Các điểm này không được approval D13 giải quyết thay.
+**Cập nhật TASK 02Q:** [Draft PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã bàn giao [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) với mapping thiết kế A-01–A-11. Mapping đã được chuẩn bị, review người thật của Hải/Việt Đức và nghiệm thu của Huy chưa được xác nhận. Các mục thực thi của workbook vẫn là `NOT RUN`.
+
+Default audit path PROPOSED — AWAITING PEER REVIEW; unexpected internal exception residual; CON-004 nonmutation là đề nghị riêng. Các điểm này không được approval D13 giải quyết thay.
 
 ## 5. Checklist acceptance của Huy
 
@@ -33,5 +35,5 @@ Chưa xác nhận Hải/Việt Đức peer review, QA Matrix mapping hoặc Huy 
 - [ ] 157 input/ID/level/ID/exception cũ giữ nguyên, 18 new cases có gap độc lập.
 - [ ] RULE-020 HATT evidence TRUE nhưng TIER1_MATCH FALSE; không ép helpers MISS-009 thành TRUE.
 - [ ] 81 math rows và formulas/ngưỡng/benchmark protocol không đổi; đọc static evidence, không tính như runtime.
-- [ ] Việt Đức map/review QA A-01–A-11, core/audit và explanation; Hải review technical handoff nếu có.
+- [ ] Đối chiếu mapping A-01–A-11 đã có ở PR #4. Việt Đức review QA, audit và explanation. Hải review technical handoff theo phân công. Ghi người review và SHA khi có bằng chứng.
 - [ ] Giữ unresolved không thuộc D13 và quyết định acceptance/PR/merge riêng.

@@ -41,6 +41,17 @@ Tên exception audit không bị tự đặt ở tài liệu này; M2 assert the
 
 ## 3. Đối chiếu QA Matrix
 
-QA Matrix chưa được cung cấp/xác minh trong nguồn TASK 02E. Bảng chuẩn bị theo A §8, còn cần Việt Đức review/map khi nhận nguồn. Các ID INT/AUD-001–003 cần được map sang A-04/A-06/A-07/A-08 và nơi lưu kết quả. Hải review provider/helpers/public path theo phân công; Việt Đức review writer/privacy/lỗi kép/isolation. Bản remediation là Leader-owned, không tuyên bố hai bạn đã review. Các phát hiện cần đổi policy sẽ chuyển Huy xem xét.
+Tại thời điểm TASK 02E, QA Matrix chưa được cung cấp/xác minh trong nguồn. Bảng INT/AUD được chuẩn bị theo A §8. Bản remediation M1-02 do Huy phụ trách trên baseline của Hải.
 
-Khi có matrix, giữ cùng ID, fixture và expected; bổ sung link commit của matrix cùng kết quả review vào HANDOFF. Phần đối chiếu này hiện còn chờ, chưa tính là đã hoàn tất review chéo.
+**Cập nhật TASK 02Q:** Đối chiếu mapping thiết kế trong [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx). Các nhóm dưới đây liên kết theo fixture hoặc assertion tương ứng. Chúng không thay expected của §2.
+
+| Ca QA / checklist | Mục INT tương ứng và phạm vi |
+|---|---|
+| `QA-022`, `QA-023`, `CHK-059` | `INT-017`: nullable hợp lệ, writer hoàn tất → `SUCCESS`. `INT-005`: validation lỗi, writer hoàn tất → `INVALID_INPUT`. INV-001, INV-002 và AUD-002 là các fixture riêng. |
+| `QA-020`, `QA-040/041`, `QA-057` | `INT-018` cho MISS-009, TA15-BOOL1 và D13E-001/002: AllPV/CANONICAL. `INT-021` kiểm mã đại diện và disclosure trên `ly_do` thực tế. |
+| `QA-054–056`, `QA-061/062` | `INT-019` cho cặp dependent inhalation, MISS-012 và D13E-008–013: Mixed. `INT-021` kiểm lý do thiếu thông tin và các diễn giải sai cần loại. |
+| `QA-058–060`, `QA-064` | `INT-020` cho AllPV có bằng chứng sốc, đối chứng RULE-020, thiếu HATT/tuổi, thiếu HATT nền và biên 17,99/18. `INT-021` kiểm `ly_do` ở các ca explanation tương ứng trong QA-059/064. |
+| `QA-063`, `CHK-058` | `INT-021` kiểm DIRECT ở D13E-014 và kiểm assertion dương/âm cho DIRECT/CANONICAL/MIXED. `INT-015` bổ sung kiểm raw-data/privacy ở các đường message, log và exception chaining trong CHK-058. |
+| `CHK-060` | Gate người thật review mapping/oracle/nguồn theo SHA. Liên quan `INT-016` cho README runtime ở M2, không phải kết quả chạy INT. |
+
+Giữ ID, fixture và expected riêng theo từng ca. Mapping thiết kế đã có. Review người thật, kết quả thực thi và nghiệm thu vẫn chờ bằng chứng. Hải review provider/helpers/public path, Việt Đức review writer/privacy/lỗi kép/isolation. Mọi đề xuất đổi policy chuyển Huy xem xét.
