@@ -543,15 +543,17 @@ Mười ba hàng dưới giống Q §5.1. TA-EX-01–11 đối chiếu TA; TA-EX
 | TA-EX-12 | Tuổi 15, HATT 110, S=TRUE, I=TRUE, K=TRUE, H=C=FALSE, G thiếu/null | THEO_DOI / null | Mixed: G=False không rule, G=True R02; fallback D13-E đã duyệt; MISS-012 |
 | TA-EX-13 | Tuổi 15, HATT 110, S thiếu/null, I=TRUE, K=H=TRUE, C=G=FALSE | PHAN_VE / R01-PV | CANONICAL: AllPV/Def rỗng; ly_do bắt buộc nêu mã đại diện R01/R02, không xác nhận S=False; MISS-009/TA15-BOOL1-* |
 
-### 9.3. Bàn giao TASK 02E cho M1-02/M1-03 — chưa sửa file thành viên
+### 9.3. Bàn giao TASK 02E và nguồn thiết kế M1-02/M1-03 hiện hành
 
-Nguồn Hải hiện hành: docs/m1-tests-hai, commit 768f196e6a9ec3b1142c44399ce8288f7cc2e87e, 157 main cases và 81 internal cases. Bảy PEND đã TA-confirmed: 001 PV/R02; 002/007 TD/null; 003/004 PV/R01; 005/006 PV/R02. Không đặt lại pending TA.
+Baseline lịch sử của Hải: [docs/m1-tests-hai tại commit 768f196e6a9ec3b1142c44399ce8288f7cc2e87e](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/tree/768f196e6a9ec3b1142c44399ce8288f7cc2e87e/docs/m1-hai), gồm 157 ca chính và 81 ca logic nội bộ riêng. Đây là nguồn fixture của sáu expected ở §9.4.
+
+Nguồn hiện hành: [Draft PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) có [175 ca chính](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_CASES.csv) theo [Test Plan](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_PLAN.md) và bộ [81 ca logic nội bộ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M2/INTERNAL_STATE_CASES.csv) riêng. [Draft PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) có [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) với ánh xạ A-01–A-11, audit và khoảng trống bằng chứng. Bảy PEND đã TA-confirmed: 001 PV/R02; 002/007 TD/null; 003/004 PV/R01; 005/006 PV/R02. Không đặt lại pending TA.
 
 Tám nullable INV hợp lệ: INV-001/017/021/025/029/033/037/043. Với fixture hiện tại, INV-043 SOC_PHAN_VE/R-SOC, bảy ca khác THEO_DOI/null. AUD-002 đã đổi null thành chuỗi "true", nay TypeError/INVALID_INPUT khi audit thành công. Hiện có 36 invalid=28 TypeError+8 ValueError; lỗi kép vẫn audit precedence. Tám ValueError INV-002/005/006/007/008/012/016/041 không đổi.
 
 Lịch sử baseline 2c6685e55af47eea55ffeea63c250272a4e71fe3 từng có 35 invalid+9 nullable trong nhóm 44 cũ; đổi fixture AUD-002 giải thích khác biệt với 36 invalid hiện tại. Không gọi dữ liệu audit cũ là nguồn hiện hành.
 
-Hải cập nhật source approval, Policy review, assertions cho sáu ID §9.4, giữ helpers UNKNOWN ở correlation nhưng approved positive/canonical ở public selector; thêm Def-vs-Poss, multi-U/64 worlds, numeric crossovers, explanation negative assertions. Việt Đức map A-01–A-11/test IDs, nguồn Revision 04, SUCCESS/INVALID_INPUT và gap evidence. TASK 02G không sửa CSV/RULE_DESIGN/TEST_PLAN/QA hoặc kết luận họ đã review; việc này thuộc TASK 02E và task kiểm chứng tiếp theo.
+M1-02 giữ bản gốc của Hải và bản sửa TASK 02E do Huy Đức phụ trách với Codex hỗ trợ. Test Plan và corpus thiết kế đã có các nhóm Def-vs-Poss, multi-U/64 worlds, numeric crossovers, sáu ID §9.4 và explanation negative assertions. M1-03 giữ phần QA gốc của Việt Đức, với Huy Đức tiếp quản sửa và kiểm chứng ở mức thiết kế, có hỗ trợ ChatGPT/Codex. Workbook đã có mapping A-01–A-11, phân biệt `SUCCESS`/`INVALID_INPUT` và khoảng trống bằng chứng. Các mục thực thi vẫn `NOT RUN`. TASK 02G không sửa các deliverable này. Review của thành viên và kết quả runtime chưa được xác nhận.
 
 ### 9.4. Sáu expected D13-E đã được Leader phê duyệt — bàn giao TASK 02E
 
@@ -580,13 +582,13 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 | Direct call chưa có audit path | Cơ chế mặc định ở phần 5.4.1 chỉ PROPOSED — AWAITING PEER REVIEW; Hải/Việt Đức review gốc ổn định, override ngoài input, đích ngoài repository và README; không thay OPEN-04 đã duyệt |
 | Input hợp lệ nhưng rule/helper gặp unexpected internal exception trước audit thành công | Residual implementation risk / review item: không coi là SUCCESS hoặc tự phân loại INVALID_INPUT; không thêm ERROR/FAILED/INTERNAL_ERROR, không đổi bốn trường và không ghi raw patient payload/exception nhạy cảm. Nghĩa vụ audit đã duyệt vẫn giữ nguyên; cách audit/propagate cho lỗi nội bộ chưa chốt, Hải/Việt Đức review chéo, không suy rộng từ policy validation/audit failure |
 | Dùng cùng file đồng thời ngoài phạm vi | V1 tuần tự, ownership rõ; ContextVar không bảo đảm file atomicity. Nhu cầu shared-file concurrency phải review riêng |
-| Test phản chiếu implementation, null cũ bị giữ invalid hoặc fixture không reset | Hải dùng D+TA+D13-E, source 157 cases hiện hành và §9.3/§9.4; Việt Đức review tmp_path/QA/canonical assertions. Approval không thay evidence runtime |
+| Test phản chiếu implementation, null cũ bị giữ invalid hoặc fixture không reset | Hải dùng D+TA+D13-E, nguồn 175 ca chính và 81 ca logic nội bộ riêng theo §9.3, giữ baseline §9.4 cho oracle đã duyệt. Việt Đức review tmp_path/QA/canonical assertions theo QA Matrix §9.3. Approval không thay evidence runtime |
 | Benchmark sai chỉ số/đơn vị, bỏ I/O hoặc tối ưu ngầm | Protocol 100 warm-up/nearest-rank đã chốt; Việt Đức soạn phép đo thật, Hải review timing/full-path; không số liệu giả |
 | Tài liệu Draft PR bị hiểu nhầm đã được tích hợp/nghiệm thu | Requirements Revision 04 đã xác minh tại a574ce20fbf307ad90f0d60064da394652462aea; ADR nhánh độc lập. Publish và approved D13 không chứng minh peer approval/M1 acceptance/AC; không merge trong TASK 02G |
 
 **Chi tiết nhỏ còn hoàn thiện khi triển khai:** tên/số lượng helper tối thiểu, tên exception audit, đường dẫn log được cấu hình thực tế, cách biểu diễn UTC hợp lệ nhất quán. Hải và Việt Đức đề xuất trong approved policy; không cần mở lại một vòng lựa chọn kiến trúc lớn nếu không đổi contract/phạm vi. Mọi thay đổi policy cần báo Huy; AI không quyết định thay.
 
-Trước code M2, Hải/Việt Đức cần peer review các lựa chọn và lập Test Plan/QA Matrix theo phần 9.1. Bằng chứng runtime/CI/benchmark vẫn chưa có; có thể hoàn thiện thực đo trong M3 theo phân công đã có. D01–D03 đã TA CONFIRMED; D13-E đã approved và còn cần test/review kỹ thuật, còn default path và unexpected internal exception giữ đúng trạng thái review riêng. Đây chưa phải lệnh triển khai M2.
+Trước code M2, Hải/Việt Đức cần review chéo các lựa chọn và đối chiếu Test Plan/QA Matrix đã có theo §9.1 và §9.3. Bằng chứng runtime/CI/benchmark vẫn chưa có. Benchmark thực hiện ở M3 theo phân công đã có. D01–D03 đã TA CONFIRMED. D13-E đã approved và còn cần test/review kỹ thuật. Default path, unexpected internal exception và đề nghị nonmutation giữ trạng thái riêng, chưa có phê duyệt mới. Đây chưa phải lệnh triển khai M2.
 
 ### 10.1. Đối chiếu nguồn và provenance
 
