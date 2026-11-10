@@ -114,7 +114,7 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 ## 4. Đến nay nhóm đã làm được gì?
 
-| Nội dung | Trạng thái khi đối chiếu TASK 02H |
+| Nội dung | Trạng thái khi đối chiếu TASK 02Q |
 |---|---|
 | Chọn Track A, lập nhóm 3 người, fork hai repo và tạo `track-a-development` | Đã thực hiện |
 | Đối chiếu tag/commit khởi đầu | `bkt-2026-v1` tại `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
@@ -123,8 +123,9 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 | Requirements và ADR | Revision 04 đã đăng để review trong [Draft PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1) và [Draft PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2) |
 | D13-E | Huy Đức phê duyệt chính sách nhóm ngày **09/11/2026** |
 | M1-02 | [Draft PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) có **175 ca thiết kế chính và 81 ca toán logic nội bộ**. Hải đóng góp bản gốc. Huy Đức sở hữu bản sửa TASK 02E với Codex hỗ trợ. F01–F04 đã được xử lý ở mức thiết kế và dữ liệu test |
-| Bằng chứng thực thi | Chưa xác nhận classifier/helper, integration, CI chạy test nghiệp vụ hoặc benchmark đã hoàn thành |
-| Nghiệm thu M1 | Review kỹ thuật, QA độc lập và chấp thuận cuối của Leader chưa được xác nhận. Cả ba PR đang mở ở trạng thái Draft |
+| M1-03 | [Draft PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) có [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) và báo cáo audit ở mức thiết kế: **11 AC, 64 ca QA, 60 mục checklist và 15 phát hiện**. |
+| Bằng chứng thực thi | Các mục thực thi trong QA Matrix là `NOT RUN`. Chưa xác nhận classifier/helper, integration, CI chạy test nghiệp vụ hoặc benchmark. |
+| Nghiệm thu M1 | Cả bốn PR đang mở ở trạng thái Draft. Review kỹ thuật của thành viên, QA độc lập của người review và chấp thuận cuối của Leader chưa được xác nhận. |
 
 **Cảnh báo:** `tests/test_classifier.py` trong starter đang kiểm tra `NotImplementedError`, không phải kiểm tra phân loại thật. Có workflow CI **không có nghĩa** đã đáp ứng A-08/A-09.
 
