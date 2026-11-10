@@ -6,24 +6,23 @@
 | Mã nhóm | `173820_n27` |
 | Người phụ trách | Huy Đức |
 | Mốc bàn giao | M1-01, Checkpoint 1, ngày 08/11/2026 |
-| Phiên bản | Revision 04 — Draft PR #1 / Awaiting Peer Review |
-| Cập nhật | 09/11/2026 — TASK 02G, áp dụng D13-E được Leader phê duyệt |
-| Trạng thái | Bản đưa lên nhánh Requirements để peer review; PR #1 chưa merge |
+| Phiên bản | Revision 04 |
+| Cập nhật | 11/11/2026 |
+| Trạng thái | M1 Revision 04 đã tích hợp vào `track-a-development` ngày 10/11/2026; chưa có xác nhận nghiệm thu scope của TA hoặc bằng chứng kiểm thử runtime |
 | Mốc nguồn starter | `bkt-2026-v1` → `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
-| Mốc nguồn tích hợp | `track-a-development` tại `b65032f94ec3ce600df07d81b5df6b9b4bd203d1` |
+| Mốc nguồn tích hợp | `track-a-development` tại `9bc4fc186415d7a13cd9d49692c50f3c945ddf7b` (merge commit PR #4, hoàn tất tích hợp M1 ngày 10/11/2026) |
 | Baseline trước Revision 04 | `c855c6d4f2135a14ad94485734d4d2e604cb9cff` trên `docs/m1-requirements-huy`; snapshot Revision 03, không phải HEAD sau patch này |
 | Làm rõ chính thức | [fossbk-spec — Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), ngày 08/11/2026; nguồn TA cho D01–D03 và null/missing |
 
-Revision 04 được đưa lên nhánh `docs/m1-requirements-huy` qua [Draft PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1) để review. Preflight TASK 02G ngày 09/11/2026 xác nhận PR Open/Draft, chưa merge, chưa có peer approval của Hải/Việt Đức. Xem HEAD thực tế trên PR; không ghi SHA tương lai của chính commit vào tài liệu. Publish tài liệu không nâng trạng thái bằng chứng A-01–A-11 hoặc xác nhận hoàn tất Checkpoint 1.
+Revision 04 được hoàn thiện trên nhánh `docs/m1-requirements-huy` và đã **merge qua [PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1)** vào `track-a-development` ngày 10/11/2026. Cùng ngày, [PR #2 (ADR)](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2), [PR #3 (Rule Design/Test Plan)](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) và [PR #4 (QA Matrix)](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) cũng đã merge. GitHub ghi nhận Leader self-review dạng `COMMENTED` và tài khoản `nvldvc` `APPROVED` trên cả bốn PR; chưa có lượt review của thành viên còn lại tại thời điểm merge. Quyết định tích hợp thuộc Leader và có ghi nhận ngoại lệ review. Đây là **hoàn tất tích hợp hồ sơ thiết kế nội bộ**, không phải bằng chứng TA đã duyệt Checkpoint 1 hoặc A-01–A-11 đã được kiểm chứng.
 
-**Thứ tự nguồn:** Decision Table V1 và làm rõ TA [TA] cao hơn quyết định nội bộ đã duyệt; quyết định nội bộ cao hơn đề xuất. TA không yêu cầu riêng Kleene logic hoặc Enum. Mười OPEN và phần D04–D13 không bị TA thay thế vẫn giữ trạng thái đã duyệt, chờ peer technical review. D01–D03 đã được TA xác nhận cho các tình huống được trả lời, không còn là câu hỏi chờ TA.
+**Thứ tự nguồn:** Decision Table V1 và làm rõ TA [TA] cao hơn quyết định nội bộ đã duyệt; quyết định nội bộ cao hơn đề xuất. TA không yêu cầu riêng Kleene logic hoặc Enum. Mười OPEN và phần D04–D13 không bị TA thay thế vẫn giữ hiệu lực theo quyết định của Leader; lượt approval trên PR là review tài liệu, không thay thế kiểm chứng triển khai M2 và việc xử lý các điểm kỹ thuật còn mở. D01–D03 đã được TA xác nhận cho các tình huống được trả lời, không còn là câu hỏi chờ TA.
 
-**APPROVED BY LEAD — D13-E — 09/11/2026.** Leader Huy Đức phê duyệt D13-E — Evidence-first Boolean Coverage with Canonical Attribution trong TASK 02G và chấp nhận residual risk về nghĩa mã đại diện. Đây là APPROVED TEAM POLICY trong quyền TA §§5–6, không phải quy tắc TA mới hoặc peer approval/AC verification. Chỉ phê duyệt D13; default audit path và unexpected internal exception giữ trạng thái riêng. [L; TA]
+**APPROVED BY LEAD — D13-E — 09/11/2026.** Leader phê duyệt D13-E — Evidence-first Boolean Coverage with Canonical Attribution trong TASK 02G và chấp nhận residual risk về nghĩa mã đại diện. Đây là APPROVED TEAM POLICY trong quyền TA §§5–6, không phải quy tắc TA mới. PR đã được review và tích hợp, nhưng điều đó không đồng nghĩa TA nghiệm thu giải pháp hay AC được xác minh. Chỉ phê duyệt D13; default audit path và unexpected internal exception giữ trạng thái riêng. [L; TA]
 
 
 ## 1. Giới thiệu
 
-Theo thông tin nhóm cung cấp trong yêu cầu Revision 01, Dr May Day có định hướng thử nghiệm và ứng dụng thực tế ở phạm vi phát triển rộng hơn. Thông tin này được ghi nhận với nguồn là nhóm, chưa có bằng chứng độc lập về triển khai production, kiểm định y tế hoặc khách hàng thực tế. [L]
 
 Phạm vi Hack Marathon là mô-đun Rule Engine Python phân loại dữ liệu giả lập theo bảng quyết định đã khóa. Starter có interface `classify(patient)` nhưng thân hàm đang phát sinh `NotImplementedError`. Mục tiêu của nhóm là chuyển đặc tả thành yêu cầu đầu vào/đầu ra có thể kiểm chứng, kết quả giải thích được và bằng chứng về tính đúng, audit an toàn cùng hiệu năng. [E §§4–7, 9; C dòng 11–36]
 
@@ -38,9 +37,9 @@ Sinh viên phát triển và bảo trì mô-đun. Các thành viên review yêu 
 | Kiểm thử tự động, kiểm chứng từ bản checkout sạch, CI trên PR và benchmark | AI/ML hoặc LLM suy đoán kết quả phân loại |
 | Yêu cầu, bằng chứng thiết kế/kiểm chứng, bảo mật, riêng tư và bàn giao | Tích hợp production, chẩn đoán hoặc khuyến nghị điều trị, quy tắc hoặc ngưỡng lâm sàng tự bổ sung |
 
-Bản nháp M1 mô tả yêu cầu và phương pháp kiểm chứng dự kiến. Chi tiết test case thuộc Test Plan, còn lý do và đánh đổi thiết kế thuộc ADR. Mốc Checkpoint 1 là cuối ngày 08/11/2026. [E §§4–7; G §§2, 5; P §3]
+Bản M1 đã tích hợp mô tả yêu cầu và phương pháp kiểm chứng dự kiến; đây vẫn là **đầu ra thiết kế**, chưa phải kết quả thực thi. Chi tiết test case thuộc Test Plan, còn lý do và đánh đổi thiết kế thuộc ADR. Mốc Checkpoint 1 theo đề là cuối ngày 08/11/2026; trường hợp chưa nộp có hướng bổ sung hồ sơ trên fork trước 9:30 ngày 11/11 theo [erratum #25](https://github.com/fossbk-spec/ktpmud-project/issues/25). [E §§4–7; G §§2, 5; P §3]
 
-## 3. Hợp đồng dữ liệu đầu vào
+## 3. Đặc tả dữ liệu đầu vào
 
 Danh sách cho phép vẫn đúng chín tên khóa. Missing là khóa vắng mặt; null là khóa hiện diện với giá trị None. Data Dictionary gốc [D] khóa tên/ý nghĩa trường; [TA §5] làm rõ unavailable được phép cho ba trường số và sáu boolean. TypedDict(total=False) chỉ mô tả kiểu tĩnh, không thực thi validation runtime. Không thêm UUID/path hoặc khóa định danh vào PatientInput.
 
@@ -77,7 +76,7 @@ Validate mọi trường có mặt trước suy luận. Một trường invalid 
 
 Raw input khác trạng thái nội bộ; UNKNOWN không phải giá trị input mới hoặc output thứ tư. Không fill patient bằng giá trị giả. HATT unavailable có thể giữ trạng thái điều kiện UNKNOWN; lựa chọn output vẫn theo TA/D13-E ở §4.2. Không biến UNKNOWN thành False để kết luận mức.
 
-## 4. Yêu cầu phân loại
+## 4. Yêu cầu chức năng và quy tắc xử lý
 
 ### 4.1. Yêu cầu chức năng
 
@@ -182,7 +181,7 @@ Writer M2 hoàn tất open append/write/close theo từng record trước khi pu
 
 **Kiểm chứng tích hợp M2 — còn cần peer review:** direct `classify(patient)` khi chưa cấu hình audit path phải được đưa vào kế hoạch kiểm chứng. Cơ chế chọn path mặc định ổn định ngoài repository, không phụ thuộc working directory, là đề xuất chưa được Leader duyệt; cần kiểm tra override ngoài PatientInput cho test/demo, fail-closed khi không tạo/ghi được file và hướng dẫn nơi lưu/cấu hình trong README khi triển khai. Giữ nguyên signature và chín input keys. [TASK 02C.4 Patch A]
 
-## 5. Hợp đồng dữ liệu đầu ra
+## 5. Đặc tả dữ liệu đầu ra
 
 Mọi kết quả phân loại vẫn có đúng ba khóa dưới đây. Dữ liệu unavailable được TA cho phép không tự là lỗi; non-null invalid theo D04 phát sinh lỗi validation khi audit thành công, hoặc lỗi audit an toàn nếu writer thất bại. [D; TA; L]
 
@@ -231,7 +230,7 @@ Protocol D10 đã được Leader chốt: sắp N mẫu tăng dần, lấy phầ
 
 ## 7. Tiêu chí nghiệm thu
 
-Trạng thái vẫn phản ánh bằng chứng tại baseline: NOT IMPLEMENTED là chưa có chức năng/tài liệu cần thiết, PARTIALLY AVAILABLE là có khung nhưng thiếu bằng chứng nghiệp vụ. TA CONFIRMED là nguồn yêu cầu đã rõ, không đồng nghĩa VERIFIED. Không AC nào được nâng thành VERIFIED trong Revision 04; không có kết quả chạy test/CI/benchmark mới từ việc sửa tài liệu.
+Trạng thái dưới đây phản ánh bằng chứng có thể kiểm tra tại thời điểm tích hợp M1 ngày 10/11/2026: NOT IMPLEMENTED là chưa có chức năng/tài liệu cần thiết, PARTIALLY AVAILABLE là có khung nhưng thiếu bằng chứng nghiệp vụ. TA CONFIRMED là nguồn yêu cầu đã rõ, không đồng nghĩa VERIFIED. Không AC nào được nâng thành VERIFIED chỉ từ việc merge tài liệu; chưa có bằng chứng runtime test/CI nghiệp vụ/benchmark đạt. Các trạng thái cần cập nhật lại khi M2 có kết quả thực tế.
 
 | AC | Yêu cầu | Điều kiện nghiệm thu | Bằng chứng cần có | Nguồn | Trạng thái hiện tại |
 |---|---|---|---|---|---|
@@ -243,13 +242,13 @@ Trạng thái vẫn phản ánh bằng chứng tại baseline: NOT IMPLEMENTED l
 | A-06 | Audit an toàn đúng schema | Bốn trường; CLASSIFY, SUCCESS/INVALID_INPUT theo nghĩa thao tác; không INVALID_INPUT chỉ vì allowed unavailable | Schema/UTC/UUID/status, failure paths, dữ liệu cấm | E A-06; D07/D08; TA §5 | NOT IMPLEMENTED |
 | A-07 | Test nghiệp vụ đủ nhóm | Normal/boundary/invalid/missing/null; thay/chỉnh test stub | Bộ test được review và map TA-EX/FR | E A-07; T | PARTIALLY AVAILABLE — mới có test minh họa NotImplementedError; chưa có bộ test nghiệp vụ đạt |
 | A-08 | Chạy đạt từ clean checkout | pytest -q đạt với test nghiệp vụ đã thay/chỉnh stub | Lệnh, môi trường, kết quả thực chạy | E A-08; R | PARTIALLY AVAILABLE — có lệnh, chưa có bằng chứng test nghiệp vụ clean checkout đạt |
-| A-09 | CI trên PR | GitHub Actions thực sự chạy bộ test cho PR | PR run URL và bước test thực tế | E A-09; W | PARTIALLY AVAILABLE — có workflow, chưa cập nhật bằng chứng CI nghiệp vụ trong task tài liệu |
+| A-09 | CI trên PR | GitHub Actions thực sự chạy bộ test cho PR | PR run URL và bước test thực tế | E A-09; W | PARTIALLY AVAILABLE — có workflow, chưa có bằng chứng CI chạy đạt với bộ test nghiệp vụ |
 | A-10 | Benchmark đúng protocol | N≥1.000 sau 100 warm-up; nearest-rank p50/p95; p95 <100 ms, công bố máy và I/O full-path | Phương pháp và số liệu thật | E A-10; D10 | NOT IMPLEMENTED — protocol đã duyệt, chưa có số liệu |
 | A-11 | Disclaimer README | Có chính xác educational/synthetic — not for clinical use | Kiểm tra README | E A-11; R | NOT IMPLEMENTED |
 
-Việc test stub có thể chạy đạt chỉ chứng minh stub; không chứng minh yêu cầu nghiệp vụ. Hải lập/cập nhật Test Plan, Việt Đức cập nhật QA traceability và bằng chứng; task này không sửa các file đó. [P; L]
+Việc test stub có thể chạy đạt chỉ chứng minh stub; không chứng minh yêu cầu nghiệp vụ. Test Plan và QA Matrix hiện hành đã được tích hợp qua PR #3 và #4. Bộ pytest nghiệp vụ, kết quả chạy, bằng chứng audit/CI và cập nhật QA theo thực thi vẫn thuộc M2/M3. [P; L]
 
-## 8. Truy vết yêu cầu
+## 8. Ma trận truy vết yêu cầu
 
 | ID yêu cầu | Rule hoặc AC liên quan | Kiểm chứng dự kiến ở mức yêu cầu |
 |---|---|---|
@@ -268,13 +267,13 @@ Việc test stub có thể chạy đạt chỉ chứng minh stub; không chứng
 | NFR-06 | A-09 | Cấu hình và PR run có bước test thực tế |
 | NFR-08 | A-11; E §§6,11 | Disclaimer và hồ sơ bàn giao đầy đủ |
 
-TA-EX-01–13 ở §5.1 là ánh xạ bàn giao yêu cầu, không phải test ID đã được Hải sửa hoặc bằng chứng đã chạy. Theo P, Hải cập nhật M1-02, Việt Đức map M1-03, Huy kiểm nguồn và phê duyệt nội bộ.
+TA-EX-01–13 ở §5.1 là ví dụ/ánh xạ yêu cầu để đối chiếu với Test Plan, test cases và QA Matrix hiện hành sau PR #3/#4; **không phải bằng chứng test đã chạy**. Phần thiết kế đã được tích hợp, còn triển khai và đối chiếu kết quả thực tế thuộc M2/M3.
 
 ### 8.1. Bàn giao test và nguồn hiện hành
 
 Baseline lịch sử của TASK 02G/02E: [nhánh Hải tại commit 768f196e6a9ec3b1142c44399ce8288f7cc2e87e](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/tree/768f196e6a9ec3b1142c44399ce8288f7cc2e87e/docs/m1-hai), gồm 157 ca chính và 81 ca logic nội bộ riêng. Baseline này là nguồn của sáu oracle §8.2.
 
-Nguồn thiết kế hiện hành: [Draft PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) có [175 ca chính](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_CASES.csv) theo [Test Plan](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_PLAN.md) và bộ [81 ca logic nội bộ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M2/INTERNAL_STATE_CASES.csv) riêng. [Draft PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) có [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) để truy vết A-01–A-11. Các mục thực thi trong workbook vẫn `NOT RUN`. PEND-001→PHAN_VE/R02-PV; PEND-002/007→THEO_DOI/null; PEND-003/004→PHAN_VE/R01-PV; PEND-005/006→PHAN_VE/R02-PV theo TA.
+Nguồn thiết kế hiện hành: [PR #3 — đã merge](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) có [175 ca chính](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_CASES.csv) theo [Test Plan](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_PLAN.md) và bộ [81 ca logic nội bộ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M2/INTERNAL_STATE_CASES.csv) riêng. [PR #4 — đã merge](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) có [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) để truy vết A-01–A-11. Các mục thực thi trong workbook vẫn `NOT RUN`. PEND-001→PHAN_VE/R02-PV; PEND-002/007→THEO_DOI/null; PEND-003/004→PHAN_VE/R01-PV; PEND-005/006→PHAN_VE/R02-PV theo TA.
 
 Tám INV nullable hợp lệ: INV-001, INV-017/021/025/029/033/037, INV-043. Với fixture hiện có, INV-043→SOC_PHAN_VE/R-SOC; bảy ca còn lại THEO_DOI/null. Audit SUCCESS nếu hoàn tất. AUD-002 hiện dùng chuỗi "true", là TypeError/INVALID_INPUT khi audit thành công. Nhóm invalid hiện có 36 ca =28 TypeError+8 ValueError; lỗi kép vẫn audit precedence.
 
@@ -282,7 +281,7 @@ Lịch sử: đối chiếu baseline 2c6685e55af47eea55ffeea63c250272a4e71fe3 t�
 
 ### 8.2. Sáu expected D13-E đã được Leader phê duyệt — bàn giao TASK 02E
 
-**APPROVED BY LEAD — D13-E — 09/11/2026.** Với đúng fixture tại nhánh Hải commit 768f196e6a9ec3b1142c44399ce8288f7cc2e87e, tuổi/HATT đủ như đang có, các expected sau được chốt ở mức policy. Chưa sửa CSV/QA, chưa chạy engine hoặc xác nhận Hải/Việt Đức đã review.
+**APPROVED BY LEAD — D13-E — 09/11/2026.** Với đúng fixture tại nhánh Hải commit 768f196e6a9ec3b1142c44399ce8288f7cc2e87e, tuổi/HATT đủ như đang có, các expected sau được chốt ở mức policy. Test cases và QA Matrix đã được đồng bộ trong các PR #3/#4 đã merge; **chưa chạy engine hoặc xác nhận các expected bằng runtime**. Review trên GitHub được ghi nhận theo tài khoản, không thay thế kết quả kiểm thử thực tế.
 
 | Test ID | muc_do | rule_id | Attribution / explanation bắt buộc |
 |---|---|---|---|
@@ -293,9 +292,9 @@ Lịch sử: đối chiếu baseline 2c6685e55af47eea55ffeea63c250272a4e71fe3 t�
 | TA15-DEPENDENT_INHALATION-NULL | THEO_DOI | null | Mixed do I unavailable; không ép I hoặc kết luận an toàn |
 | TA15-DEPENDENT_INHALATION-MISSING | THEO_DOI | null | Cùng fallback/uncertainty như cặp null |
 
-SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các dòng trên không tạo status audit mới. TASK 02E cần giữ R01/R02 UNKNOWN ở helper MISS-009, không đổi thành TRUE để hợp rule_id canonical; cập nhật Policy review/source/current oracle và negative explanation assertions. Ba cặp mức/mã đề xuất của Hải không đổi giá trị, nay có approval Leader, không phải TA định danh.
+SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các dòng trên không tạo status audit mới. Thiết kế và expected hiện hành tiếp tục yêu cầu helper của MISS-009 giữ R01/R02 UNKNOWN, không đổi thành TRUE chỉ để khớp `rule_id` canonical; khi triển khai M2 phải có negative explanation assertions tương ứng. Ba cặp mức/mã từ baseline Hải được giữ nguyên, có approval của Leader, không phải TA định danh.
 
-## 9. Làm rõ TA, D13-E đã duyệt và các phần còn review
+## 9. Cơ sở yêu cầu và trạng thái phê duyệt
 
 Đã đọc toàn bộ [bình luận fossbk-spec](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) tại Issue #15, tạo/cập nhật lúc 14:01:50 UTC ngày 08/11/2026. Làm rõ áp dụng chung cho Track A; D01–D03 trong phạm vi đã trả lời không còn chờ TA. Không biến phê duyệt TA về hành vi thành phê duyệt toàn bộ kiến trúc nhóm.
 
@@ -309,7 +308,7 @@ TA-05 bắt buộc missing/null boolean không tự gây exception và không h�
 
 **D13-E hiện hành: APPROVED BY LEAD — D13-E — 09/11/2026.** Normalization, coverage, definite-first, Mixed fallback và canonical semantics §3.2/§4.2/§5/§8.2 đã được phê duyệt nội bộ; không còn chờ Leader cho D13. Leader chấp nhận residual risk về activated-rule semantics. Không cần chờ một câu trả lời TA mới để thực hiện policy được duyệt; không gán convention nhóm thành lời TA hoặc đóng bằng chứng triển khai.
 
-Các quyết định ContextVar, UUID scope, JSONL, fail-closed, error precedence, isolation, Enum và benchmark vẫn giữ nguyên ngoài phần bị TA thay thế. Tên helper/exception audit và path cụ thể là chi tiết triển khai. Default path vẫn đề xuất chờ peer review; unexpected internal exception vẫn residual review item. Dùng liên kết GitHub theo commit cho tài liệu khác nhánh; chưa có DECISIONS.md trên nhánh PR #1 nên không thêm liên kết tương đối bị thiếu.
+Các quyết định ContextVar, UUID scope, JSONL, fail-closed, error precedence, isolation, Enum và benchmark vẫn giữ nguyên ngoài phần bị TA thay thế. Tên helper/exception audit và path cụ thể là chi tiết triển khai. Default path vẫn đề xuất chờ peer review; unexpected internal exception vẫn residual review item. Các tài liệu M1 hiện hành đã nằm cùng nhánh `track-a-development`, gồm `DECISIONS.md`; giữ liên kết pin commit cho nguồn lịch sử và sử dụng đường dẫn hiện hành khi điều hướng trong fork.
 
 Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_nguyen_nghi_ngo; tiếp tục giữ biểu thức và chín tên khóa như D. Không suy thêm khóa hoặc rule. [D; TA]
 
@@ -324,8 +323,8 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | Audit SUCCESS/INVALID_INPUT bị dùng nhầm | Allowed missing/null không tự là lỗi; giữ D04 cho invalid thực sự, bốn trường và error precedence |
 | Direct call chưa cấu hình audit path | Tiếp tục review đề xuất ở ADR, không tự chọn/duyệt path trong task này |
 | Unexpected internal exception trước audit thành công | Residual implementation risk / review item: không SUCCESS hoặc tự gán INVALID_INPUT; không thêm status/schema hoặc log payload; Hải/Việt Đức review cách xử lý |
-| Nhầm review tài liệu với nghiệm thu | Giữ 11 AC chưa VERIFIED; approval D13-E không chứng minh peer review/M1 acceptance/test/clean checkout/CI/benchmark |
-| Nguồn snapshot G/P và M1-02/M1-03 còn policy cũ | Giữ snapshot là lịch sử; source TA và Revision 04/D13-E ưu tiên hơn. Chỉ bàn giao tác động, không tuyên bố đã sửa file Hải/QA |
+| Nhầm review tài liệu với nghiệm thu | Giữ 11 AC chưa VERIFIED; Leader approval D13-E và GitHub PR approval không chứng minh TA đã nghiệm thu scope hoặc runtime/test/clean checkout/CI/benchmark đạt |
+| Nguồn snapshot lịch sử còn policy cũ | Giữ snapshot là lịch sử; source TA và Revision 04/D13-E ưu tiên hơn. Bản M1-02/QA hiện hành đã được đồng bộ và merge trong PR #3/#4; không dùng snapshot cũ làm policy hiện hành |
 | AI-use hoặc phối hợp thiếu bằng chứng | Ghi công cụ/phạm vi/kiểm chứng/quyết định và người chịu trách nhiệm thực tế; Huy review nguồn, Hải M1-02, Việt Đức M1-03 |
 
 | Ký hiệu | Nguồn và phiên bản |
@@ -335,14 +334,14 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | TA | [Trả lời chính thức fossbk-spec — Issue #15 comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), §§1–6, tạo/cập nhật 08/11/2026 14:01:50 UTC; áp dụng chung Track A. |
 | Q2 | [Requirements Revision 02 — lịch sử trước đồng bộ TA](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/662c47be9eba076bf9ca551403cc3e961f421d42/REQUIREMENTS.md); không dùng policy cũ trái TA cho hiện trạng. |
 | Q3 | [Requirements Revision 03 — lịch sử trước D13-E](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/c855c6d4f2135a14ad94485734d4d2e604cb9cff/REQUIREMENTS.md), snapshot từng giữ extension/fallback chờ Leader; Revision 04 thay phần đó bằng approval D13-E. |
-| G | [Project Guide](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/docs/PROJECT_GUIDE.md), mốc nguồn tích hợp, đặc biệt §§3–5. |
-| P | [Team Plan](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/docs/TEAM_PLAN.md), mốc nguồn tích hợp, đặc biệt §3. |
-| C | [Interface classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/rule_engine/classifier.py), mốc nguồn tích hợp. |
-| T | [Test mẫu starter](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/tests/test_classifier.py), mốc nguồn tích hợp. |
-| W | [Workflow GitHub Actions](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/.github/workflows/test.yml), mốc nguồn tích hợp. |
-| R | [README starter](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/b65032f94ec3ce600df07d81b5df6b9b4bd203d1/README.md), mốc nguồn tích hợp. |
-| I | [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15), đã đọc toàn bộ hai comments trong preflight 08/11/2026: câu hỏi nhóm và trả lời fossbk-spec; không sửa/đăng comment trong task này. |
-| L | Phê duyệt Leader trong hội thoại các task trước cho phần architecture không xung đột TA; TASK 02G ngày 09/11/2026 phê duyệt đúng D13-E và chấp nhận residual risk canonical attribution. Nhãn APPROVED BY LEAD — D13-E — 09/11/2026. TASK 02F là phân tích tư vấn, không approval; các trạng thái pending D13 ở Revision 03 là lịch sử. Chỉ cho cập nhật/publish Requirements/ADR trên PR hiện có; không merge/code/tests/CI hoặc sửa file Hải/QA/Guide/Plan. Không có URL repository cho nguồn approval trong hội thoại. |
+| G | [Project Guide](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/docs/PROJECT_GUIDE.md), mốc nguồn tích hợp, đặc biệt §§3–5. |
+| P | [Team Plan](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/docs/TEAM_PLAN.md), mốc nguồn tích hợp, đặc biệt §3. |
+| C | [Interface classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/rule_engine/classifier.py), mốc nguồn tích hợp. |
+| T | [Test mẫu starter](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/tests/test_classifier.py), mốc nguồn tích hợp. |
+| W | [Workflow GitHub Actions](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/.github/workflows/test.yml), mốc nguồn tích hợp. |
+| R | [README starter](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/README.md), mốc nguồn tích hợp. |
+| I | [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15), câu hỏi và trả lời của fossbk-spec ngày 08/11/2026, áp dụng chung cho Track A; không thay thế Decision Table V1. |
+| L | Quyết định Leader trong quá trình M1, gồm TASK 02G ngày 09/11/2026 phê duyệt D13-E và chấp nhận residual risk canonical attribution. TASK 02F chỉ là tư vấn; D13 pending ở Revision 03 là lịch sử. Các PR #1–#4 đã merge ngày 10/11 theo quyết định tích hợp của Leader; chưa có bằng chứng thực thi code/test/CI/benchmark. Phần sử dụng AI, hậu kiểm của con người và đóng góp được ghi trung thực trong hồ sơ `AI_USE.md`/`CONTRIBUTIONS.md` khi hoàn thiện. |
 
 Nguồn D + TA quyết định yêu cầu bắt buộc; G/P là snapshot phân công/lịch sử, không ghi đè TA. D13-E là approved team policy theo quyền TA §§5–6, không TA approval; default audit path/internal exception giữ trạng thái riêng. Không diễn giải approval D13 thành thay đổi tự động miền validation hoặc các OPEN đã chọn.
 
@@ -351,5 +350,6 @@ Nguồn D + TA quyết định yêu cầu bắt buộc; G/P là snapshot phân c
 | Phiên bản | Nội dung | Tình trạng bằng chứng |
 |---|---|---|
 | Revision 02, 08/11/2026 — lịch sử tại 662c47be9eba076bf9ca551403cc3e961f421d42 | D01–D03 khi đó PENDING TA CONFIRMATION; tuổi/boolean null bị coi invalid theo policy cũ | Snapshot trước trả lời TA, không phải policy hiện hành |
-| Revision 03, 08/11/2026 — TASK 02C.6 | Đồng bộ TA-01–06, thay thế một phần D04/D13, cập nhật FR/AC/truy vết và 12 ví dụ; extension null → UNKNOWN chờ Leader | Draft PR / Awaiting Peer Review; chưa có implementation/test/benchmark evidence |
-| Revision 04, 09/11/2026 — TASK 02G | APPROVED BY LEAD — D13-E — 09/11/2026; chuẩn hóa missing/null, Def/Poss/AllPV, definite-first, canonical attribution và Mixed fallback; chốt sáu expected, đồng bộ nguồn/bàn giao TASK 02E | Draft PR / Awaiting Peer Review; không M1 acceptance hoặc implementation verification; default path/internal exception còn review |
+| Revision 03, 08/11/2026 — TASK 02C.6 | Đồng bộ TA-01–06, thay thế một phần D04/D13, cập nhật FR/AC/truy vết và 12 ví dụ; extension null → UNKNOWN chờ Leader | **Trạng thái lịch sử tại 08/11:** Draft/chờ review; chưa có implementation/test/benchmark evidence |
+| Revision 04, 09/11/2026 — TASK 02G | APPROVED BY LEAD — D13-E — 09/11/2026; chuẩn hóa missing/null, Def/Poss/AllPV, definite-first, canonical attribution và Mixed fallback; chốt sáu expected, đồng bộ nguồn/bàn giao TASK 02E | **Trạng thái lịch sử tại 09/11:** Draft/chờ peer review; chưa có implementation verification; default path/internal exception còn review | 
+| Đồng bộ trạng thái sau merge, 10–11/11/2026 *(không đổi Revision 04 hoặc chính sách kỹ thuật)* | Xác nhận PR #1–#4 đã merge vào `track-a-development`; chỉnh tham chiếu SHA, trạng thái peer review và bàn giao M2 | Có Leader self-review và review APPROVED từ `nvldvc`; chưa có lượt review thành viên còn lại; chưa có TA scope acceptance hoặc bằng chứng runtime/test/CI/benchmark đạt |
