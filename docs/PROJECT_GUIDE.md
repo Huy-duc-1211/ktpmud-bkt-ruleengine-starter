@@ -1,14 +1,13 @@
 # PROJECT GUIDE — ĐỌC TRƯỚC KHI NHẬN VIỆC
 
 > **Nhóm 173820_n27 | Hack Marathon 2026 | Track A — Dr May Day**  
-> Bản dự thảo v0.1, ngày 05/11/2026. Dành cho Huy Đức, Hải và Việt Đức.  
-> **Đây là tài liệu bàn giao nội bộ**, không thay thế đề thi hay bảng quyết định chính thức. Leader sẽ duyệt trước khi đưa lên GitHub.
+> Bản hướng dẫn nội bộ cho Huy Đức, Hải và Việt Đức, đồng bộ M1 Revision 04 trong TASK 02H. Đề thi và bảng quyết định là nguồn bắt buộc của Track A.
 
 ## 1. Bắt đầu từ đâu? (10–15 phút)
 
 1. Đọc toàn bộ mục 2–6 của file này để hiểu bài thi, những việc đã làm và những quyết định đã chốt.
 2. Mở **đề chính thức** và **`docs/decision-table.md`** (link mục 2). Đây là nguồn có thẩm quyền; nếu có mâu thuẫn, dừng lại và hỏi leader.
-3. Đọc `TEAM_PLAN.md` để biết mình phụ trách task nào, đầu ra cần bàn giao và ai review.
+3. Đọc [`REQUIREMENTS.md`](../REQUIREMENTS.md) và ADR Rev04 để đối chiếu contract và quyết định thiết kế. Xem kế hoạch bàn giao M2 ở mục 5 của [`TEAM_PLAN.md`](TEAM_PLAN.md).
 4. Xác nhận nhận việc trong nhóm Zalo. Không để Codex tự quyết định những điểm nhóm đã khóa.
 
 ## 2. Bài thi và nguồn chính thức
@@ -41,7 +40,8 @@
 - [Repo phát triển của nhóm](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter), nhánh `track-a-development`.
 - [Repo chuẩn bị nộp của nhóm](https://github.com/Huy-duc-1211/ktpmud-project); **không viết code phân loại ở repo này**.
 - [Repo đích nộp bài của thầy](https://github.com/fossbk-spec/ktpmud-project).
-- [Issue #15 — nhóm hỏi thầy](https://github.com/fossbk-spec/ktpmud-project/issues/15).
+- [phản hồi chính thức tại Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (D01–D03 và cách xử lý dữ liệu thiếu).
+- Tài liệu thiết kế hiện hành theo SHA cố định. [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md), [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md), [M1-02 sau TASK 02E](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/HANDOFF.md).
 - [Mẫu hồ sơ Track A](https://github.com/fossbk-spec/ktpmud-project/tree/main/submissions/_TEMPLATE_BKT_RULEENGINE).
 
 **Định danh:** Lớp `173820`, nhóm `27`, mã dự kiến `173820_n27`; slug Track A `may_day_sprint`. Nhóm cần xác nhận mã từ đồ án chính có dùng chung cho Hack Marathon hay không.
@@ -50,7 +50,7 @@
 
 ## 3. Logic nghiệp vụ cần hiểu
 
-### 3.1. Input có đúng 9 trường
+### 3.1. Input có 9 tên trường được phép
 
 | Trường | Kiểu theo tài liệu | Ý nghĩa |
 |---|---|---|
@@ -63,6 +63,8 @@
 | `co_trieu_chung_ho_hap` | `bool` | Triệu chứng hô hấp |
 | `co_trieu_chung_tuan_hoan` | `bool` | Triệu chứng tuần hoàn |
 | `co_trieu_chung_tieu_hoa_nang` | `bool` | Triệu chứng tiêu hóa nặng |
+
+Bảng trên ghi kiểu trong Data Dictionary. Theo D04, tuổi có giá trị nhận `int` hoặc `float` hữu hạn ≥0, loại `bool`. HATT hiện tại có giá trị phải là `int` ≥0, HATT nền có giá trị phải là `int` >0, cả hai loại `bool`. Quy tắc với khóa thiếu và `null` nằm ở mục 5.
 
 Chỉ sử dụng **dữ liệu synthetic**; không đưa tên, MSSV, số điện thoại, CCCD hay thông tin định danh vào `PatientInput`.
 
@@ -92,7 +94,8 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 - `muc_do`: `SOC_PHAN_VE`, `PHAN_VE`, `THEO_DOI`.
 - `rule_id`: `R-SOC`, `R01-PV`, `R02-PV`, `R03-PV`, `null`.
-- `ly_do`: chuỗi ngắn, giải thích rule đã kích hoạt; không có raw clinical input hay lời khuyên điều trị.
+- Với `PHAN_VE`, DIRECT dùng mã rule đã được xác nhận riêng. CANONICAL chỉ dùng khi mọi khả năng đều khớp Tầng 2 mà chưa có rule riêng chắc chắn. Khi đó `rule_id` là mã đại diện và `ly_do` phải nêu rõ dữ liệu thiếu, mức phản vệ được bảo toàn và rule đại diện chưa được xác nhận riêng.
+- `ly_do` giải thích ngắn gọn căn cứ phân loại và thông tin còn thiếu khi liên quan. Tránh dữ liệu lâm sàng thô và lời khuyên điều trị. Ví dụ JSON trên minh họa DIRECT.
 - `THEO_DOI` nghĩa là **chưa đủ điều kiện kết luận theo bảng**, không đồng nghĩa “an toàn”.
 
 ### 3.4. Thuật ngữ tối thiểu
@@ -111,18 +114,18 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 ## 4. Đến nay nhóm đã làm được gì?
 
-| Nội dung | Trạng thái ngày 05/11/2026 |
+| Nội dung | Trạng thái khi đối chiếu TASK 02Q |
 |---|---|
-| Chọn Track A và lập nhóm 3 người | **Xong** |
-| Fork hai repo, tạo nhánh `track-a-development` | **Xong** |
-| Đối chiếu tag/commit khởi đầu | **Xong**: `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
-| TASK 01 — Codex đọc starter và viết báo cáo phân tích | **Xong**, đã được leader và AI reviewer rà soát |
-| Đăng Issue #15 hỏi D01–D03 | **Đã gửi; chưa có phản hồi tại thời điểm cập nhật** |
-| Chốt định hướng thiết kế D04–D10 | **Leader đã đồng ý**, thành viên khác cần đọc và hiểu |
-| Thống nhất hướng phân vai | **Leader đồng ý**, chờ Hải và Việt Đức nhận task |
-| `REQUIREMENTS.md`, `DECISIONS.md`, Test Plan chính thức | **Chưa triển khai TASK 02** |
-| `classify()` nghiệp vụ, audit, benchmark, test đầy đủ | **Chưa viết** |
-| CI xanh với test nghiệp vụ; freeze, release, PR nộp | **Chưa thực hiện** |
+| Chọn Track A, lập nhóm 3 người, fork hai repo và tạo `track-a-development` | Đã thực hiện |
+| Đối chiếu tag/commit khởi đầu | `bkt-2026-v1` tại `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
+| TASK 01 | Đã có báo cáo phân tích starter |
+| D01–D03 | Đã nhận làm rõ chính thức tại Issue #15 |
+| Requirements và ADR | Revision 04 đã đăng để review trong [Draft PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1) và [Draft PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2) |
+| D13-E | Huy Đức phê duyệt chính sách nhóm ngày **09/11/2026** |
+| M1-02 | [Draft PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) có **175 ca thiết kế chính và 81 ca toán logic nội bộ**. Hải đóng góp bản gốc. Huy Đức sở hữu bản sửa TASK 02E với Codex hỗ trợ. F01–F04 đã được xử lý ở mức thiết kế và dữ liệu test |
+| M1-03 | [Draft PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) có [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) và báo cáo audit ở mức thiết kế: **11 AC, 64 ca QA, 60 mục checklist và 15 phát hiện**. |
+| Bằng chứng thực thi | Các mục thực thi trong QA Matrix là `NOT RUN`. Chưa xác nhận classifier/helper, integration, CI chạy test nghiệp vụ hoặc benchmark. |
+| Nghiệm thu M1 | Cả bốn PR đang mở ở trạng thái Draft. Review kỹ thuật của thành viên, QA độc lập của người review và chấp thuận cuối của Leader chưa được xác nhận. |
 
 **Cảnh báo:** `tests/test_classifier.py` trong starter đang kiểm tra `NotImplementedError`, không phải kiểm tra phân loại thật. Có workflow CI **không có nghĩa** đã đáp ứng A-08/A-09.
 
@@ -132,9 +135,9 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 | ID | Quyết định |
 |---|---|
-| **D04** | Validation nghiêm ngặt, không ép kiểu ngầm. Tuổi là số hữu hạn **≥0, có thể là số lẻ**; không coi `True/False` là số. Input sai kiểu xử lý lỗi rõ ràng. Dữ liệu thiếu theo chính sách D02–D03 khi được làm rõ. |
+| **D04** | Validation nghiêm ngặt, không ép kiểu ngầm. Tuổi là số hữu hạn **≥0, có thể là số lẻ**; không coi `True/False` là số. Kiểm tra toàn bộ input trước phân loại. Sai kiểu thật sự dùng `TypeError`. Sai miền hoặc khóa lạ dùng `ValueError`. Missing/null được xử lý theo TA và D13-E. |
 | **D05** | Giữ `classify(patient)`; tách vài hàm theo trách nhiệm, **kiến trúc tối giản**, không làm rối logic. |
-| **D06** | `ly_do` dựa trên mẫu giải thích gắn rule, không dùng LLM, không đưa dữ liệu thô hoặc khuyên điều trị. |
+| **D06** | `ly_do` dựa trên mẫu tất định theo kết quả và nguồn gán mã DIRECT/CANONICAL. Nêu thiếu tuổi/HATT/nền khi liên quan. Tránh LLM, dữ liệu thô và lời khuyên điều trị. |
 | **D07** | Tách audit writer; dùng JSON Lines cho bài thi; UUID giả lập theo **phiên người thao tác** nằm ngoài `PatientInput`; hỗ trợ thay cách lưu sau này nhưng **không tích hợp production**. |
 | **D08** | Audit cả xử lý thành công và input lỗi, chỉ ghi trạng thái tổng quát; không log payload hoặc exception chứa dữ liệu đầu vào. |
 | **D09** | Test normal, boundary, invalid, missing, overlap, output, audit. **Test tuổi số lẻ** vì đề quy định. |
@@ -142,17 +145,27 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 **D11–D12 là ràng buộc từ đề:** Không tự thêm clinical rules/ngưỡng; input chỉ chín trường, output ba trường, audit đúng `Timestamp, User_UUID, Action_Type, Status`; zero PII/PHI/secret.
 
-**Chi tiết còn cần thiết kế trong ADR:** miền giá trị số đo không được thầy định nghĩa đầy đủ; cách truyền UUID theo phiên mà không đổi contract; chính sách xử lý lỗi lưu audit; cách thống kê benchmark. Không tự thêm ngưỡng y khoa mới.
+### D01–D03 đã được giảng viên làm rõ
 
-### D01–D03: còn chờ TA qua Issue #15
+| ID | Hướng dẫn hiện hành |
+|---|---|
+| **D01** | Nếu đủ Tầng 1, ưu tiên `SOC_PHAN_VE / R-SOC`. Khi nhiều rule Tầng 2 cùng thỏa và chưa đủ Tầng 1, chọn một mã theo R01-PV > R02-PV > R03-PV. R02 và R03 cùng thỏa thì chọn R02-PV. |
+| **D02** | Tuổi thiếu khóa hoặc `null` → `THEO_DOI / null` kể cả khi bằng chứng Tầng 2 đã đủ. `ly_do` nêu thiếu tuổi để chọn ngưỡng. |
+| **D03** | Có tuổi và đủ bằng chứng Tầng 2 thì giữ `PHAN_VE` với mã Tầng 2 phù hợp khi HATT hiện tại thiếu/`null` hoặc người ≥18 tuổi có HATT ≥90 mmHg nhưng thiếu/`null` HATT nền. Nêu số đo nào còn thiếu, tránh suy hoặc gán nền mặc định. Người ≥18 tuổi có HATT <90 mmHg vẫn đủ bằng chứng cho nhánh tuyệt đối khi Tầng 2 đã được chứng minh. |
 
-| ID | Câu hỏi | Phương án dự phòng **chưa được xác nhận** |
-|---|---|---|
-| **D01** | Nếu R02 và R03 cùng đúng, chọn `rule_id` nào? | Tạm ưu tiên R02 trước R03 theo thứ tự bảng |
-| **D02** | Thiếu `tuoi` nhưng R01/R02/R03 đúng thì phân loại gì? | Tạm `THEO_DOI` theo đoạn đặc tả nhắc thiếu tuổi |
-| **D03** | HATT `null`/thiếu nhưng thỏa phản vệ thì sao? | Với `null` hợp lệ, dự kiến `PHAN_VE`; thiếu hẳn khóa còn phải có policy |
+Thiếu khóa và `null` tương đương về `muc_do` và `rule_id` đối với tuổi, HATT hiện tại và HATT nền. Với boolean thiếu/`null`, TA yêu cầu không lỗi chỉ vì thiếu dữ liệu và giữ mức đã đủ bằng chứng. Xem [phản hồi chính thức tại Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248).
 
-**Không tự viết expected output chắc chắn cho ba ca mơ hồ.** Ghi `PENDING TA CONFIRMATION` trong bản nháp, cập nhật sau phản hồi của thầy.
+### D13-E đã được Leader phê duyệt ngày 09/11/2026
+
+D13-E là chính sách nội bộ đã công bố theo phạm vi TA cho phép. Cách chọn mã đại diện thuộc quyết định của nhóm. Xem [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) và [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md).
+
+- Boolean thiếu khóa hoặc `null` → UNKNOWN nội bộ. Boolean có giá trị phải đúng kiểu. Áp dụng D04 cho dữ liệu không hợp lệ và giữ Enum/Kleene, cách đếm T/U của R02. Không ép UNKNOWN thành False.
+- Giữ dữ liệu đã biết khi xét mọi cách gán True/False cho boolean UNKNOWN. **Def** là tập rule đúng trong mọi khả năng. **Poss** là tập rule đúng trong ít nhất một khả năng. **AllPV** nghĩa là mỗi khả năng đều khớp ít nhất một rule Tầng 2.
+- Chọn trong **Def** trước theo R01 > R02 > R03 và dùng DIRECT. Rule chỉ possible có thứ tự cao hơn không lấn rule definite. Nếu Def rỗng nhưng AllPV, giữ kết luận phản vệ. Khi trả `PHAN_VE`, chọn mã ưu tiên cao nhất trong Poss làm CANONICAL và giải thích rõ như mục 3.3.
+- Bằng chứng phản vệ từ Def hoặc AllPV kết hợp bằng chứng tụt HATT theo bảng và tuổi đã biết → `SOC_PHAN_VE / R-SOC`. Ưu tiên kiểm tra tuổi theo D02 và xử lý HATT thiếu theo D03.
+- **Mixed**, tức có cả khả năng khớp và không khớp Tầng 2 → `THEO_DOI / null` với lý do chưa đủ thông tin. Nếu mọi khả năng đều không khớp, dùng cùng mức/mã với lý do không khớp rule.
+
+Các lựa chọn về validation số, ContextVar/UUID, fail-closed, thứ tự lỗi kép và protocol benchmark đã có trong ADR Rev04. Cơ chế đường dẫn audit mặc định vẫn là đề xuất chờ review. Xử lý lỗi nội bộ ngoài dự kiến vẫn là mục cần review riêng.
 
 ## 6. A-01 đến A-11: cần làm gì để đạt?
 
@@ -202,7 +215,7 @@ Mỗi thành viên cần trả lời được:
 3. Vì sao `tuoi=0.5` hợp lệ và HATT **bằng** ngưỡng không thỏa điều kiện `<`?
 4. Vì sao test stub đang pass không chứng minh code đã đúng?
 5. Audit có những trường nào? Vì sao UUID không thuộc input bệnh nhân?
-6. D01–D03 đang chờ gì, D04–D10 đã được ai duyệt?
+6. D01–D03 đã được giảng viên làm rõ thế nào? Khi nào D13-E dùng mã CANONICAL và phải giải thích điều gì?
 7. Phải làm gì khi Codex tạo ra nội dung khác Decision Table?
 
 **Việc ngay sau khi đọc:** mở `TEAM_PLAN.md`, xác nhận vai trò và task trên Zalo. Nếu chưa hiểu, hỏi trước khi làm.

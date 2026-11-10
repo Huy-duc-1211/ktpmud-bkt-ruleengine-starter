@@ -1,9 +1,12 @@
 # TEAM PLAN — PHÂN CÔNG, BÀN GIAO & REVIEW
 
 > **Nhóm 173820_n27 | Track A — Dr May Day**  
-> Bản dự thảo v0.1, 05/11/2026. **Chưa đăng lên GitHub.**  
-> **Huy Đức đã đồng ý hướng chia việc; Hải và Việt Đức chưa xác nhận nhận việc.**  
+> Đồng bộ M1 Revision 04 trong TASK 02H. Phân công dưới đây ghi vai trò và kế hoạch review của nhóm. Kết quả từng phần được ghi theo bằng chứng bàn giao.
 > Đọc [`PROJECT_GUIDE.md`](PROJECT_GUIDE.md) trước tài liệu này.
+
+D01–D03 đã được giảng viên làm rõ. Ưu tiên R-SOC khi đủ điều kiện, sau đó chọn rule Tầng 2 đã thỏa theo R01 > R02 > R03. Thiếu tuổi → `THEO_DOI / null`. Có tuổi và đủ bằng chứng Tầng 2 thì giữ `PHAN_VE` khi thiếu HATT cần thiết để xác nhận sốc. Xem mục 5 của [Project Guide](PROJECT_GUIDE.md) và [phản hồi tại Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248).
+
+Huy Đức phê duyệt **D13-E ngày 09/11/2026**. Boolean thiếu khóa hoặc `null` → UNKNOWN. Dữ liệu sai kiểu hoặc sai miền vẫn theo D04. Khi đã kiểm tra input và có tuổi, rule definite được xét trước rule chỉ possible. AllPV giữ mức phản vệ. Nếu Def rỗng và kết quả là `PHAN_VE`, chọn mã ưu tiên nhất trong Poss làm CANONICAL. `ly_do` phải giải thích đây là mã đại diện, nêu dữ liệu còn thiếu và ghi rõ rule riêng chưa được xác nhận. Mixed → `THEO_DOI / null` kèm lý do chưa đủ thông tin. R-SOC vẫn cần bằng chứng Tầng 2 và tụt HATT theo tuổi. D13-E là chính sách của nhóm trong phạm vi TA cho phép. [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md), [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md).
 
 ## 1. Mục tiêu của cách phân công
 
@@ -20,33 +23,35 @@ Mỗi task phải có **Owner** (người làm và chịu trách nhiệm), **Rev
 
 | Người | Vai trò chính | Chịu trách nhiệm xuyên suốt | Người review |
 |---|---|---|---|
-| **Huy Đức — SV1 (Leader)** | Requirements, quyết định thiết kế, tích hợp | Contract, phạm vi, thống nhất D01–D12, quản lý deadline, chốt tài liệu/PR cuối | Hải và Việt Đức review chéo; Huy tổng hợp quyết định cuối |
-| **Hải — SV2 (Technical Owner)** | Logic phân loại & test kỹ thuật | Thiết kế rồi triển khai R01/R02/R03/R-SOC, validation, boundary/negative tests | Huy đối chiếu với Decision Table; Việt Đức kiểm tra AC/test coverage |
-| **Việt Đức — SV3 (QA/Quality Owner)** | QA, audit, security, CI, benchmark | Đối chiếu A-01–A-11, kiểm chứng không rò dữ liệu, triển khai audit nhỏ ở M2 có review, bằng chứng CI/benchmark | Huy review; Hải hỗ trợ phần code/test kỹ thuật |
+| **Huy Đức — SV1 (Leader)** | Requirements, quyết định thiết kế, tích hợp | Contract, phạm vi, quyết định Requirements/ADR, sở hữu bản sửa TASK 02E, theo dõi mốc, review cuối và tích hợp | Hải và Việt Đức review chéo; Huy tổng hợp quyết định cuối |
+| **Hải — SV2 (Technical Owner)** | Logic phân loại & test kỹ thuật | Tác giả đóng góp M1-02 gốc. M2 dự kiến triển khai R01/R02/R03/R-SOC, validation và test biên/ca âm | Huy đối chiếu với Decision Table; Việt Đức kiểm tra AC/test coverage |
+| **Việt Đức — SV3 (QA/Quality Owner)** | QA, audit, security, CI, benchmark | Đối chiếu QA Matrix A-01–A-11, kiểm chứng privacy, audit M2 có review, bằng chứng CI/benchmark | Huy review; Hải hỗ trợ phần code/test kỹ thuật |
 
 **Phân công là trách nhiệm chính, không phải tách biệt kiến thức.** Cả ba phải hiểu luồng input → validation → rules → output/audit để trả lời vấn đáp ngẫu nhiên.
 
 Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đăng nhập vào repo công khai.
 
-## 3. M1: công việc ngay trước Checkpoint 1 (05–08/11)
+## 3. M1 (05–08/11) và trạng thái review hiện hành
 
 ### M1-01 — Huy Đức: Requirements & Scope
 
-**Đầu ra dự kiến:** bản nháp `REQUIREMENTS.md` (file chính thức chỉ tạo khi TASK 02 được giao).
+**Đầu ra hiện hành** gồm [`REQUIREMENTS.md`](../REQUIREMENTS.md) Revision 04 trong [Draft PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1). Bản theo SHA đã dùng để đối chiếu là [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md).
 
 - Mô tả mục tiêu bài, giới hạn trong/ngoài phạm vi.
 - Viết input/output contract chín trường/ba trường đúng bảng quyết định.
 - Diễn giải R01–R03/R-SOC, thứ tự tầng, yêu cầu zero PII.
 - Đối chiếu 11 acceptance criteria, phân biệt yêu cầu từ đề và quyết định của nhóm.
-- Ghi D01–D03 **PENDING TA CONFIRMATION**, D04–D10 **APPROVED BY LEAD**, D11–D12 **SPECIFIED**.
-- Theo dõi [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15) và cập nhật nếu thầy trả lời.
+- Ghi D01–D03 **TA CONFIRMED**. D04–D10 giữ các quyết định Leader duyệt ở phần tương thích với phản hồi TA. D11–D12 giữ theo đề. D13-E đã được Leader phê duyệt ngày 09/11/2026.
+- Dùng [phản hồi tại Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) để đối chiếu các ca thiếu dữ liệu và chồng lấp rule.
 
 **Reviewer:** Hải kiểm tra logic rule; Việt Đức kiểm tra AC và điều kiện an toàn.  
 **Đạt khi:** không sai contract, có nguồn, không thiếu AC, khớp Test Plan và có review.
 
-### M1-02 — Hải: Rule Design & Test Cases
+### M1-02 — Rule Design & Test Cases
 
-**Đầu ra dự kiến:** sơ đồ/diễn giải luồng `classify()` tối giản; danh sách test cases có **Test ID — Scenario — Input — Expected — AC — Nguồn — Trạng thái**.
+**Đầu ra hiện hành** nằm trong [Draft PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3). Hải là tác giả bản M1-02 gốc. Huy Đức sở hữu bản sửa TASK 02E, có Codex hỗ trợ. F01–F04 đã được xử lý ở mức thiết kế và dữ liệu test. PR có **175 ca thiết kế chính** và **81 ca toán logic nội bộ**. Xem [bàn giao theo SHA](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/HANDOFF.md) và [bằng chứng kiểm tra tĩnh](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/REMEDIATION_EVIDENCE.json).
+
+**Phạm vi bộ ca thiết kế**
 
 - Diễn giải chính xác từng điều kiện `AND/OR`, R01–R03 và R-SOC.
 - Test các nhóm `SOC_PHAN_VE`, `PHAN_VE`, `THEO_DOI`.
@@ -54,7 +59,7 @@ Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đă
 - Test R03 ở cả nhánh hô hấp và tuần hoàn, kể cả khi dị nguyên qua đường hít.
 - Test overlap R02/R03; test ưu tiên R-SOC.
 - Test tuổi `0`, `0.5`, `1`, `1.5`, `10.99`, `11`, `18`, huyết áp bằng ngưỡng, giảm đúng và trên 30%.
-- Test dữ liệu thiếu, `null`, sai kiểu và trường dư. Các ca chịu ảnh hưởng D01–D03 phải ghi **PENDING**, không tự chốt expected.
+- Test dữ liệu thiếu, `null`, sai kiểu và trường dư. Expected của D01–D03 theo làm rõ của TA. Các ca D13-E bao phủ definite/possible, AllPV, Mixed và giải thích DIRECT/CANONICAL.
 - Đề xuất hàm hỗ trợ **ít và rõ trách nhiệm** theo D05, giúp viết ADR.
 
 **Không triển khai code `classify()` trong M1 nếu Huy chưa giao task viết code.**  
@@ -63,9 +68,9 @@ Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đă
 
 ### M1-03 — Việt Đức: AC Traceability, QA & Audit/Security Review
 
-**Đầu ra dự kiến:** bảng A-01–A-11 → cách kiểm chứng/test ID/bằng chứng; QA checklist; đóng góp thiết kế audit, privacy, CI, benchmark và AI-use.
+**Bàn giao hiện hành:** [Draft PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) có [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) với ánh xạ A-01–A-11 tới ca kiểm thử, checklist và bằng chứng dự kiến cho audit, privacy, CI, benchmark và AI-use. Việt Đức là tác giả QA gốc. Huy Đức tiếp quản việc sửa và kiểm chứng ở mức thiết kế với hỗ trợ ChatGPT/Codex. Các mục thực thi vẫn `NOT RUN`. Kết quả review độc lập của thành viên cần được đối chiếu trước khi Leader nghiệm thu.
 
-- Dùng danh sách test của Hải để map đủ **11 AC**; chỉ ra AC nào **chưa có test/bằng chứng**.
+- Dùng bộ ca M1-02 trong PR #3 để ánh xạ đủ **11 AC** và ghi rõ AC nào còn thiếu test hoặc bằng chứng.
 - Không tự tuyên bố đã đạt A-08/A-09/A-10 trước khi chạy test/CI/benchmark thật.
 - Đối chiếu yêu cầu audit **đúng bốn trường**: `Timestamp`, `User_UUID`, `Action_Type`, `Status`.
 - Phân tích cách kiểm tra audit không chứa huyết áp, triệu chứng hay raw input.
@@ -79,18 +84,18 @@ Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đă
 
 ### M1-04 — Cả nhóm: ADR đầu tiên và review chéo
 
-**Đầu ra dự kiến:** `DECISIONS.md` / ADR đầu tiên.
+**Đầu ra hiện hành** là [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md) trong [Draft PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2). Review chéo và chấp thuận M1 cuối cùng chưa được xác nhận.
 
 | Người | Trách nhiệm |
 |---|---|
-| Huy | Tổng hợp D04–D10 đã duyệt, các lý do và đánh đổi; giữ D01–D03 pending |
+| Huy | Tổng hợp D04–D10, làm rõ TA cho D01–D03 và D13-E đã duyệt, kèm lý do và đánh đổi |
 | Hải | Kiểm tra kiến trúc hàm, logic rules, cách tách validation và classification |
 | Việt Đức | Kiểm tra audit, UUID, bảo mật, test, CI và benchmark |
 | Cả ba | Đọc chéo Requirements–ADR–Test Plan, không để một tài liệu mâu thuẫn tài liệu khác |
 
 **Đạt khi:** cả ba đã đọc và phản hồi phần mình; Huy phê duyệt bản tổng hợp. TA duyệt **scope** ở Checkpoint 1, không thay nhóm phê duyệt toàn bộ kỹ thuật.
 
-## 4. Các mốc bàn giao nội bộ (đề xuất)
+## 4. Các mốc bàn giao nội bộ đề xuất trước Checkpoint 1 (lịch sử)
 
 | Mốc | Bàn giao cần có | Xử lý khi gặp khó khăn |
 |---|---|---|
@@ -99,22 +104,30 @@ Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đă
 | **07/11 — review/sửa** | Mỗi người sửa theo comment, gửi lại link bản nháp/PR | Huy cân nhắc thu hẹp hoặc chuyển giao task nếu có rủi ro |
 | **08/11 — Checkpoint 1** | Requirements, AC, Test Plan, ADR đầu tiên nhất quán, đủ để trình TA | Không tuyên bố TA đã duyệt nếu chưa được phản hồi |
 
-Đây là **mốc quản lý nội bộ**, có thể điều chỉnh theo thống nhất của nhóm trên Zalo. **Hạn chính thức:** cuối 08/11/2026.
+Bảng lưu lại các mốc quản lý nội bộ đã đề xuất trước Checkpoint 1. Hạn chính thức của Checkpoint 1 là cuối 08/11/2026.
 
 ## 5. Phân công định hướng M2–M4 (chưa phải lệnh làm ngay)
 
 | Giai đoạn | Huy Đức | Hải | Việt Đức |
 |---|---|---|---|
-| **M2 · 09–15/11** | Review logic và PR, tích hợp, đối chiếu contract, xử lý D01–D03 theo phản hồi | Code `classify()` và các hàm logic/validation, test rule/boundary | Phần audit nhỏ và test audit, kiểm tra CI, smoke test |
+| **M2 · 09–15/11** | Review logic và PR, tích hợp, đối chiếu contract theo làm rõ D01–D03 và D13-E | Code `classify()` và các hàm logic/validation, test rule/boundary | Phần audit nhỏ và test audit, kiểm tra CI, smoke test |
 | **M3 · 16–19/11** | Kiểm tra A-01–A-11, hoàn thiện tài liệu, review freeze/tag | Sửa lỗi core, mở rộng negative/boundary test | Chạy benchmark, security/privacy checklist, CI evidence, hỗ trợ TEST_REPORT và AI_USE |
 | **M4 · 20/11** | Chuẩn bị PR nộp bài, điền `source-ref.json`, kiểm tra SHA/tag/CI | Đối chiếu source release, hỗ trợ sửa blocker | Rà schema nộp, tài liệu QA, evidence và contributions |
 | **Viva · 21/11** | Giải thích kiến trúc, các quyết định và đánh đổi | Giải thích code/rule/test | Giải thích audit/CI/privacy/benchmark; **cả ba hiểu hệ thống tổng thể** |
+
+### Bàn giao M2 từ thiết kế M1
+
+**Đã có để đối chiếu** gồm [175 ca chính](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_CASES.csv), [81 ca logic nội bộ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M2/INTERNAL_STATE_CASES.csv), [Test Plan](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_PLAN.md), [Integration Test Plan §2 (gồm INT-021) và §3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/13804b6292f49ef64f2f3df16703b259a89b73b8/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md) và [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx). Đây là đầu vào cho triển khai và viết test. Chưa xác nhận thực thi classifier/helper, integration, CI nghiệp vụ, benchmark, peer QA hoặc nghiệm thu M1.
+
+- **Hải** dự kiến triển khai validation và selector D13-E, chạy ca rule, biên và trạng thái nội bộ. Kiểm tra riêng definite thắng possible, AllPV, Mixed, ưu tiên sốc và các trường hợp thiếu tuổi/HATT. Review logic giải thích trong INT-021 cùng Việt Đức.
+- **Việt Đức** đối chiếu QA Matrix A-01–A-11 với ID ca, test thực thi, nguồn bằng chứng và khoảng trống. Với INT-021/CHK-058, áp dụng `explanation_assertions` lên `ly_do` thực tế của DIRECT/CANONICAL/MIXED. Kiểm tra cả mẫu phải khớp và mẫu sai phải bị loại, rồi đọc lại ý nghĩa và privacy cùng Hải. Ghi kết quả chạy và nguồn bằng chứng tách khỏi mapping thiết kế. Kiểm tra gọi trực tiếp `classify(patient)`, validation, JSONL bốn trường, UUID/context theo phiên và việc dọn context, cô lập file test, đường lỗi audit/fail-closed và privacy ở output, audit, message và exception chaining.
+- **Huy Đức** đối chiếu Requirements–ADR–Test Plan, review bằng chứng và quyết định tích hợp. Đường dẫn audit mặc định và cách xử lý lỗi nội bộ ngoài dự kiến vẫn theo trạng thái review riêng trong ADR.
 
 Nếu kỹ năng thực tế khác với dự kiến, leader có thể điều chỉnh. Không gán công việc chưa thực hiện cho thành viên trong `CONTRIBUTIONS.md`.
 
 ## 6. Cách dùng AI riêng nhưng không làm lệch thiết kế
 
-**Một nguồn chung:** đề thi + Decision Table đúng tag + `PROJECT_GUIDE.md` + `TEAM_PLAN.md` + D04–D10 đã duyệt + D01–D03 pending.
+Cả nhóm dùng đề thi, Decision Table tại tag `bkt-2026-v1`, phản hồi TA cho D01–D03, Requirements/ADR Rev04 và bộ ca M1-02 ở mục 3. Guide và Plan tóm tắt cách áp dụng. D13-E là chính sách nhóm đã duyệt.
 
 **Quy trình:**
 
@@ -144,7 +157,7 @@ Nếu kỹ năng thực tế khác với dự kiến, leader có thể điều c
 
 ## 8. Xử lý người làm chậm hoặc sản phẩm chưa đạt
 
-- **Không chờ đến 08/11 mới nói không làm kịp**: báo khi phát sinh blocker hoặc có nguy cơ trễ.
+- Báo khi phát sinh blocker hoặc có nguy cơ trễ mốc đang phụ trách.
 - Nếu chất lượng chưa đạt, reviewer nêu lỗi cụ thể và Owner sửa; không lấy bản đầu do Codex tạo làm kết quả cuối.
 - Nếu task có nguy cơ làm trễ Checkpoint, Huy có quyền chuyển giao **một phần công việc có phạm vi rõ**, cập nhật lại Owner/Reviewer.
 - Ai thực tế viết, kiểm chứng, review thì ghi đúng vào bằng chứng đóng góp. Không gán công giả.
@@ -154,7 +167,7 @@ Nếu kỹ năng thực tế khác với dự kiến, leader có thể điều c
 
 | Người | Phải giải thích được |
 |---|---|
-| Huy | Vì sao chọn D04–D10, ưu nhược điểm, tích hợp, trách nhiệm AI/human |
+| Huy | Vì sao chọn D04–D10 và D13-E, ưu nhược điểm, tích hợp, trách nhiệm AI/human |
 | Hải | `classify()`, R01/R02/R03/R-SOC, validation, test ranh giới |
 | Việt Đức | Audit bốn trường, UUID synthetic, bảo mật, CI, p50/p95, bằng chứng nghiệm thu |
 | **Cả nhóm** | Luồng tổng thể, vì sao test pass chưa đủ chứng minh đúng, D01–D03, cách kiểm chứng Codex |
