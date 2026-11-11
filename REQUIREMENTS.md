@@ -230,7 +230,7 @@ Protocol D10 đã được Leader chốt: sắp N mẫu tăng dần, lấy phầ
 
 ## 7. Tiêu chí nghiệm thu
 
-Trạng thái dưới đây phản ánh bằng chứng có thể kiểm tra tại thời điểm tích hợp M1 ngày 10/11/2026: NOT IMPLEMENTED là chưa có chức năng/tài liệu cần thiết, PARTIALLY AVAILABLE là có khung nhưng thiếu bằng chứng nghiệp vụ. TA CONFIRMED là nguồn yêu cầu đã rõ, không đồng nghĩa VERIFIED. Không AC nào được nâng thành VERIFIED chỉ từ việc merge tài liệu; chưa có bằng chứng runtime test/CI nghiệp vụ/benchmark đạt. Các trạng thái cần cập nhật lại khi M2 có kết quả thực tế.
+Trạng thái dưới đây phản ánh bằng chứng của từng tiêu chí. `NOT IMPLEMENTED` là chưa có chức năng hoặc tài liệu cần thiết. `PARTIALLY AVAILABLE` là có khung nhưng thiếu bằng chứng nghiệp vụ. `TA CONFIRMED` ghi nhận yêu cầu đã được TA làm rõ. `VERIFIED` ghi nhận điều kiện nghiệm thu của tiêu chí đã được đối chiếu trực tiếp với bằng chứng được dẫn. A-11 được kiểm tra bằng README. Các tiêu chí về thực thi vẫn cần kết quả runtime, test nghiệp vụ, CI hoặc benchmark tương ứng.
 
 | AC | Yêu cầu | Điều kiện nghiệm thu | Bằng chứng cần có | Nguồn | Trạng thái hiện tại |
 |---|---|---|---|---|---|
@@ -244,7 +244,7 @@ Trạng thái dưới đây phản ánh bằng chứng có thể kiểm tra tạ
 | A-08 | Chạy đạt từ clean checkout | pytest -q đạt với test nghiệp vụ đã thay/chỉnh stub | Lệnh, môi trường, kết quả thực chạy | E A-08; R | PARTIALLY AVAILABLE — có lệnh, chưa có bằng chứng test nghiệp vụ clean checkout đạt |
 | A-09 | CI trên PR | GitHub Actions thực sự chạy bộ test cho PR | PR run URL và bước test thực tế | E A-09; W | PARTIALLY AVAILABLE — có workflow, chưa có bằng chứng CI chạy đạt với bộ test nghiệp vụ |
 | A-10 | Benchmark đúng protocol | N≥1.000 sau 100 warm-up; nearest-rank p50/p95; p95 <100 ms, công bố máy và I/O full-path | Phương pháp và số liệu thật | E A-10; D10 | NOT IMPLEMENTED — protocol đã duyệt, chưa có số liệu |
-| A-11 | Disclaimer README | Có chính xác educational/synthetic — not for clinical use | Kiểm tra README | E A-11; R | NOT IMPLEMENTED |
+| A-11 | Disclaimer README | Có chính xác educational/synthetic — not for clinical use | Đã đối chiếu nguyên văn tại [README.md dòng 43 ở commit `4482e4f`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43). | E A-11; R | VERIFIED — disclaimer trong README |
 
 Việc test stub có thể chạy đạt chỉ chứng minh stub; không chứng minh yêu cầu nghiệp vụ. Test Plan và QA Matrix hiện hành đã được tích hợp qua PR #3 và #4. Bộ pytest nghiệp vụ, kết quả chạy, bằng chứng audit/CI và cập nhật QA theo thực thi vẫn thuộc M2/M3. [P; L]
 
@@ -323,7 +323,7 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | Audit SUCCESS/INVALID_INPUT bị dùng nhầm | Allowed missing/null không tự là lỗi; giữ D04 cho invalid thực sự, bốn trường và error precedence |
 | Direct call chưa cấu hình audit path | Tiếp tục review đề xuất ở ADR, không tự chọn/duyệt path trong task này |
 | Unexpected internal exception trước audit thành công | Residual implementation risk / review item: không SUCCESS hoặc tự gán INVALID_INPUT; không thêm status/schema hoặc log payload; Hải/Việt Đức review cách xử lý |
-| Nhầm review tài liệu với nghiệm thu | Giữ 11 AC chưa VERIFIED; Leader approval D13-E và GitHub PR approval không chứng minh TA đã nghiệm thu scope hoặc runtime/test/clean checkout/CI/benchmark đạt |
+| Nhầm review tài liệu với nghiệm thu | Ghi nhận `VERIFIED` cho A-11 theo README tại §7. A-01 đến A-10 tiếp tục cần bằng chứng theo từng tiêu chí. Nghiệm thu phạm vi của TA cần xác nhận riêng. |
 | Nguồn snapshot lịch sử còn policy cũ | Giữ snapshot là lịch sử; source TA và Revision 04/D13-E ưu tiên hơn. Bản M1-02/QA hiện hành đã được đồng bộ và merge trong PR #3/#4; không dùng snapshot cũ làm policy hiện hành |
 | AI-use hoặc phối hợp thiếu bằng chứng | Ghi công cụ/phạm vi/kiểm chứng/quyết định và người chịu trách nhiệm thực tế; Huy review nguồn, Hải M1-02, Việt Đức M1-03 |
 
