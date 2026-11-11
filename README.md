@@ -36,7 +36,7 @@ Kế hoạch gồm phân loại theo rule, validation input, kết quả có gi�
 
 - [Decision Table](docs/decision-table.md), [Requirements](REQUIREMENTS.md), [ADR](DECISIONS.md).
 - [Project Guide](docs/PROJECT_GUIDE.md), [Team Plan](docs/TEAM_PLAN.md).
-- [Rule Design](docs/m1-hai/M1/RULE_DESIGN.md), [Test Plan](docs/m1-hai/M1/TEST_PLAN.md), [QA Matrix](docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx).
+- [Rule Design](docs/m1-hai/M1/RULE_DESIGN.md), [Test Plan](docs/m1-hai/M1/TEST_PLAN.md), [QA Matrix](docs/m1-qa/QA_MATRIX.xlsx).
 
 ## An toàn và giới hạn
 

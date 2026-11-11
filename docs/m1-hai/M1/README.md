@@ -8,4 +8,4 @@ Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md) (Q), [ADR](../../
 4. [REVIEW_NOTES](REVIEW_NOTES.md), [REVIEW_RESPONSE](REVIEW_RESPONSE.md): F01–F04 và R01–R11, không tự xác nhận final acceptance.
 5. [HANDOFF](HANDOFF.md), [VALIDATION_REPORT](VALIDATION_REPORT.md), [sources](sources/README.md).
 
-Xem [kế hoạch M2/M3](../M2/README.md) cho 81 ca logic nội bộ, integration, fixture và benchmark. Trạng thái thiết kế và bằng chứng thực thi được theo dõi riêng trong [QA Matrix](../../m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx).
+Xem [kế hoạch M2/M3](../M2/README.md) cho 81 ca logic nội bộ, integration, fixture và benchmark. Trạng thái thiết kế và bằng chứng thực thi được theo dõi riêng trong [QA Matrix](../../m1-qa/QA_MATRIX.xlsx).

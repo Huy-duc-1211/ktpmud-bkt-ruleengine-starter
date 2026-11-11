@@ -68,7 +68,7 @@ Không đưa họ tên đầy đủ, thông tin cá nhân hoặc thông tin đă
 
 ### M1-03 — Việt Đức: AC Traceability, QA & Audit/Security Review
 
-**Bàn giao hiện hành:** [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã tích hợp [QA Matrix](m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) với ánh xạ A-01–A-11 và bằng chứng dự kiến. Việt Đức là tác giả QA gốc. Huy Đức tiếp quản sửa và kiểm chứng thiết kế với ChatGPT/Codex. Các mục thực thi vẫn `NOT RUN`.
+**Bàn giao hiện hành:** [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã tích hợp [QA Matrix](m1-qa/QA_MATRIX.xlsx) với ánh xạ A-01–A-11 và bằng chứng dự kiến. Việt Đức là tác giả QA gốc. Huy Đức tiếp quản việc sửa và kiểm chứng thiết kế với công cụ AI hỗ trợ. Các mục thực thi vẫn `NOT RUN`.
 
 - Dùng bộ ca M1-02 trong PR #3 để ánh xạ đủ **11 AC** và ghi rõ AC nào còn thiếu test hoặc bằng chứng.
 - Không tự tuyên bố đã đạt A-08/A-09/A-10 trước khi chạy test/CI/benchmark thật.
@@ -120,7 +120,7 @@ Bảng lưu lại các mốc quản lý nội bộ đã đề xuất trước Ch
 
 ### Bàn giao M2 từ thiết kế M1
 
-**Nguồn bàn giao:** [175 ca chính](m1-hai/M1/TEST_CASES.csv), [81 ca logic nội bộ](m1-hai/M2/INTERNAL_STATE_CASES.csv), [Test Plan](m1-hai/M1/TEST_PLAN.md), [Integration Test Plan có INT-021](m1-hai/M2/INTEGRATION_TEST_PLAN.md) và [QA Matrix](m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx). Đây là đầu vào thiết kế. Kết quả runtime, CI nghiệp vụ và benchmark cần được thu riêng.
+**Nguồn bàn giao:** [175 ca chính](m1-hai/M1/TEST_CASES.csv), [81 ca logic nội bộ](m1-hai/M2/INTERNAL_STATE_CASES.csv), [Test Plan](m1-hai/M1/TEST_PLAN.md), [Integration Test Plan có INT-021](m1-hai/M2/INTEGRATION_TEST_PLAN.md) và [QA Matrix](m1-qa/QA_MATRIX.xlsx). Đây là đầu vào thiết kế. Kết quả runtime, CI nghiệp vụ và benchmark cần được thu riêng.
 
 - **Hải** dự kiến triển khai validation và selector D13-E, chạy ca rule, biên và trạng thái nội bộ. Kiểm tra riêng definite thắng possible, AllPV, Mixed, ưu tiên sốc và các trường hợp thiếu tuổi/HATT. Review logic giải thích trong INT-021 cùng Việt Đức.
 - **Việt Đức** đối chiếu QA Matrix A-01–A-11 với ID ca, test thực thi, nguồn bằng chứng và khoảng trống. Với INT-021/CHK-058, áp dụng `explanation_assertions` lên `ly_do` thực tế của DIRECT/CANONICAL/MIXED. Kiểm tra cả mẫu phải khớp và mẫu sai phải bị loại, rồi đọc lại ý nghĩa và privacy cùng Hải. Ghi kết quả chạy và nguồn bằng chứng tách khỏi mapping thiết kế. Kiểm tra gọi trực tiếp `classify(patient)`, validation, JSONL bốn trường, UUID/context theo phiên và việc dọn context, cô lập file test, đường lỗi audit/fail-closed và privacy ở output, audit, message và exception chaining.
