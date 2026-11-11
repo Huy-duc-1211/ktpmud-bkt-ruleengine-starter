@@ -1,13 +1,13 @@
 # PROJECT GUIDE — ĐỌC TRƯỚC KHI NHẬN VIỆC
 
 > **Nhóm 173820_n27 | Hack Marathon 2026 | Track A — Dr May Day**  
-> Bản hướng dẫn nội bộ cho Huy Đức, Hải và Việt Đức, đồng bộ M1 Revision 04 trong TASK 02H. Đề thi và bảng quyết định là nguồn bắt buộc của Track A.
+> Hướng dẫn nội bộ sau tích hợp M1. Đề thi và bảng quyết định là nguồn bắt buộc của Track A.
 
 ## 1. Bắt đầu từ đâu? (10–15 phút)
 
 1. Đọc toàn bộ mục 2–6 của file này để hiểu bài thi, những việc đã làm và những quyết định đã chốt.
 2. Mở **đề chính thức** và **`docs/decision-table.md`** (link mục 2). Đây là nguồn có thẩm quyền; nếu có mâu thuẫn, dừng lại và hỏi leader.
-3. Đọc [`REQUIREMENTS.md`](../REQUIREMENTS.md) và ADR Rev04 để đối chiếu contract và quyết định thiết kế. Xem kế hoạch bàn giao M2 ở mục 5 của [`TEAM_PLAN.md`](TEAM_PLAN.md).
+3. Đọc [Requirements](../REQUIREMENTS.md) và [ADR](../DECISIONS.md) để đối chiếu contract và quyết định thiết kế. Xem bàn giao M2 ở mục 5 của [Team Plan](TEAM_PLAN.md).
 4. Xác nhận nhận việc trong nhóm Zalo. Không để Codex tự quyết định những điểm nhóm đã khóa.
 
 ## 2. Bài thi và nguồn chính thức
@@ -35,13 +35,14 @@
 **Nguồn cần mở:**
 
 - [Đề chính thức](https://fossbk-spec.github.io/ktpmud-book/exams/KTPMUD_Hack_Marathon_2026_De_Thi_Chinh_Thuc_v1.0.0_20261103.html) (URL ghi v1.0.0, nội dung đã đối chiếu hiển thị v1.0.2).
-- [Decision Table — nguồn duy nhất về rule](https://github.com/fossbk-spec/ktpmud-bkt-ruleengine-starter/blob/bkt-2026-v1/docs/decision-table.md).
-- [Repo starter gốc](https://github.com/fossbk-spec/ktpmud-bkt-ruleengine-starter), **tag `bkt-2026-v1`**.
+- [Decision Table V1](decision-table.md) — nguồn công thức và ngưỡng.
+- [Repo starter gốc](https://github.com/fossbk-spec/ktpmud-bkt-ruleengine-starter), **tag `bkt-2026-v1`** tại `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469`.
 - [Repo phát triển của nhóm](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter), nhánh `track-a-development`.
 - [Repo chuẩn bị nộp của nhóm](https://github.com/Huy-duc-1211/ktpmud-project); **không viết code phân loại ở repo này**.
 - [Repo đích nộp bài của thầy](https://github.com/fossbk-spec/ktpmud-project).
 - [phản hồi chính thức tại Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (D01–D03 và cách xử lý dữ liệu thiếu).
-- Tài liệu thiết kế hiện hành theo SHA cố định. [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md), [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md), [M1-02 sau TASK 02E](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/HANDOFF.md).
+- [Erratum pytest của starter (Issue #16)](https://github.com/fossbk-spec/ktpmud-project/issues/16).
+- Nguồn nhóm hiện hành: [Requirements](../REQUIREMENTS.md), [ADR](../DECISIONS.md), [Rule Design và Test Plan](m1-hai/M1/README.md), [QA Matrix](m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx).
 - [Mẫu hồ sơ Track A](https://github.com/fossbk-spec/ktpmud-project/tree/main/submissions/_TEMPLATE_BKT_RULEENGINE).
 
 **Định danh:** Lớp `173820`, nhóm `27`, mã dự kiến `173820_n27`; slug Track A `may_day_sprint`. Nhóm cần xác nhận mã từ đồ án chính có dùng chung cho Hack Marathon hay không.
@@ -114,20 +115,15 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 ## 4. Đến nay nhóm đã làm được gì?
 
-| Nội dung | Trạng thái khi đối chiếu TASK 02Q |
+| Nội dung | Trạng thái sau tích hợp M1 |
 |---|---|
-| Chọn Track A, lập nhóm 3 người, fork hai repo và tạo `track-a-development` | Đã thực hiện |
-| Đối chiếu tag/commit khởi đầu | `bkt-2026-v1` tại `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
-| TASK 01 | Đã có báo cáo phân tích starter |
-| D01–D03 | Đã nhận làm rõ chính thức tại Issue #15 |
-| Requirements và ADR | Revision 04 đã đăng để review trong [Draft PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1) và [Draft PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2) |
-| D13-E | Huy Đức phê duyệt chính sách nhóm ngày **09/11/2026** |
-| M1-02 | [Draft PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) có **175 ca thiết kế chính và 81 ca toán logic nội bộ**. Hải đóng góp bản gốc. Huy Đức sở hữu bản sửa TASK 02E với Codex hỗ trợ. F01–F04 đã được xử lý ở mức thiết kế và dữ liệu test |
-| M1-03 | [Draft PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) có [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) và báo cáo audit ở mức thiết kế: **11 AC, 64 ca QA, 60 mục checklist và 15 phát hiện**. |
-| Bằng chứng thực thi | Các mục thực thi trong QA Matrix là `NOT RUN`. Chưa xác nhận classifier/helper, integration, CI chạy test nghiệp vụ hoặc benchmark. |
-| Nghiệm thu M1 | Cả bốn PR đang mở ở trạng thái Draft. Review kỹ thuật của thành viên, QA độc lập của người review và chấp thuận cuối của Leader chưa được xác nhận. |
+| Tích hợp | [PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1), [PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2), [PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3), [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã merge vào `track-a-development` ngày 10/11/2026. Mốc tích hợp [`9bc4fc1`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/commit/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b). |
+| M1-01 / M1-04 | [Requirements](../REQUIREMENTS.md) và [ADR](../DECISIONS.md) đã tích hợp. D01–D03 được giảng viên làm rõ. Leader phê duyệt chính sách nhóm D13-E ngày 09/11/2026. |
+| M1-02 | [Rule Design](m1-hai/M1/RULE_DESIGN.md), [Test Plan](m1-hai/M1/TEST_PLAN.md), [175 ca thiết kế chính](m1-hai/M1/TEST_CASES.csv) và [81 ca logic nội bộ](m1-hai/M2/INTERNAL_STATE_CASES.csv). Hải đóng góp bản gốc, Huy Đức phụ trách bản sửa TASK 02E với Codex hỗ trợ. |
+| M1-03 | [QA Matrix](m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) và báo cáo audit thiết kế gồm 11 AC, 64 ca QA, 60 mục checklist và 15 phát hiện. Các mục thực thi vẫn `NOT RUN`. |
+| Review và nghiệm thu | GitHub ghi Leader self-review và approval từ `nvldvc` trên bốn PR. Chưa thấy bằng chứng review kỹ thuật cuối của cả hai thành viên hoặc TA nghiệm thu phạm vi. |
 
-**Cảnh báo:** `tests/test_classifier.py` trong starter đang kiểm tra `NotImplementedError`, không phải kiểm tra phân loại thật. Có workflow CI **không có nghĩa** đã đáp ứng A-08/A-09.
+[Classifier](../rule_engine/classifier.py) vẫn raise `NotImplementedError`. [Test hiện có](../tests/test_classifier.py) chỉ kiểm tra stub. [Workflow CI](../.github/workflows/test.yml) đã cấu hình, chưa có bằng chứng bộ test nghiệp vụ chạy đạt trên CI. Chưa có kết quả benchmark. Hồ sơ tích hợp là đầu ra phân tích và thiết kế M1.
 
 ## 5. Các quyết định đã thống nhất và đang chờ
 
@@ -157,7 +153,7 @@ Thiếu khóa và `null` tương đương về `muc_do` và `rule_id` đối v�
 
 ### D13-E đã được Leader phê duyệt ngày 09/11/2026
 
-D13-E là chính sách nội bộ đã công bố theo phạm vi TA cho phép. Cách chọn mã đại diện thuộc quyết định của nhóm. Xem [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) và [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md).
+D13-E là chính sách nội bộ đã công bố theo phạm vi TA cho phép. Cách chọn mã đại diện thuộc quyết định của nhóm. Xem [Requirements](../REQUIREMENTS.md) và [ADR](../DECISIONS.md).
 
 - Boolean thiếu khóa hoặc `null` → UNKNOWN nội bộ. Boolean có giá trị phải đúng kiểu. Áp dụng D04 cho dữ liệu không hợp lệ và giữ Enum/Kleene, cách đếm T/U của R02. Không ép UNKNOWN thành False.
 - Giữ dữ liệu đã biết khi xét mọi cách gán True/False cho boolean UNKNOWN. **Def** là tập rule đúng trong mọi khả năng. **Poss** là tập rule đúng trong ít nhất một khả năng. **AllPV** nghĩa là mỗi khả năng đều khớp ít nhất một rule Tầng 2.
@@ -213,7 +209,7 @@ Mỗi thành viên cần trả lời được:
 1. Vì sao Track A chỉ cần Rule Engine Python, không cần website hay ML?
 2. R01, R02 và R03 khác nhau chỗ nào; khi nào mới là R-SOC?
 3. Vì sao `tuoi=0.5` hợp lệ và HATT **bằng** ngưỡng không thỏa điều kiện `<`?
-4. Vì sao test stub đang pass không chứng minh code đã đúng?
+4. Vì sao nếu test stub chạy đạt thì vẫn chưa chứng minh code đúng nghiệp vụ?
 5. Audit có những trường nào? Vì sao UUID không thuộc input bệnh nhân?
 6. D01–D03 đã được giảng viên làm rõ thế nào? Khi nào D13-E dùng mã CANONICAL và phải giải thích điều gì?
 7. Phải làm gì khi Codex tạo ra nội dung khác Decision Table?
