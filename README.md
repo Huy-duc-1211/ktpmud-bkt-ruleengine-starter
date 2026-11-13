@@ -5,14 +5,15 @@ Nhóm `173820_n27` xây dựng mô-đun Python phân loại theo [Decision Table
 ## Trạng thái phát triển
 
 - **M1:** Requirements, ADR, Rule Design, Test Plan, các ca thiết kế và QA Matrix đã tích hợp qua [PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1), [PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2), [PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3), [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) ngày 10/11/2026.
-- **M2:** `classify(patient)` vẫn raise `NotImplementedError`. Test hiện có kiểm tra stub. Chưa có bằng chứng pytest hoặc CI chạy đạt với bộ test nghiệp vụ, và chưa có kết quả benchmark.
+- **M2:** Đã triển khai `classify(patient)`, kiểm tra input, phân loại theo bảng quyết định và ghi audit JSONL. Bộ pytest chạy ca nghiệp vụ, logic ba trạng thái và các đường lỗi audit.
 
 ## Cấu trúc repository
 
 | Đường dẫn | Nội dung |
 |---|---|
-| [`rule_engine/classifier.py`](rule_engine/classifier.py) | Kiểu input/output và hàm khung `classify()` |
-| [`tests/test_classifier.py`](tests/test_classifier.py) | Test minh họa của starter |
+| [`rule_engine/classifier.py`](rule_engine/classifier.py) | Kiểu input/output, validation và logic phân loại |
+| [`rule_engine/audit.py`](rule_engine/audit.py) | UUID phiên, đường dẫn và ghi audit JSONL |
+| [`tests/`](tests/) | Kiểm thử nghiệp vụ, bảng logic, giải thích và audit |
 | [`docs/m1-hai/`](docs/m1-hai/README.md) | Thiết kế rule, ca kiểm thử và kế hoạch kiểm chứng |
 | [`docs/m1-qa/`](docs/m1-qa/) | QA Matrix và báo cáo audit thiết kế |
 | [`.github/workflows/test.yml`](.github/workflows/test.yml) | Workflow pytest trên push và pull request |
@@ -26,11 +27,25 @@ python -m pip install -r requirements.txt
 pytest -q
 ```
 
-[`pytest.ini`](pytest.ini) áp dụng [erratum của starter](https://github.com/fossbk-spec/ktpmud-project/issues/16). Kết quả test hiện tại chỉ phản ánh hành vi starter.
+[`pytest.ini`](pytest.ini) áp dụng [erratum của starter](https://github.com/fossbk-spec/ktpmud-project/issues/16).
 
-## Phạm vi chức năng
+## Chạy thử với dữ liệu giả lập
 
-Kế hoạch gồm phân loại theo rule, validation input, kết quả có giải thích và audit trail bốn trường. Nhóm sẽ chuyển các ca thiết kế thành test tự động, kiểm tra trên CI và đo benchmark toàn luồng.
+```python
+from rule_engine.classifier import classify
+
+print(classify({
+    "tuoi": 15,
+    "huyet_ap_tam_thu": 110,
+    "co_di_nguyen_nghi_ngo": False,
+    "co_ton_thuong_da_niem_mac": True,
+    "co_trieu_chung_ho_hap": True,
+}))
+```
+
+Mẫu trên trả `PHAN_VE / R01-PV`. Có thể đặt biến môi trường `DR_MAY_DAY_AUDIT_PATH` thành đường dẫn tuyệt đối tới file JSONL riêng ngoài repository. Khi chưa đặt biến, bản M2 dùng đường dẫn thử nghiệm `~/.173820_n27/dr_may_day/runs/<run-id>/audit.jsonl`. Gọi nhiều lần trong `with audit_session():` (import từ `rule_engine.audit`) để dùng chung UUID giả lập trong phiên. Mỗi lần gọi ngoài phiên có UUID riêng.
+
+Hàm ghi xong audit mới trả kết quả. Input sai được ghi `INVALID_INPUT` rồi báo `TypeError` hoặc `ValueError`. Nếu ghi audit lỗi, hàm báo `AuditError`. File audit dùng cho các lần ghi tuần tự trong một lần chạy.
 
 ## Tài liệu tham chiếu
 
