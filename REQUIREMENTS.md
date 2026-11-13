@@ -7,7 +7,7 @@
 | Người phụ trách | Huy Đức |
 | Mốc bàn giao | M1-01, Checkpoint 1, ngày 08/11/2026 |
 | Phiên bản | Revision 04 — cập nhật cách trình bày và nguồn Issue #31 |
-| Mốc đối chiếu | `track-a-development` tại [`912ad084`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/commit/912ad0847409002de195a91483dcf8fba4c073d9), đối chiếu ngày 12/11/2026 |
+| Mốc đối chiếu | `track-a-development` tại [`ee409e4c`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/commit/ee409e4c06187199fad671da1c5d273d6b1bfcc1), đối chiếu ngày 12/11/2026 |
 | Trạng thái | M1 Revision 04 đã tích hợp vào `track-a-development` ngày 10/11/2026; chưa có xác nhận nghiệm thu scope của TA hoặc bằng chứng kiểm thử runtime |
 | Mốc nguồn starter | `bkt-2026-v1` → `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
 | Mốc nguồn tích hợp | `track-a-development` tại `9bc4fc186415d7a13cd9d49692c50f3c945ddf7b` (merge commit PR #4, hoàn tất tích hợp M1 ngày 10/11/2026) |
@@ -18,7 +18,7 @@ Revision 04 được hoàn thiện trên nhánh `docs/m1-requirements-huy` và �
 
 **Thứ tự nguồn:** Đề, Decision Table V1 và các làm rõ chính thức của GV/TA được ưu tiên khi xác định yêu cầu bắt buộc; tiếp theo là quyết định nội bộ đã duyệt và các đề xuất. D01–D03 đã được TA làm rõ trong phạm vi Issue #15. Issue #31 xác nhận cách chọn mã đại diện cho trường hợp thiếu khóa boolean được nêu. Các chi tiết kỹ thuật D04–D13 do nhóm lựa chọn vẫn được phân biệt với yêu cầu chính thức. [D; TA; TA31; L]
 
-Tích hợp tài liệu và phê duyệt nội bộ không thay thế bằng chứng thực thi hoặc xác nhận nghiệm thu phạm vi của TA. D13-E được Leader duyệt trong M1; một số nội dung về mã đại diện đã có làm rõ sau đó trong Issue #31. Chi tiết quyết định, trạng thái và các điểm còn cần review nằm ở §4.2–4.4 và §9.
+Tích hợp tài liệu và phê duyệt nội bộ không thay thế bằng chứng thực thi hoặc xác nhận nghiệm thu phạm vi của TA. D13-E được Leader duyệt trong M1. Sau Issue #31, Leader cập nhật cách chọn mã theo §4.2: khi đã chứng minh phản vệ, ưu tiên rule có thể thỏa theo R01 > R02 > R03, thay cho cách ưu tiên rule chắc chắn trước. ADR và bộ ca liên quan cần được rà soát, đồng bộ; thay đổi này chưa phải bằng chứng chạy test. Chi tiết và trạng thái ở §4.2–4.4 và §9.
 
 ## Hướng dẫn đọc tài liệu
 
@@ -107,7 +107,7 @@ FR (*Functional Requirement*) là yêu cầu về việc chương trình phải 
 | FR-03 | R02-PV: `co_di_nguyen_nghi_ngo = true` **VÀ** ít nhất 2 trong 4 nhóm da/niêm mạc, hô hấp, tuần hoàn, tiêu hóa nặng là `true`. | FACT — D dòng 42. D13 quy định cách xác định trạng thái điều kiện đếm khi thiếu dữ liệu. |
 | FR-04 | R03-PV: `co_di_nguyen_nghi_ngo = true` **VÀ** ((`di_nguyen_qua_duong_hit = false` **VÀ** `co_trieu_chung_ho_hap = true`) **HOẶC** `co_trieu_chung_tuan_hoan = true`). Giữ đúng trường dị nguyên nghi ngờ và dấu ngoặc. | FACT — D dòng 43. Giữ nguyên ngoặc và AND/OR khi áp dụng D13. |
 | FR-05 | R-SOC cần phản vệ được chứng minh bằng rule chắc chắn hoặc AllPV theo D13-E **và** bằng chứng tụt HATT theo bảng. AllPV nghĩa là mọi khả năng của boolean chưa biết đều có ít nhất một rule Tầng 2 thỏa (§4.2.2). Thiếu/null tuổi → `THEO_DOI / null`. Có tuổi, thiếu HATT hiện tại hoặc người lớn HATT ≥90 thiếu nền không làm mất kết luận phản vệ đã được chứng minh; không tự gán HATT hoặc nền. | D dòng 25–35; TA §§2–5; D13-E (L). |
-| FR-06 | Sau kiểm tra mọi trường, tuổi thiếu/null → `THEO_DOI / null`. Nếu có tuổi, chọn rule chắc chắn trước theo R01 > R02 > R03; không để rule chỉ có thể đúng thay rule chắc chắn. Nếu không có rule chắc chắn nhưng AllPV, giữ kết luận phản vệ; với `PHAN_VE`, chọn mã đại diện ưu tiên trong Poss — tập các rule có thể thỏa — và giải thích theo §4.2/§5. Đủ bằng chứng phản vệ và tụt HATT → `SOC_PHAN_VE / R-SOC`. Mixed hoặc không có khả năng khớp → `THEO_DOI / null`, với lý do phù hợp. | D; TA; APPROVED TEAM POLICY D13-E. |
+| FR-06 | Sau khi kiểm tra mọi trường, tuổi thiếu/null → `THEO_DOI / null`. Khi có tuổi và phản vệ đã được chứng minh (AllPV), nếu có bằng chứng tụt HATT theo tuổi thì chọn `SOC_PHAN_VE / R-SOC`; nếu chưa xác nhận sốc thì chọn `PHAN_VE` và mã ưu tiên cao nhất trong Poss theo `R01 > R02 > R03`. Nếu mã được chọn chưa chắc chắn đúng, công bố đó là mã đại diện theo §4.2/§5, kể cả khi một rule ưu tiên thấp hơn đã chắc chắn đúng. Mixed hoặc không có khả năng khớp → `THEO_DOI / null`, với lý do phù hợp. | D; TA; TA31; chính sách D13-E cập nhật theo quyết định Leader. |
 | FR-07 | Thực hiện validation §3: missing/null được cho phép không tự là invalid; boolean không có sẵn → `UNKNOWN` theo D13-E. Giá trị non-null sai kiểu, sai miền hoặc khóa lạ xử lý theo D04. Kiểm tra cả trường invalid không liên quan đến rule trước khi suy luận; không ép kiểu. | TA §§5–6; D04/D13-E; E A-04. |
 | FR-08 | Trả ba trường theo §5. `ly_do` nêu kết quả/rule và thiếu tuổi, HATT hiện tại hoặc nền khi phù hợp. Mã đại diện phải được công bố là đại diện, chưa xác nhận rule riêng; không khẳng định thông tin chưa biết đã được quan sát là `False`. DIRECT là cách gắn mã rule chắc chắn (§4.2.4); Mixed nêu chưa đủ thông tin. Không kết luận an toàn, đưa dữ liệu thô hoặc lời khuyên điều trị. | D dòng 49–55; TA §§1–4; D06 và D13-E. |
 | FR-09 | Hàm `classify()` ghi audit đúng bốn trường `Timestamp`, `User_UUID`, `Action_Type`, `Status`. Phân loại hợp lệ hoàn tất ghi `SUCCESS`, kể cả khi thiếu/null được phép; không dùng `INVALID_INPUT` chỉ vì thiếu/null. Dữ liệu invalid theo D04 ghi `INVALID_INPUT` nếu writer thành công. Giữ fail-closed và thứ tự ưu tiên lỗi audit khi có lỗi kép (§4.4). | E A-06; D05/D07/D08; TA §5. |
@@ -123,9 +123,9 @@ Các ngưỡng và dấu so sánh giữ nguyên. Với người lớn, giảm >3
 
 ### 4.2. Xử lý khi thiếu dữ liệu đúng/sai (D13-E)
 
-D13-E là chính sách đã được Leader duyệt để xử lý thông tin boolean chưa biết, giữ nguyên các biểu thức R01/R02/R03 của Decision Table. Cách biểu diễn và tổ chức tính toán là lựa chọn của nhóm; thầy đã làm rõ thêm việc chọn mã đại diện cho tình huống thiếu khóa ở [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002). [D; TA; TA31; L]
+D13-E là chính sách đã được Leader duyệt để xử lý thông tin boolean chưa biết, giữ nguyên các biểu thức R01/R02/R03 của Decision Table. Sau [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002), Leader cập nhật chính sách chọn mã tại §4.2.3–4.2.4. Cách biểu diễn và tổ chức tính toán là lựa chọn của nhóm; ví dụ MISS-009 có xác nhận trực tiếp của thầy. [D; TA; TA31; L]
 
-**Đọc nhanh:** sau khi kiểm tra dữ liệu và tuổi, nhóm ưu tiên rule chắc chắn đúng. Nếu không có rule chắc chắn, xét các khả năng của dữ liệu boolean chưa biết: mọi khả năng đều dẫn tới phản vệ thì giữ kết luận phản vệ và chọn mã đại diện; nếu chỉ một số khả năng dẫn tới phản vệ thì trả `THEO_DOI` và nêu thiếu thông tin. Đã đủ bằng chứng phản vệ **và** thỏa điều kiện tụt HATT theo tuổi thì trả `SOC_PHAN_VE / R-SOC`. Các điều kiện và thứ tự chi tiết ở dưới.
+**Đọc nhanh:** sau khi kiểm tra dữ liệu và tuổi, xét các khả năng của thông tin boolean chưa biết. Nếu mọi khả năng đều dẫn tới phản vệ, giữ kết luận phản vệ; khi chưa xác nhận sốc, chọn mã có ưu tiên cao nhất trong các rule có thể thỏa, kể cả khi rule ưu tiên thấp hơn đã chắc chắn đúng. Nếu mã được chọn chưa chắc chắn đúng, giải thích đây là mã đại diện. Nếu chỉ một số khả năng dẫn tới phản vệ, trả `THEO_DOI` và nêu thiếu thông tin. Đã đủ bằng chứng phản vệ **và** thỏa điều kiện tụt HATT theo tuổi thì trả `SOC_PHAN_VE / R-SOC`. Các điều kiện và thứ tự chi tiết ở dưới.
 
 #### 4.2.1. Đánh giá điều kiện với `UNKNOWN`
 
@@ -163,9 +163,9 @@ Các tập/ký hiệu chỉ dùng nội bộ để mô tả lựa chọn và ki�
 Các bước sau mô tả việc **chọn kết quả**. Sau đó `classify()` phải hoàn tất audit `SUCCESS` trước khi trả bất kỳ kết quả phân loại hợp lệ nào; các trường hợp lỗi và thứ tự ưu tiên lỗi tuân theo §4.4.
 
 1. Kiểm tra mọi trường theo D04. Nếu tuổi missing/null, chọn `THEO_DOI / null` và nêu thiếu tuổi theo TA; kết thúc phần lựa chọn và chuyển sang audit, không áp dụng các bước 2–6.
-2. Nếu **Def không rỗng**, nhóm chọn rule chắc chắn theo `R01 > R02 > R03`; một rule chỉ possible có ưu tiên cao hơn không thay rule definite theo chính sách nhóm. Đây là cách gắn mã **DIRECT**.
-3. Nếu **Def rỗng nhưng AllPV**, phản vệ được chứng minh qua các khả năng. Khi chưa đủ bằng chứng sốc, chọn `PHAN_VE` và rule ưu tiên cao nhất trong Poss làm mã đại diện **CANONICAL**.
-4. Nếu đã đủ bằng chứng phản vệ theo bước 2 hoặc 3 **và** điều kiện tụt HATT theo bảng là `TRUE`, chọn `SOC_PHAN_VE / R-SOC`; kết quả này ưu tiên hơn mã phản vệ ở bước 2–3. Chỉ có tụt HATT không đủ để kết luận sốc phản vệ. Thiếu HATT không phải bằng chứng sốc; nếu có tuổi và phản vệ đã được chứng minh thì giữ `PHAN_VE`, giải thích thông tin còn thiếu.
+2. Với tuổi đã có, xét các khả năng của boolean chưa biết để xác định Def, Poss, AllPV và AnyPV theo §4.2.2. Nếu **AllPV**, phản vệ được chứng minh, kể cả khi không có rule riêng nào chắc chắn đúng.
+3. Nếu **AllPV** và điều kiện tụt HATT theo bảng là `TRUE`, chọn `SOC_PHAN_VE / R-SOC`; kết quả này ưu tiên hơn mã phản vệ ở bước 4. Chỉ có tụt HATT không đủ để kết luận sốc phản vệ.
+4. Nếu **AllPV** nhưng chưa đủ bằng chứng sốc, chọn `PHAN_VE` và rule có ưu tiên cao nhất trong **Poss**, theo `R01 > R02 > R03`. Nếu rule được chọn cũng thuộc Def, dùng cách gắn mã **DIRECT**; nếu rule được chọn chưa chắc chắn đúng, dùng mã đại diện **CANONICAL** và giải thích theo §4.2.4. Rule ưu tiên thấp hơn có thể đã chắc chắn đúng. Thiếu HATT không phải bằng chứng sốc; giải thích thông tin còn thiếu.
 5. Nếu **AnyPV nhưng không AllPV — Mixed**, chọn `THEO_DOI / null` và nêu chưa đủ thông tin; không coi giá trị đang `UNKNOWN` thực ra là `False`.
 6. Nếu **không AnyPV**, chọn `THEO_DOI / null` với lý do không khớp. Kết quả cùng nhãn với Mixed nhưng lý do cần phân biệt.
 
@@ -173,13 +173,13 @@ Trạng thái tụt HATT của người lớn được xét theo cả hai nhánh
 
 #### 4.2.4. Mã trực tiếp và mã đại diện
 
-**DIRECT**: mã phản vệ được chọn từ rule đã được xác nhận chắc chắn. **CANONICAL**: mã đại diện của các khả năng, chỉ dùng cho `PHAN_VE` khi Def rỗng và AllPV. Đây là thông tin nội bộ để tạo `ly_do`, không tạo khóa output/audit mới.
+**DIRECT**: mã phản vệ được chọn thuộc một rule đã chắc chắn đúng. **CANONICAL**: mã đại diện được chọn theo thứ tự ưu tiên trong Poss, khi `PHAN_VE` đã được chứng minh nhưng rule mang mã đó chưa được xác nhận chắc chắn. CANONICAL có thể được dùng cả khi Def rỗng và khi một rule ưu tiên thấp hơn đã chắc chắn đúng. Đây là thông tin nội bộ để tạo `ly_do`, không tạo khóa output/audit mới.
 
-Với CANONICAL, `ly_do` **phải** nêu mã là đại diện và thông tin còn thiếu; không nói rule đại diện đã được xác nhận độc lập hoặc khẳng định trường chưa biết đã được quan sát là `False`. Không khẳng định người bệnh an toàn hoặc đưa lời khuyên điều trị/dữ liệu thô. [D06; L]
+Với CANONICAL, `ly_do` **phải** nêu mã là đại diện và thông tin còn thiếu; không nói rule đại diện đã được xác nhận độc lập hoặc khẳng định trường chưa biết đã được quan sát là `False`. Nếu có rule khác đã chắc chắn thỏa, lời giải thích có thể nêu thêm rule đó. Không khẳng định người bệnh an toàn hoặc đưa lời khuyên điều trị/dữ liệu thô. [D06; L]
 
 Theo [làm rõ Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002), khi các khả năng của khóa boolean thiếu cùng dẫn tới một mức nhưng khác rule, chọn mã ưu tiên cao nhất trong các rule có thể thỏa theo `R01-PV > R02-PV > R03-PV` và nêu trong `ly_do` rằng đó là mã đại diện do thiếu khóa. Phán quyết áp dụng chung Track A. Với ví dụ nhóm hỏi là `MISS-009` (Def rỗng), thầy xác nhận `PHAN_VE / R01-PV`. Thầy yêu cầu ghi quy tắc vào `DECISIONS.md` và có ít nhất một test cho ca thiếu khóa. [TA31]
 
-Theo D13-E Leader đã chốt, khi có rule chắc chắn đúng, nhóm chọn trong Def trước. Ví dụ, [`MISS-013/014`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/912ad0847409002de195a91483dcf8fba4c073d9/docs/m1-hai/M1/TEST_CASES.csv) có R03 chắc chắn và R02 có thể thỏa; expected thiết kế của nhóm là `PHAN_VE / R03-PV` với giải thích DIRECT theo [ADR §5.8.2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/912ad0847409002de195a91483dcf8fba4c073d9/DECISIONS.md#L232). Issue #31 không nêu trực tiếp ví dụ có đồng thời rule chắc chắn và rule chỉ có thể thỏa nhưng ưu tiên cao hơn; cần đối chiếu phạm vi áp dụng khi tích hợp. Không coi phần definite-first hoặc toàn bộ chi tiết triển khai D13-E là đã được TA xác nhận riêng. [TA31; L]
+Theo quyết định mới của Leader, nếu một rule ưu tiên thấp hơn đã chắc chắn đúng nhưng rule ưu tiên cao hơn vẫn có thể thỏa, nhóm chọn rule ưu tiên cao hơn làm mã đại diện khi đã xác định `PHAN_VE`. Ví dụ, [`MISS-013/014`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M1/TEST_CASES.csv) có R03 chắc chắn và R02 có thể thỏa: expected theo chính sách cập nhật là `PHAN_VE / R02-PV`, với giải thích CANONICAL; không khẳng định riêng R02 đã được xác nhận. Bản test cases và [ADR §5.8.2 tại mốc trước cập nhật](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/912ad0847409002de195a91483dcf8fba4c073d9/DECISIONS.md#L232) vẫn ghi `R03-PV`/DIRECT và cần đồng bộ. Issue #31 xác nhận trực tiếp MISS-009 và đưa ra quy tắc chọn mã đại diện; cách áp dụng cho trường hợp vừa nêu là quyết định của nhóm, không tự nhận thầy đã xác nhận riêng fixture này. [TA31; L]
 
 #### 4.2.5. Ví dụ: thiếu dị nguyên nghi ngờ
 
@@ -208,7 +208,7 @@ Cả hai khả năng đều phản vệ: AllPV đúng, nhưng R01/R02 mỗi rule
 | D08 | CLASSIFY; SUCCESS/INVALID_INPUT; fail-closed/error precedence; allowed unavailable không tự là INVALID_INPUT | APPROVED BY LEAD, áp dụng theo TA — FR-09 |
 | D09 | Thay/chỉnh stub M2; kiểm overlap, null/missing, context, failures, isolation, D13 | APPROVED BY LEAD, cập nhật expected theo TA — NFR-05 |
 | D10 | perf_counter_ns, 100 warm-up, N≥1.000, nearest-rank, full-path I/O thật | APPROVED BY LEAD — NFR-01 |
-| D13 | `UNKNOWN`, definite-first, AllPV, Mixed và mã đại diện theo §4.2 | Leader đã duyệt D13-E; Issue #31 làm rõ lựa chọn mã đại diện trong phạm vi nêu. Chưa có bằng chứng runtime. |
+| D13 | `UNKNOWN`, AllPV, ưu tiên rule có thể thỏa, Mixed và mã đại diện theo §4.2 | Leader đã cập nhật cách chọn mã sau Issue #31; cách cũ ưu tiên definite trước là lịch sử. ADR và test liên quan cần đồng bộ; chưa có bằng chứng runtime. |
 
 D11 giữ clinical rules/ngưỡng; D12 giữ chín tên input, ba output, bốn audit fields và privacy. Các phương án OPEN đã được Leader lựa chọn trong phạm vi ghi ở ADR; không tự thay đổi khi triển khai mà chưa đối chiếu quyết định. Đường dẫn audit mặc định vẫn là đề xuất chờ peer review; cách xử lý lỗi nội bộ bất ngờ vẫn là điểm cần review. [TA; L]
 
@@ -247,7 +247,7 @@ Một kết quả phân loại hợp lệ có đúng ba khóa `muc_do`, `rule_id
 | Trường | Kiểu | Ý nghĩa và giá trị |
 |---|---|---|
 | `muc_do` | Chuỗi | `SOC_PHAN_VE`: đã chứng minh phản vệ và đủ bằng chứng tụt HATT theo tuổi. `PHAN_VE`: đã chứng minh phản vệ nhưng chưa xác nhận điều kiện sốc. `THEO_DOI`: thiếu tuổi, hoặc Mixed/không có khả năng khớp Tầng 2 theo §4.2. Không diễn đạt `THEO_DOI` thành kết luận an toàn. |
-| `rule_id` | Chuỗi hoặc `null` | `R-SOC` khi xác định Tầng 1. Với `PHAN_VE`, rule chắc chắn được chọn trực tiếp theo thứ tự R01/R02/R03; nếu Def rỗng và AllPV, chọn mã đại diện ưu tiên cao nhất trong Poss theo §4.2. `THEO_DOI` dùng `null`; D13-E không chọn `PHAN_VE / null`. |
+| `rule_id` | Chuỗi hoặc `null` | `R-SOC` khi xác định Tầng 1. Với `PHAN_VE`, chọn rule ưu tiên cao nhất trong Poss theo R01/R02/R03; mã là DIRECT nếu rule đó chắc chắn đúng, hoặc CANONICAL nếu chưa chắc chắn và cần công bố là mã đại diện theo §4.2. `THEO_DOI` dùng `null`; D13-E không chọn `PHAN_VE / null`. |
 | `ly_do` | Chuỗi | Giải thích ngắn gắn với kết quả và rule. Với mã đại diện, nêu rõ mã đại diện và dữ liệu thiếu, không nói rule được xác nhận riêng. Phân biệt Mixed với không khớp; nêu thiếu tuổi/HATT/nền khi phù hợp. Không đưa dữ liệu lâm sàng thô, khẳng định dữ liệu chưa biết, kết luận an toàn hoặc lời khuyên điều trị. |
 
 `reason` trong đề tương ứng `ly_do`. `UNKNOWN`, `DIRECT` và `CANONICAL` là khái niệm nội bộ, không phải khóa hoặc mức phân loại bổ sung. Không khẳng định “không có sốc” chỉ vì thiếu số đo; chỉ nêu chưa có bằng chứng xác nhận sốc. [D; TA; TA31; L]
@@ -284,7 +284,7 @@ NFR (*Non-functional Requirement*) mô tả chất lượng và ràng buộc khi
 | NFR-02 | Chỉ dùng dữ liệu synthetic. Không có PII, dữ liệu bệnh nhân thật, thông tin xác thực hoặc secret trong input, dữ liệu test, log và hồ sơ bàn giao. | Review bảo mật/riêng tư trên file được theo dõi và bằng chứng sinh ra | D dòng 22–23; E §§5, 7 |
 | NFR-03 | Audit bốn trường/giá trị §4.4, UUID đúng scope, fail-closed/error precedence. Allowed missing/null không tự thành INVALID_INPUT. Message/chaining/log không lộ raw input. | Kiểm schema/UTC/UUID, SUCCESS cho unavailable hợp lệ, INVALID_INPUT cho invalid thực sự, writer failure/lỗi kép | E A-06; D07/D08; TA §5 |
 | NFR-04 | Giữ classify(patient), ranh giới rule/I/O, Enum/Kleene/T-U không truthiness. D13-E phân biệt definite/possible, DIRECT/CANONICAL và TA bắt buộc/team policy đã duyệt. | Review interface, source hierarchy, coverage/selection/provenance | E §§7.1,9; D05/D13-E; L. |
-| NFR-05 | Test normal/boundary/invalid/missing/null và overlap; thay/chỉnh stub M2. Giữ context/failure/isolation; thêm normalization, Def/Poss/AllPV/Mixed, canonical explanation, 1–64 completions, TA-EX-01–13 và sáu ca §8.2. | Test Plan và QA Matrix đã có ở mức thiết kế (nguồn §8.1). Bằng chứng cần thu: clean-checkout business tests và PR CI thật. Approval không chứng minh runtime. | E A-07/A-08; D09/D13-E; L. |
+| NFR-05 | Test normal/boundary/invalid/missing/null và overlap; thay/chỉnh stub M2. Giữ context/failure/isolation; thêm normalization, Def/Poss/AllPV/Mixed, lựa chọn mã khi definite và possible cùng tồn tại, canonical explanation, 1–64 completions, TA-EX-01–13 và sáu ca §8.2. | Test Plan và QA Matrix đã có ở mức thiết kế (nguồn §8.1), cần rà và đồng bộ chính sách cập nhật. Bằng chứng cần thu: clean-checkout business tests và PR CI thật. Approval không chứng minh runtime. | E A-07/A-08; D09/D13-E; L. |
 | NFR-06 | GitHub Actions chạy test trên Pull Request. | Cấu hình workflow và liên kết lượt chạy PR có bước test thực tế | E §7.3 A-09; W |
 | NFR-07 | Explanation ngắn gắn rule/kết quả; DIRECT có definite evidence; CANONICAL công bố mã đại diện/uncertainty, không claim independently confirmed; Mixed không khẳng định an toàn. Missing numeric đúng TA; không raw input/điều trị. | Review template và negative assertions cho cả sáu ca §8.2, unavailable BP/age và canonical risk | D; TA; D06/D13-E. |
 | NFR-08 | Có hướng dẫn cài/chạy/test tái lập, disclaimer chính xác trong README và hồ sơ tài liệu/bàn giao theo các mốc đề yêu cầu. | README và tài liệu yêu cầu, quyết định, kiểm thử, bảo mật/riêng tư, AI-use, đóng góp | E §§4–6, 7.3 A-11, 11 |
@@ -300,7 +300,7 @@ Trạng thái dưới đây phản ánh bằng chứng của từng tiêu chí. 
 | A-01 | Phân loại đúng contract | classify() thực thi bảng và làm rõ TA, hết NotImplementedError | Rule–code/test mapping gồm priority, age override và BP unavailable | E A-01; D; TA | NOT IMPLEMENTED |
 | A-02 | Không hard-code fixture ID | Kết quả dựa trên dữ liệu đặc tả | Review code và fixture synthetic độc lập | E A-02; C | NOT IMPLEMENTED |
 | A-03 | Đủ mức phân loại | SOC_PHAN_VE/PHAN_VE/THEO_DOI theo bảng và TA | Tầng 1/2, overlap, missing/null và TA-EX | E A-03; D; TA | NOT IMPLEMENTED |
-| A-04 | Policy dữ liệu công bố và thực thi | Giữ missing/null theo TA và strict D04 cho invalid thực sự. D13-E đã duyệt: UNKNOWN, definite-first/coverage, Mixed fallback và canonical disclosure. | Policy/source review; test null/missing, invalid và cả sáu ca approved §8.2 | E A-04; TA; D04/D13-E; L | NOT IMPLEMENTED — policy đã duyệt, chưa có implementation evidence |
+| A-04 | Policy dữ liệu công bố và thực thi | Giữ missing/null theo TA và strict D04 cho invalid thực sự. D13-E cập nhật: UNKNOWN, coverage, chọn rule ưu tiên cao nhất trong Poss khi AllPV, Mixed fallback và canonical disclosure. | Policy/source review; test null/missing, invalid, sáu ca §8.2 và overlap definite/possible | E A-04; TA; TA31; D04/D13-E; L | NOT IMPLEMENTED — policy đã được Leader cập nhật, chưa có implementation evidence |
 | A-05 | Explanation truy vết | ly_do DIRECT/CANONICAL đúng §4.2/§5; canonical không giả rule đã xác nhận độc lập, không raw input/điều trị. | Output/negative explanation assertions cho TA và D13-E | E A-05; D; TA; D06/D13-E | NOT IMPLEMENTED |
 | A-06 | Audit an toàn đúng schema | Bốn trường; CLASSIFY, SUCCESS/INVALID_INPUT theo nghĩa thao tác; không INVALID_INPUT chỉ vì allowed unavailable | Schema/UTC/UUID/status, failure paths, dữ liệu cấm | E A-06; D07/D08; TA §5 | NOT IMPLEMENTED |
 | A-07 | Test nghiệp vụ đủ nhóm | Normal/boundary/invalid/missing/null; thay/chỉnh test stub | Bộ test được review và map TA-EX/FR | E A-07; T | PARTIALLY AVAILABLE — mới có test minh họa NotImplementedError; chưa có bộ test nghiệp vụ đạt |
@@ -309,7 +309,7 @@ Trạng thái dưới đây phản ánh bằng chứng của từng tiêu chí. 
 | A-10 | Benchmark đúng protocol | N≥1.000 sau 100 warm-up; nearest-rank p50/p95; p95 <100 ms, công bố máy và I/O full-path | Phương pháp và số liệu thật | E A-10; D10 | NOT IMPLEMENTED — protocol đã duyệt, chưa có số liệu |
 | A-11 | Disclaimer README | Có chính xác educational/synthetic — not for clinical use | Đã đối chiếu nguyên văn tại [README.md dòng 43 ở commit `4482e4f`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43). | E A-11; R | VERIFIED — disclaimer trong README |
 
-Việc test stub có thể chạy đạt chỉ chứng minh stub; không chứng minh yêu cầu nghiệp vụ. Test Plan và QA Matrix hiện hành đã được tích hợp qua PR #3 và #4. Bộ pytest nghiệp vụ, kết quả chạy, bằng chứng audit/CI và cập nhật QA theo thực thi vẫn thuộc M2/M3. [P; L]
+Việc test stub có thể chạy đạt chỉ chứng minh stub; không chứng minh yêu cầu nghiệp vụ. Test Plan và QA Matrix đã được tích hợp qua PR #3 và #4; các nội dung liên quan đến lựa chọn mã cần được rà lại theo chính sách cập nhật. Bộ pytest nghiệp vụ, kết quả chạy, bằng chứng audit/CI và cập nhật QA theo thực thi vẫn thuộc M2/M3. [P; L]
 
 ## 8. Ma trận truy vết yêu cầu
 
@@ -322,7 +322,7 @@ Bảng này nối mỗi FR/NFR với tiêu chí nghiệm thu, rule và cách ki�
 | FR-03 | R02-PV; A-01/A-03/A-07 | Đếm 2/4 và T/U; assert R02 riêng tránh bị R03 che; TA-EX-01,06,07,12 |
 | FR-04 | R03-PV; A-01/A-03/A-07 | Giữ ngoặc/đường hít/tuần hoàn; rule TRUE không bị rule UNKNOWN làm mất hiệu lực |
 | FR-05 | R-SOC; A-01/A-03/A-07 | Biên tuổi/BP, giảm đúng/trên 30%, không suy nền; TA-EX-02–09, nguồn TA-02–04 |
-| FR-06 | Ưu tiên, coverage, fallback; A-01/A-03/A-07 | Rule definite thắng possible; AllPV/Def rỗng giữ positive; Mixed TD/null; canonical disclosure. TA age override/shock giữ nguyên; TA-EX-01–13, sáu ID §8.2 |
+| FR-06 | Ưu tiên, coverage, fallback; A-01/A-03/A-07 | Khi AllPV, chọn rule ưu tiên cao nhất trong Poss; nếu chưa definite thì công bố canonical, kể cả khi rule ưu tiên thấp hơn definite. Mixed → THEO_DOI/null; tuổi thiếu và R-SOC giữ theo TA. Kiểm TA-EX-01–13, sáu ID §8.2 và overlap definite/possible. |
 | FR-07 | A-04/A-07 | Missing/null không tự là invalid; D04 strict với non-null sai kiểu/miền/khóa lạ; tính lại INV/AUD cũ theo TA-EX |
 | FR-08, NFR-07 | A-05 | Ba khóa và explanation DIRECT/CANONICAL, uncertainty, thiếu tuổi/BP/nền; không raw input hoặc claim unknown=False |
 | FR-09, NFR-02/03 | A-06 | SUCCESS cho phân loại unavailable hợp lệ, INVALID_INPUT cho invalid thực sự; giữ UTC/UUID, scope/reset và fail-closed/lỗi kép |
@@ -332,7 +332,7 @@ Bảng này nối mỗi FR/NFR với tiêu chí nghiệm thu, rule và cách ki�
 | NFR-06 | A-09 | Cấu hình và PR run có bước test thực tế |
 | NFR-08 | A-11; E §§6,11 | Disclaimer và hồ sơ bàn giao đầy đủ |
 
-TA-EX-01–13 ở §5.1 là ví dụ/ánh xạ yêu cầu để đối chiếu với Test Plan, test cases và QA Matrix hiện hành sau PR #3/#4; **không phải bằng chứng test đã chạy**. Phần thiết kế đã được tích hợp, còn triển khai và đối chiếu kết quả thực tế thuộc M2/M3.
+TA-EX-01–13 ở §5.1 là ví dụ/ánh xạ yêu cầu để đối chiếu với Test Plan, test cases và QA Matrix đã tích hợp qua PR #3/#4; **không phải bằng chứng test đã chạy**. Những mục chịu tác động của chính sách chọn mã mới cần được đồng bộ; triển khai và đối chiếu kết quả thực tế thuộc M2/M3.
 
 ### 8.1. Bàn giao test và nguồn hiện hành
 
@@ -373,7 +373,7 @@ Ba cặp mức/mã từ baseline Hải được giữ nguyên và Leader phê du
 
 TA-05 bắt buộc missing/null boolean không tự gây exception và không hạ kết luận khi một rule đã được dữ liệu còn lại chứng minh trọn vẹn. Issue #31 xác nhận cách chọn mã đại diện cho trường hợp thiếu khóa được nêu, yêu cầu ghi quyết định trong ADR và có test tương ứng. [TA31] TA-06 cho phép policy nội bộ trong khoảng chưa quy định, phải công bố/test/giải trình và không đổi rule/ngưỡng/schema.
 
-**D13-E hiện hành: APPROVED BY LEAD — D13-E — 09/11/2026.** Normalization, coverage, definite-first, Mixed fallback và canonical semantics §3.2/§4.2/§5/§8.2 đã được phê duyệt nội bộ; không còn chờ Leader cho D13. Leader đã chấp nhận rủi ro về cách hiểu mã đại diện khi duyệt D13-E. Làm rõ Issue #31 xác nhận quy tắc mã đại diện trong phạm vi nêu; definite-first và các chi tiết biểu diễn/triển khai vẫn ghi đúng là chính sách nhóm. Với tình huống vừa có rule chắc chắn vừa có rule ưu tiên cao hơn chỉ có thể thỏa, cần đối chiếu cách áp dụng chính sách nhóm với phạm vi phán quyết và ca kiểm thử khi tích hợp. Không coi phản hồi hoặc phê duyệt là bằng chứng triển khai.
+**D13-E hiện hành:** Leader đã duyệt normalization, coverage, Mixed fallback và canonical attribution trong M1 ngày 09/11/2026. Sau Issue #31, Leader cập nhật cách chọn mã: khi AllPV và chưa xác nhận sốc, chọn rule ưu tiên cao nhất trong Poss; nếu rule đó chưa chắc chắn đúng thì công bố mã đại diện theo §4.2, kể cả khi rule ưu tiên thấp hơn đã chắc chắn đúng. Cách chọn definite trước được giữ trong lịch sử, không còn là chính sách chọn mã hiện hành. Issue #31 xác nhận trực tiếp ca MISS-009 và nêu quy tắc áp dụng chung; ví dụ overlap definite/possible là cách nhóm áp dụng quy tắc và chưa được thầy xác nhận riêng. ADR và bộ test liên quan cần đồng bộ. Phê duyệt và phản hồi không phải bằng chứng triển khai.
 
 Các quyết định ContextVar, UUID scope, JSONL, fail-closed, error precedence, isolation, Enum và benchmark vẫn giữ nguyên ngoài phần bị TA thay thế. Tên helper/exception audit và path cụ thể là chi tiết triển khai. Default path vẫn đề xuất chờ peer review; unexpected internal exception vẫn residual review item. Các tài liệu M1 hiện hành đã nằm cùng nhánh `track-a-development`, gồm `DECISIONS.md`; giữ liên kết pin commit cho nguồn lịch sử và sử dụng đường dẫn hiện hành khi điều hướng trong fork.
 
@@ -385,13 +385,13 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 |---|---|
 | Còn dùng policy cũ coi tuổi/boolean null là invalid | Đồng bộ dữ liệu/expected/AUD status theo TA; không chuyển máy móc 44 ca lỗi cũ sang exception |
 | Quên tuổi unavailable override hoặc để thiếu BP chặn PHAN_VE | Review TA-EX-01–09 và ly_do, phân biệt thiếu bằng chứng sốc với loại bỏ Tầng 2 |
-| Ép UNKNOWN thành False hoặc chọn rule_id không được chứng minh | Giữ D13-E, Def trước Poss; canonical chỉ ở AllPV/Def rỗng, disclosure MUST. Leader đã chấp nhận risk mã không definite; QA cần negative assertions, không gọi rule canonical là confirmed |
+| Ép UNKNOWN thành False hoặc hiểu nhầm mã đại diện | Với AllPV, chọn rule ưu tiên cao nhất trong Poss; nếu mã chưa definite thì công bố là mã đại diện và nêu thông tin thiếu, kể cả khi rule khác đã definite. QA cần assertion kiểm tra không gọi rule đại diện là đã xác nhận độc lập. |
 | Sai ngoặc/ngưỡng hoặc suy BP mặc định | Đối chiếu biểu thức gốc, boundary và >30% nghiêm ngặt; không tạo rule y khoa mới |
 | Audit SUCCESS/INVALID_INPUT bị dùng nhầm | Allowed missing/null không tự là lỗi; giữ D04 cho invalid thực sự, bốn trường và error precedence |
 | Direct call chưa cấu hình audit path | Tiếp tục review đề xuất ở ADR, không tự chọn/duyệt path trong task này |
 | Unexpected internal exception trước audit thành công | Residual implementation risk / review item: không SUCCESS hoặc tự gán INVALID_INPUT; không thêm status/schema hoặc log payload; Hải/Việt Đức review cách xử lý |
 | Nhầm review tài liệu với nghiệm thu | Ghi nhận `VERIFIED` cho A-11 theo README tại §7. A-01 đến A-10 tiếp tục cần bằng chứng theo từng tiêu chí. Nghiệm thu phạm vi của TA cần xác nhận riêng. |
-| Nguồn snapshot lịch sử còn policy cũ | Giữ snapshot là lịch sử; source TA và Revision 04/D13-E ưu tiên hơn. Bản M1-02/QA hiện hành đã được đồng bộ và merge trong PR #3/#4; không dùng snapshot cũ làm policy hiện hành |
+| Nguồn snapshot lịch sử hoặc tài liệu liên quan còn policy cũ | Giữ snapshot là lịch sử. ADR, Test Plan, test cases và QA Matrix đã được tích hợp qua PR #3/#4 nhưng cần rà và đồng bộ với chính sách chọn mã cập nhật; không dùng expected cũ làm chính sách hiện hành. |
 | AI-use hoặc phối hợp thiếu bằng chứng | Ghi công cụ/phạm vi/kiểm chứng/quyết định và người chịu trách nhiệm thực tế; Huy review nguồn, Hải M1-02, Việt Đức M1-03 |
 
 | Ký hiệu | Nguồn và phiên bản |
@@ -409,9 +409,9 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | W | [Workflow GitHub Actions](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/.github/workflows/test.yml), mốc nguồn tích hợp. |
 | R | [README starter](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b/README.md), mốc nguồn tích hợp. |
 | I | [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15), câu hỏi và trả lời của fossbk-spec ngày 08/11/2026, áp dụng chung cho Track A; không thay thế Decision Table V1. |
-| L | Quyết định Leader trong quá trình M1, gồm TASK 02G ngày 09/11/2026 phê duyệt D13-E và chấp nhận residual risk canonical attribution. TASK 02F chỉ là tư vấn; D13 pending ở Revision 03 là lịch sử. Các PR #1–#4 đã merge ngày 10/11 theo quyết định tích hợp của Leader; chưa có bằng chứng thực thi code/test/CI/benchmark. Phần sử dụng AI, hậu kiểm của con người và đóng góp được ghi trung thực trong hồ sơ `AI_USE.md`/`CONTRIBUTIONS.md` khi hoàn thiện. |
+| L | Quyết định Leader trong quá trình M1, gồm TASK 02G ngày 09/11/2026 phê duyệt D13-E và chấp nhận residual risk canonical attribution; sau Issue #31, Leader cập nhật cách chọn mã theo §4.2. TASK 02F chỉ là tư vấn; D13 pending ở Revision 03 là lịch sử. Các PR #1–#4 đã merge ngày 10/11 theo quyết định tích hợp của Leader; chưa có bằng chứng thực thi code/test/CI/benchmark. Phần sử dụng AI, hậu kiểm của con người và đóng góp được ghi trung thực trong hồ sơ `AI_USE.md`/`CONTRIBUTIONS.md` khi hoàn thiện. |
 
-Nguồn D, TA và TA31 là các nguồn quy định/làm rõ theo phạm vi tương ứng; G/P là snapshot phân công và lịch sử. D13-E là policy nhóm đã duyệt, trong đó lựa chọn mã đại diện cho tình huống được nêu đã có làm rõ tại Issue #31; không gán toàn bộ chi tiết D13-E cho TA. Đường dẫn audit mặc định và lỗi nội bộ giữ trạng thái review riêng. Việc duyệt D13 không tự thay miền validation hoặc các quyết định OPEN.
+Nguồn D, TA và TA31 là các nguồn quy định/làm rõ theo phạm vi tương ứng; G/P là snapshot phân công và lịch sử. D13-E là policy nhóm đã duyệt và được Leader cập nhật cách chọn mã theo §4.2; Issue #31 xác nhận trực tiếp tình huống MISS-009 và nêu quy tắc chọn mã đại diện, không gán toàn bộ chi tiết D13-E cho TA. Đường dẫn audit mặc định và lỗi nội bộ giữ trạng thái review riêng. Việc duyệt D13 không tự thay miền validation hoặc các quyết định OPEN.
 
 ### 10.1. Lịch sử thay đổi
 
@@ -421,5 +421,5 @@ Nguồn D, TA và TA31 là các nguồn quy định/làm rõ theo phạm vi tư�
 | Revision 03, 08/11/2026 — TASK 02C.6 | Đồng bộ TA-01–06, thay thế một phần D04/D13, cập nhật FR/AC/truy vết và 12 ví dụ; extension null → UNKNOWN chờ Leader | **Trạng thái lịch sử tại 08/11:** Draft/chờ review; chưa có implementation/test/benchmark evidence |
 | Revision 04, 09/11/2026 — TASK 02G | APPROVED BY LEAD — D13-E — 09/11/2026; chuẩn hóa missing/null, Def/Poss/AllPV, definite-first, canonical attribution và Mixed fallback; chốt sáu expected, đồng bộ nguồn/bàn giao TASK 02E | **Trạng thái lịch sử tại 09/11:** Draft/chờ peer review; chưa có implementation verification; default path/internal exception còn review | 
 | Đồng bộ trạng thái sau merge, 10–11/11/2026 *(không đổi Revision 04 hoặc chính sách kỹ thuật)* | Xác nhận PR #1–#4 đã merge vào `track-a-development`; chỉnh tham chiếu SHA, trạng thái peer review và bàn giao M2 | Có Leader self-review và review APPROVED từ `nvldvc`; chưa có lượt review thành viên còn lại; chưa có TA scope acceptance hoặc bằng chứng runtime/test/CI/benchmark đạt |
-| Cập nhật đề xuất sau Issue #31, đối chiếu 12/11/2026 | Diễn đạt lại để dễ đọc; bổ sung nguồn và phạm vi làm rõ về mã đại diện; chỉnh liên kết fixture và trạng thái audit | Giữ expected thiết kế đã duyệt; ADR và test tự động cho ca thiếu khóa còn cần được cập nhật/triển khai. |
+| Cập nhật lựa chọn mã sau Issue #31 — quyết định Leader | Khi AllPV và chưa xác nhận sốc, chọn rule ưu tiên cao nhất trong Poss; nếu rule được chọn chưa chắc chắn đúng thì ghi mã đại diện. Cách definite-first đã được thay thế cho lựa chọn mã. | Cần đồng bộ ADR, ca thiết kế, QA và test tự động; chưa có bằng chứng runtime. |
 
