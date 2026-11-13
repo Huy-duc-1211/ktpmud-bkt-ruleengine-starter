@@ -10,7 +10,11 @@ Thư mục này lưu QA Matrix và hồ sơ rà soát thiết kế của nhóm `
 | [QA_REVIEW_COMPARISON.md](QA_REVIEW_COMPARISON.md) | Đối chiếu các nhận định review với dữ liệu và bằng chứng có tại thời điểm rà soát. |
 | [QA_LEADER_REVIEW_NOTES.md](QA_LEADER_REVIEW_NOTES.md) | Ghi chú bàn giao cho Leader, các điểm cần review và việc chuyển sang M2/M3. |
 
-Bốn báo cáo ghi lại trạng thái tại TASK 02N-C. Câu “chưa mở PR #4” phản ánh thời điểm viết. PR #4 đã merge ngày 10/11/2026. [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4)
+Bốn báo cáo ghi lại trạng thái tại TASK 02N-C, trước khi Leader cập nhật cách chọn mã sau [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002). Câu “chưa mở PR #4” phản ánh thời điểm viết; PR #4 đã merge ngày 10/11/2026. Xem workbook cùng phiên bản và [Test Cases](../m1-hai/M1/TEST_CASES.csv) cho thiết kế hiện hành; báo cáo tĩnh cũ không chứng minh selector mới đã chạy. [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4)
+
+Các URL ghim commit cũ trong workbook là nguồn lịch sử để truy vết; expected và assertion sau Issue #31 được xem trong `TEST_CASES.csv` ở cùng commit với workbook. Workbook vẫn cần Hải/Việt Đức review và bằng chứng thực thi riêng.
+
+Nguồn lịch sử của các ô nguồn rút gọn: [Requirements cũ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md), [Test Plan cũ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_PLAN.md), [Test Cases cũ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M1/TEST_CASES.csv) và [Integration Test Plan cũ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/61b6b9ff2d0ef62ee1794d7b7b68eb74d814429e/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md).
 
 Ô `GAP_REVIEW!L8` lưu tên báo cáo kiểm chứng theo thời điểm viết. Báo cáo hiện ở [QA_WORKBOOK_VALIDATION.md](QA_WORKBOOK_VALIDATION.md).
 

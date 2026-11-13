@@ -1,6 +1,6 @@
 # Kế hoạch public integration, context và audit
 
-Nguồn Q/A Revision 04 pin trong [sources](../M1/sources/README.md): Q §§4.4,6,8.2; A §§4,5.4.1,8,9.4. Đây là kế hoạch chuẩn bị ở M1 để triển khai sau, **chưa thực thi**. Tên helper/session factory/exception audit là chi tiết triển khai, không đổi signature `classify(patient)`. T15 ưu tiên diễn giải nullable/selection mới; không coi null tuổi hoặc boolean là invalid. D13-E đã Leader duyệt, canonical không phải TA-defined rule; xem [ISSUE15_SYNC](../M1/ISSUE15_SYNC.md).
+Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md), [ADR](../../../DECISIONS.md), [Decision Table](../../decision-table.md), [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002); snapshot lịch sử ở [sources](../M1/sources/README.md). Đây là kế hoạch, **chưa thực thi**. Tên helper/session factory/exception audit là chi tiết triển khai, không đổi signature `classify(patient)`. Missing/null hợp lệ theo T15; cách chọn mã được Leader cập nhật sau Issue #31. Thầy xác nhận trực tiếp MISS-009, còn overlap definite/possible là cách nhóm áp dụng quy tắc chung.
 
 ## 1. Fixture và oracle chung
 
@@ -32,10 +32,10 @@ Nguồn Q/A Revision 04 pin trong [sources](../M1/sources/README.md): Q §§4.4,
 | INT-015 | Synthetic canary trong giá trị lỗi/cause; thu audit/log/public error | Không raw clinical input/canary nhạy cảm qua audit, stdout/stderr, message hoặc rendered chain; không trường/status ngoài allowlist | D06/D07/D08; Việt Đức |
 | INT-016 | Review README runtime sau M2 | Mô tả nơi lưu/cấu hình/override, lỗi ghi và disclaimer; cơ chế default path chỉ mô tả như đã chọn sau khi Huy duyệt | A §5.4.1; Huy/Việt Đức |
 | INT-017 | Chạy các cặp numeric/boolean null-vs-missing T15; writer thật thành công | Không raise vì nullable; đúng mức/mã theo T15 và D13-E, disclosure canonical khi tương ứng; không hạ SOC khi đã đủ bằng chứng; record CLASSIFY/SUCCESS, không INVALID_INPUT do null. AUD-002 invalid dùng chuỗi, không null | T15 §§2–5; D13-E theo Q/A Revision 04; Hải/Việt Đức review |
-| INT-018 | MISS-009/TA15-BOOL1 và D13E-001/002; writer thật | PV/R01 canonical và SUCCESS; helper R01/R02 UNKNOWN không bị đổi TRUE; ly_do nói đại diện/chưa độc lập, không observed S=False; 3 output/4 audit keys | D13-E APPROVED; Hải, Việt Đức review |
+| INT-018 | MISS-009 với khóa dị nguyên nghi ngờ thực sự vắng mặt; TA15-BOOL1 và D13E-001/002; writer thật | PV/R01 canonical và SUCCESS; helper R01/R02 UNKNOWN không bị đổi TRUE; ly_do nói R01 là mã đại diện vì thiếu thông tin dị nguyên nghi ngờ, chưa xác nhận riêng; không observed S=False; 3 output/4 audit keys. Đối chứng INT-021/CHK-058: câu thiếu chi tiết trường dị nguyên không đạt dù regex khớp | D13-E APPROVED; Hải, Việt Đức review |
 | INT-019 | MISS-012, TA15-DEPENDENT_INHALATION và D13E-008–013 | Mixed TD/null, insufficient information; không khẳng định an toàn hoặc unavailable=False; SUCCESS nếu writer hoàn tất | D13-E APPROVED; Hải/Việt Đức |
 | INT-020 | D13E-003–007/015–018 và RULE-020, các cặp null/missing | AllPV+HATT proof SOC; missing BP PV; missing age TD; lowBP/noPV TD; 17.99/18 không làm tròn; TIER1_MATCH không lẫn HATT evidence | TA + D13-E; Hải |
-| INT-021 | Actual ly_do của DIRECT/CANONICAL/MIXED; positive và mutated unsafe message | Áp required_patterns_all/forbidden_patterns_any, đúng rule/provenance; không tự coi regex là proof ngôn ngữ tự nhiên; peer review raw-data/privacy | D06/D13-E; Việt Đức, Hải review |
+| INT-021 | Actual ly_do của DIRECT/CANONICAL/MIXED; MISS-009, MISS-013/014, TA15-BOOL3 null/missing, D13E-014 và các câu đối chứng | Overlap: PV/R02 CANONICAL, R03 TRUE/R02 UNKNOWN; D13E-014: PV/R01 DIRECT. Kiểm toàn câu, mã đại diện và đúng trường thiếu; regex chỉ hỗ trợ. Đối chứng MISS-009 có/không nêu dị nguyên nghi ngờ thiếu; kiểm câu mâu thuẫn, Mixed khẳng định không phản vệ, HATT bị nói đầy đủ khi thiếu, privacy và lời khuyên điều trị | D06/D13-E; Việt Đức, Hải review |
 
 Tên exception audit không bị tự đặt ở tài liệu này; M2 assert theo lớp public an toàn đã được chọn khi triển khai. Không mở lại precedence. Với explicit session, reset ở scope ngoài, không làm mất UUID phiên sau mỗi successful call; với UUID tạm phải reset sau từng call.
 
@@ -43,12 +43,13 @@ Tên exception audit không bị tự đặt ở tài liệu này; M2 assert the
 
 Tại thời điểm TASK 02E, QA Matrix chưa được cung cấp/xác minh trong nguồn. Bảng INT/AUD được chuẩn bị theo A §8. Bản remediation M1-02 do Huy phụ trách trên baseline của Hải.
 
-**Cập nhật TASK 02Q:** Đối chiếu mapping thiết kế trong [QA Matrix tại commit của PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx). Các nhóm dưới đây liên kết theo fixture hoặc assertion tương ứng. Chúng không thay expected của §2.
+**TASK 02Q và cập nhật sau Issue #31:** Mapping dưới đây được đối chiếu với [QA Matrix cùng phiên bản](../../m1-qa/QA_MATRIX.xlsx). [QA Matrix tại commit PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) là mốc lịch sử. Các nhóm liên kết theo fixture hoặc assertion tương ứng và không thay expected của §2.
 
 | Ca QA / checklist | Mục INT tương ứng và phạm vi |
 |---|---|
 | `QA-022`, `QA-023`, `CHK-059` | `INT-017`: nullable hợp lệ, writer hoàn tất → `SUCCESS`. `INT-005`: validation lỗi, writer hoàn tất → `INVALID_INPUT`. INV-001, INV-002 và AUD-002 là các fixture riêng. |
 | `QA-020`, `QA-040/041`, `QA-057` | `INT-018` cho MISS-009, TA15-BOOL1 và D13E-001/002: AllPV/CANONICAL. `INT-021` kiểm mã đại diện và disclosure trên `ly_do` thực tế. |
+| `QA-044/045`, `CHK-056` | `INT-017/021` cho TA15-BOOL3 null/missing và MISS-013/014: R02-PV CANONICAL, R03 chắc chắn/R02 chưa chắc chắn; D13E-014 là đối chứng R01 DIRECT. Helper và output kiểm riêng. |
 | `QA-054–056`, `QA-061/062` | `INT-019` cho cặp dependent inhalation, MISS-012 và D13E-008–013: Mixed. `INT-021` kiểm lý do thiếu thông tin và các diễn giải sai cần loại. |
 | `QA-058–060`, `QA-064` | `INT-020` cho AllPV có bằng chứng sốc, đối chứng RULE-020, thiếu HATT/tuổi, thiếu HATT nền và biên 17,99/18. `INT-021` kiểm `ly_do` ở các ca explanation tương ứng trong QA-059/064. |
 | `QA-063`, `CHK-058` | `INT-021` kiểm DIRECT ở D13E-014 và kiểm assertion dương/âm cho DIRECT/CANONICAL/MIXED. `INT-015` bổ sung kiểm raw-data/privacy ở các đường message, log và exception chaining trong CHK-058. |

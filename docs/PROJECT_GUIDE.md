@@ -41,6 +41,7 @@
 - [Repo chuẩn bị nộp của nhóm](https://github.com/Huy-duc-1211/ktpmud-project); **không viết code phân loại ở repo này**.
 - [Repo đích nộp bài của thầy](https://github.com/fossbk-spec/ktpmud-project).
 - [phản hồi chính thức tại Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (D01–D03 và cách xử lý dữ liệu thiếu).
+- [Phản hồi Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) về chọn mã đại diện khi thiếu khóa boolean.
 - [Erratum pytest của starter (Issue #16)](https://github.com/fossbk-spec/ktpmud-project/issues/16).
 - Nguồn nhóm hiện hành: [Requirements](../REQUIREMENTS.md), [ADR](../DECISIONS.md), [Rule Design và Test Plan](m1-hai/M1/README.md), [QA Matrix](m1-qa/QA_MATRIX.xlsx).
 - [Mẫu hồ sơ Track A](https://github.com/fossbk-spec/ktpmud-project/tree/main/submissions/_TEMPLATE_BKT_RULEENGINE).
@@ -95,7 +96,7 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 
 - `muc_do`: `SOC_PHAN_VE`, `PHAN_VE`, `THEO_DOI`.
 - `rule_id`: `R-SOC`, `R01-PV`, `R02-PV`, `R03-PV`, `null`.
-- Với `PHAN_VE`, DIRECT dùng mã rule đã được xác nhận riêng. CANONICAL chỉ dùng khi mọi khả năng đều khớp Tầng 2 mà chưa có rule riêng chắc chắn. Khi đó `rule_id` là mã đại diện và `ly_do` phải nêu rõ dữ liệu thiếu, mức phản vệ được bảo toàn và rule đại diện chưa được xác nhận riêng.
+- Với `PHAN_VE`, chọn rule ưu tiên cao nhất trong các rule có thể thỏa. Nếu rule được chọn chắc chắn đúng, mã là DIRECT; nếu chưa chắc chắn, mã là CANONICAL, kể cả khi rule ưu tiên thấp hơn đã chắc chắn. Với CANONICAL, `ly_do` nêu mã đại diện, dữ liệu thiếu và rule mang mã chưa được xác nhận riêng.
 - `ly_do` giải thích ngắn gọn căn cứ phân loại và thông tin còn thiếu khi liên quan. Tránh dữ liệu lâm sàng thô và lời khuyên điều trị. Ví dụ JSON trên minh họa DIRECT.
 - `THEO_DOI` nghĩa là **chưa đủ điều kiện kết luận theo bảng**, không đồng nghĩa “an toàn”.
 
@@ -153,11 +154,11 @@ Thiếu khóa và `null` tương đương về `muc_do` và `rule_id` đối v�
 
 ### D13-E đã được Leader phê duyệt ngày 09/11/2026
 
-D13-E là chính sách nội bộ đã công bố theo phạm vi TA cho phép. Cách chọn mã đại diện thuộc quyết định của nhóm. Xem [Requirements](../REQUIREMENTS.md) và [ADR](../DECISIONS.md).
+D13-E là chính sách nội bộ đã công bố theo phạm vi TA cho phép. Issue #31 làm rõ thứ tự chọn mã đại diện khi thiếu khóa; cách nhóm áp dụng cho overlap definite/possible do Leader quyết định. Xem [Requirements](../REQUIREMENTS.md) và [ADR](../DECISIONS.md).
 
 - Boolean thiếu khóa hoặc `null` → UNKNOWN nội bộ. Boolean có giá trị phải đúng kiểu. Áp dụng D04 cho dữ liệu không hợp lệ và giữ Enum/Kleene, cách đếm T/U của R02. Không ép UNKNOWN thành False.
 - Giữ dữ liệu đã biết khi xét mọi cách gán True/False cho boolean UNKNOWN. **Def** là tập rule đúng trong mọi khả năng. **Poss** là tập rule đúng trong ít nhất một khả năng. **AllPV** nghĩa là mỗi khả năng đều khớp ít nhất một rule Tầng 2.
-- Chọn trong **Def** trước theo R01 > R02 > R03 và dùng DIRECT. Rule chỉ possible có thứ tự cao hơn không lấn rule definite. Nếu Def rỗng nhưng AllPV, giữ kết luận phản vệ. Khi trả `PHAN_VE`, chọn mã ưu tiên cao nhất trong Poss làm CANONICAL và giải thích rõ như mục 3.3.
+- Khi AllPV và chưa xác nhận sốc, chọn rule ưu tiên cao nhất trong **Poss** theo R01 > R02 > R03. Rule được chọn thuộc Def là DIRECT; nếu chưa chắc chắn là CANONICAL, kể cả khi rule ưu tiên thấp hơn đã chắc chắn. Giải thích mã đại diện như mục 3.3.
 - Bằng chứng phản vệ từ Def hoặc AllPV kết hợp bằng chứng tụt HATT theo bảng và tuổi đã biết → `SOC_PHAN_VE / R-SOC`. Ưu tiên kiểm tra tuổi theo D02 và xử lý HATT thiếu theo D03.
 - **Mixed**, tức có cả khả năng khớp và không khớp Tầng 2 → `THEO_DOI / null` với lý do chưa đủ thông tin. Nếu mọi khả năng đều không khớp, dùng cùng mức/mã với lý do không khớp rule.
 

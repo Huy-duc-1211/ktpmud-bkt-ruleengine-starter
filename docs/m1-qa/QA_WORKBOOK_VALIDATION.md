@@ -1,5 +1,7 @@
 # TASK 02N-C — Kiểm chứng Excel và nhật ký sửa
 
+> **Bối cảnh lịch sử:** Báo cáo và các hash dưới đây thuộc workbook TASK 02N-C trước Issue #31, không mô tả workbook sau cập nhật selector. Xem [QA Matrix hiện hành](QA_MATRIX.xlsx) và [Test Cases](../m1-hai/M1/TEST_CASES.csv); không dùng phép kiểm cũ làm bằng chứng chạy selector mới.
+
 Bản vào `QA_MATRIX_M1_SELF_REVIEW_PATCHED.xlsx`, 43.195 byte, SHA-256 `453badfe2041e09481ab8e90db0a6589dd6eaa80fcafb395817afb17515d3079`. SHA nguồn kiểm lại sau khi ghi bản sao vẫn khớp. Bản ứng viên `QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx`, 51.804 byte, SHA-256 `7a870f6fa36115ad2ef37969866816e90c47ce695995b9c7ddc3bb6efd344af7`.
 
 ## Tính lại và mở lại

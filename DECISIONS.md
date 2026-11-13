@@ -286,7 +286,7 @@ Ví dụ `MISS-009`: tuổi 15, HATT 110; thiếu `co_di_nguyen_nghi_ngo`; da, h
 
 Với cùng dữ liệu boolean: đủ bằng chứng tụt HATT → `SOC_PHAN_VE / R-SOC`; thiếu HATT → `PHAN_VE` CANONICAL; thiếu tuổi → `THEO_DOI / null`. Với Mixed, ví dụ G hoặc I quyết định một rule có thỏa không, chọn `THEO_DOI / null` và giải thích thiếu thông tin.
 
-**Ví dụ vừa có rule chắc chắn vừa có rule ưu tiên cao hơn có thể thỏa:** Với `MISS-013/014`, R03 chắc chắn và R02 có thể thỏa. Sau Issue #31, Leader chọn `PHAN_VE / R02-PV` CANONICAL; `ly_do` nói R02 là mã đại diện do dữ liệu thiếu và chưa được xác nhận riêng, có thể nêu thêm R03 đã chắc chắn đúng. Issue #31 nêu quy tắc chung và xác nhận trực tiếp MISS-009; thầy chưa xác nhận riêng hai fixture này. Bản test cases đang ghi expected cũ và cần đồng bộ. [TA31; L; Q §4.2]
+**Ví dụ vừa có rule chắc chắn vừa có rule ưu tiên cao hơn có thể thỏa:** Với `MISS-013/014`, R03 chắc chắn và R02 có thể thỏa. Sau Issue #31, Leader chọn `PHAN_VE / R02-PV` CANONICAL; `ly_do` nói R02 là mã đại diện do dữ liệu thiếu và chưa được xác nhận riêng, có thể nêu thêm R03 đã chắc chắn đúng. Issue #31 nêu quy tắc chung và xác nhận trực tiếp MISS-009; thầy chưa xác nhận riêng hai fixture này. [Test Cases hiện hành](docs/m1-hai/M1/TEST_CASES.csv) đã cập nhật expected ở mức thiết kế, chưa phải kết quả chạy. [TA31; L; Q §4.2]
 
 Trong hai fixture này, trường còn thiếu lần lượt là hô hấp ở `MISS-013` và da/niêm mạc ở `MISS-014`; các trường khác giữ theo [Test Cases ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M1/TEST_CASES.csv). Đây là mốc của fixture, trước cập nhật Requirements tại `45e0870`:
 
@@ -295,7 +295,7 @@ Trong hai fixture này, trường còn thiếu lần lượt là hô hấp ở `
 | `False` | R03 |
 | `True` | R02 và R03 |
 
-Vì R03 thỏa ở cả hai khả năng nên là rule chắc chắn; R02 chỉ có thể thỏa. Theo quyết định cập nhật, R02 ưu tiên cao hơn R03 nên được chọn làm mã đại diện; mức vẫn là `PHAN_VE`. Các expected R03-PV/DIRECT trong CSV tại mốc cũ là thiết kế trước cập nhật, chưa phải kết quả chạy. Các ca `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` cùng cần rà expected và assertion khi đồng bộ.
+Vì R03 thỏa ở cả hai khả năng nên là rule chắc chắn; R02 chỉ có thể thỏa. Theo quyết định cập nhật, R02 ưu tiên cao hơn R03 nên được chọn làm mã đại diện; mức vẫn là `PHAN_VE`. Các expected R03-PV/DIRECT trong CSV tại mốc cũ là thiết kế trước cập nhật, chưa phải kết quả chạy. Các ca `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` đã cập nhật expected và assertion ở mức thiết kế; cần review và thực thi.
 
 Rủi ro mã đại diện bị hiểu nhầm là rule chắc chắn vẫn cần kiểm soát qua `ly_do` và negative assertions. Nhóm không thêm rule/ngưỡng; kết quả thiết kế và phản hồi thầy không thay cho kiểm thử thực tế hoặc peer review. Các thay đổi policy về sau cần được review và duyệt bởi người phụ trách.
 
@@ -457,19 +457,19 @@ D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập n
 
 Xem `REQUIREMENTS.md` §5.1 cho `TA-EX-01`–`TA-EX-13`. Các expected 01–11 đối chiếu Issue #15; ca 12 phản ánh Mixed theo policy nhóm. Với ca 13, nhánh thiếu khóa tương ứng MISS-009 đã được thầy xác nhận mức/mã tại Issue #31; nhánh null tương ứng theo policy nhóm. Không coi thầy đã phê duyệt riêng mọi expected. Đầu vào thiếu/null hợp lệ, sau phân loại và audit thành công, dùng `SUCCESS`, không tự `INVALID_INPUT`.
 
-Theo [Integration Test Plan ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. Đây là thiết kế kiểm thử, chưa phải bằng chứng các test đã được thực thi.
+Theo [Integration Test Plan hiện hành](docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. [Bản ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md) là nguồn lịch sử. Đây là thiết kế kiểm thử, chưa phải bằng chứng các test đã được thực thi.
 
 ### 9.3. Tình trạng tài liệu kiểm thử M1-02 và QA M1-03
 
 - [PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) đã tích hợp **175 ca thiết kế chính** (từ baseline 157 ca) và **81 ca logic nội bộ**; [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã tích hợp QA Matrix ánh xạ A-01–A-11. Đây là **test design**, chưa phải pytest thực thi.
 - Bộ ca được đối chiếu tại mốc có **36 invalid** (28 TypeError, 8 ValueError), **8 ca nullable hợp lệ** `INV-001/017/021/025/029/033/037/043`; riêng `INV-043` kỳ vọng `SOC_PHAN_VE/R-SOC`. `AUD-002` nay dùng chuỗi `"true"` nên là TypeError/INVALID_INPUT nếu audit thành công. Các số lịch sử 35 invalid/9 nullable là bản fixture cũ.
-- Hải là tác giả bản M1-02 gốc; Việt Đức là tác giả QA M1-03 gốc. Huy Đức phụ trách các bản sửa và tích hợp với công cụ AI hỗ trợ. Approval PR và tài liệu đã merge **không** chứng minh Hải/Việt Đức đã review kỹ thuật vòng cuối, hoặc CI/runtime đạt. Cần lưu review thực chất và bằng chứng chạy. Sau cập nhật chọn mã, cần rà và đồng bộ Test Plan, CSV, QA Matrix cùng các tài liệu phụ thuộc; trước mắt đã thấy `MISS-013`, `MISS-014`, `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` còn expected `R03-PV`/DIRECT cũ, trong khi chính sách mới chọn `R02-PV`/CANONICAL.
+- Hải là tác giả bản M1-02 gốc; Việt Đức là tác giả QA M1-03 gốc. Huy Đức phụ trách các bản sửa và tích hợp với công cụ AI hỗ trợ. Approval PR và tài liệu đã merge **không** chứng minh Hải/Việt Đức đã review kỹ thuật vòng cuối, hoặc CI/runtime đạt. Cần lưu review thực chất và bằng chứng chạy. Sau cập nhật chọn mã, Test Plan, CSV, QA Matrix và các tài liệu phụ thuộc được cập nhật ở mức thiết kế: bốn ca `MISS-013`, `MISS-014`, `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` dự kiến `R02-PV`/CANONICAL. Review và thực thi vẫn còn chờ.
 
-**Những tài liệu cần đồng bộ theo selector mới** (chưa phải kết quả test):
+**Đối chiếu thiết kế theo selector mới** (chưa phải kết quả test):
 
-- **Test Cases và Test Plan:** rà bốn ca `MISS-013`, `MISS-014`, `TA15-BOOL3-NULL`, `TA15-BOOL3-MISSING`; giữ mức `PHAN_VE`, đổi mã dự kiến từ `R03-PV` sang `R02-PV` và cập nhật assertion `ly_do` theo CANONICAL. Giữ input và kiểm chứng helper. `D13E-014` vẫn là ca đối chứng DIRECT.
-- **Rule Design và kế hoạch M2:** rà selector trong `RULE_DESIGN.md` và public oracle trong `INTERNAL_STATE_TEST_PLAN.md`; giữ 81 ca helper nếu phép toán và expected helper không đổi. Giữ phạm vi `INT-018` cho MISS-009; rà và bổ sung bốn ca overlap vào kiểm `ly_do` của `INT-021`.
-- **QA Matrix:** rà `QA-044/045`, `CHK-056`, mô tả selector ở `AC_MATRIX` và `QA-063`; giữ kết quả DIRECT của `D13E-014` và CANONICAL của `QA-020` khi fixture không đổi. Giữ trạng thái thực thi theo bằng chứng, không đánh dấu PASS chỉ vì sửa thiết kế.
+- **Test Cases và Test Plan:** bốn ca `MISS-013`, `MISS-014`, `TA15-BOOL3-NULL`, `TA15-BOOL3-MISSING` giữ mức `PHAN_VE`, đổi mã dự kiến từ `R03-PV` sang `R02-PV` và cập nhật assertion `ly_do` theo CANONICAL. Giữ input và kiểm chứng helper. `D13E-014` vẫn là ca đối chứng DIRECT.
+- **Rule Design và kế hoạch M2:** selector trong `RULE_DESIGN.md` và public oracle trong `INTERNAL_STATE_TEST_PLAN.md` được cập nhật; giữ 81 ca helper do phép toán và expected helper không đổi. Giữ phạm vi `INT-018` cho MISS-009; bổ sung bốn ca overlap vào kiểm `ly_do` của `INT-021`.
+- **QA Matrix:** các mục `QA-044/045`, `CHK-056`, selector ở `AC_MATRIX` và `QA-063` được cập nhật; giữ kết quả DIRECT của `D13E-014` và CANONICAL của `QA-020` khi fixture không đổi. Giữ trạng thái thực thi theo bằng chứng, không đánh dấu PASS chỉ vì sửa thiết kế.
 
 A-11 đã được đối chiếu disclaimer tại commit README `4482e4f` (§9), còn dòng A-11 trong QA Matrix tại mốc này vẫn `NOT RUN` cho việc kiểm README ở SHA nghiệm thu. Cần đối chiếu phạm vi và cập nhật bằng chứng phù hợp khi đồng bộ, không tự coi hai trạng thái là một kết quả chạy.
 
@@ -492,7 +492,7 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 
 | Hạng mục | Trạng thái / hành động kiểm chứng |
 |---|---|
-| **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; cần đồng bộ ca thiết kế và review kỹ thuật. |
+| **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; ca thiết kế đã đồng bộ, còn cần review kỹ thuật và test thực tế. |
 | **Default audit path** | Đề xuất §5.4.1 **chưa được duyệt**; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
 | **Unexpected internal exception** | Chưa chốt cách audit/propagate khi helper lỗi trước ghi audit; không tự gán SUCCESS/INVALID_INPUT, thêm status hoặc log input; cần review Dev/QA. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |

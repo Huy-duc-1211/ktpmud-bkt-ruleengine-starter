@@ -1,6 +1,6 @@
-# M1-02 — Thiết kế rule theo Issue #15
+# M1-02 — Thiết kế rule và xử lý dữ liệu thiếu
 
-Nguồn hiện hành: [Requirements Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) (Q), [ADR Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md) (A), Decision Table (D) và [TA comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15). D13-E là **APPROVED BY LEAD — D13-E — 09/11/2026**, không phải canonical rule do TA định danh. Bản sửa TASK 02E do Leader Huy Đức sở hữu, AI hỗ trợ; chưa xác nhận Hải/Việt Đức peer review hoặc Leader nghiệm thu bản sửa.
+Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md) (Q), [ADR](../../../DECISIONS.md) (A), [Decision Table](../../decision-table.md) (D), [làm rõ Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) (T31). Leader duyệt D13-E ngày 09/11/2026 và cập nhật cách chọn mã sau Issue #31. Hải là tác giả baseline; Huy Đức phụ trách TASK 02E và các bản sửa với AI hỗ trợ. Review kỹ thuật của các thành viên và kết quả thực thi cần bằng chứng riêng. Xem [sources](sources/README.md) cho các snapshot lịch sử.
 
 ## 1. Đầu vào, đầu ra và validation
 
@@ -67,13 +67,13 @@ NOT TRUE=FALSE; NOT FALSE=TRUE; NOT UNKNOWN=UNKNOWN. R02 T>=2 -> count TRUE; T+U
 
 C(p) là mọi True/False completion của boolean UNKNOWN, giữ known values; không fill patient hoặc numeric. Def là rule TRUE trong mọi completion; Poss là rule TRUE ở ít nhất một completion; AllPV là mọi completion khớp ít nhất một original rule; AnyPV là tồn tại completion positive. Có 1–64 completion.
 
-1. Validation mọi trường theo D04 trước selector; tuổi missing/null → THEO_DOI/null theo TA.
-2. Có Def: chọn priority R01 > R02 > R03 trong Def, attribution DIRECT; possible rule không được đẩy definite.
-3. Def rỗng/AllPV: giữ positive. PHAN_VE chọn canonical priority trong Poss, MUST disclosure mã đại diện và chưa xác nhận rule độc lập, không nói UNKNOWN=False đã được quan sát.
-4. Positive definite/coverage + HYPOTENSION TRUE → SOC_PHAN_VE/R-SOC. HATT thấp đơn độc không đủ; thiếu BP hoặc adult thiếu nền không hạ positive đã chứng minh khi tuổi có.
-5. Mixed → THEO_DOI/null kèm insufficient-information reason; không AnyPV → THEO_DOI/null theo không khớp. Không gọi Mixed là chắc chắn không phản vệ hoặc an toàn.
+1. Validation mọi trường theo D04; tuổi missing/null → THEO_DOI/null theo TA, nêu thiếu tuổi và chuyển sang audit.
+2. Có tuổi: xác định Def, Poss, AllPV và AnyPV từ các completion. Nếu AllPV, phản vệ đã được chứng minh, kể cả khi Def rỗng.
+3. AllPV và HYPOTENSION TRUE → SOC_PHAN_VE/R-SOC. HATT thấp đơn độc không đủ điều kiện sốc phản vệ.
+4. AllPV nhưng chưa xác nhận sốc → PHAN_VE; chọn rule ưu tiên cao nhất trong Poss theo R01 > R02 > R03. Nếu rule được chọn thuộc Def, mã là DIRECT; nếu chưa chắc chắn thì là CANONICAL, kể cả khi rule ưu tiên thấp hơn đã chắc chắn. CANONICAL bắt buộc nêu mã đại diện, dữ liệu thiếu và chưa xác nhận rule riêng; không nói UNKNOWN=False đã được quan sát.
+5. Mixed → THEO_DOI/null kèm lý do thiếu thông tin; không AnyPV → THEO_DOI/null với lý do không khớp. Không gọi Mixed là an toàn.
 
-DIRECT/CANONICAL là provenance private, không public key hoặc status mới. Canonical dùng priority trong Poss là convention nhóm đã duyệt, không TA priority giữa rules đã đồng thời TRUE. Giữ Enum/Kleene/T-U; không suy mức bằng all-UNKNOWN=False. Leader đã chấp nhận residual risk consumer hiểu representative như rule definite; disclosure và negative tests vẫn bắt buộc.
+DIRECT và CANONICAL là nhãn nội bộ, không thêm khóa output hay status audit. Issue #31 nêu cách chọn mã ưu tiên trong các rule có thể thỏa và xác nhận trực tiếp MISS-009; việc dùng CANONICAL cho ca vừa có rule chắc chắn vừa có rule ưu tiên cao hơn có thể thỏa là cách nhóm áp dụng quyết định này. Mã đại diện không làm rule đó trở thành definite. Giữ Enum/Kleene/T-U, không ép UNKNOWN thành False; ly_do và negative assertions cần ngăn hiểu nhầm rule đại diện đã được xác nhận.
 
 Các tên sau chỉ là assertion nội bộ/harness, không thêm PatientInput/output/audit:
 - HYPOTENSION: Enum TRUE/FALSE/UNKNOWN cho điều kiện số đo theo tuổi.
@@ -90,9 +90,9 @@ Ví dụ S unavailable, K=H=I=TRUE,C=G=FALSE, tuổi15/BP110: R01/R02 UNKNOWN,R0
 Context/provider UUID + writer path ngoài PatientInput
   -> validate giá trị có mặt (cho phép null/missing theo T15)
   -> tuổi không có dữ liệu: chuẩn bị THEO_DOI/null, reason thiếu tuổi
-  -> có tuổi: Enum helpers + D13-E Def trước Poss, AllPV/Mixed
+  -> có tuổi: Enum helpers + D13-E Def/Poss, AllPV/Mixed
      -> TIER1_MATCH TRUE và tuổi có: SOC_PHAN_VE/R-SOC
-     -> AllPV, chưa chứng minh sốc: PHAN_VE/DIRECT hoặc CANONICAL có disclosure
+     -> AllPV, chưa chứng minh sốc: PHAN_VE, chọn rule ưu tiên cao nhất trong Poss; DIRECT hoặc CANONICAL có disclosure
      -> Mixed: THEO_DOI/null, reason thiếu thông tin
      -> không AnyPV: THEO_DOI/null, reason không khớp rule
   -> audit CLASSIFY/SUCCESS hoàn tất rồi mới trả kết quả
@@ -115,8 +115,8 @@ Default path mechanism A §5.4.1 còn PROPOSED; unexpected internal exception c�
 
 ## 7. Test, benchmark và bàn giao
 
-- CSV chung 175 ca: giữ 157 ID/input và level/ID/exception cũ, thêm 18 D13E-001–018 theo gap F04. Bảy PEND đã resolve; tất cả DRAFT_NOT_EXECUTED.
+- CSV chung có 175 ca thiết kế, gồm 157 ID/input baseline và 18 ca bổ sung. TASK 02E từng giữ mức/mã/lớp lỗi của baseline; sau Issue #31, bốn ca MISS-013/014 và TA15-BOOL3-NULL/MISSING đổi mã dự kiến từ R03-PV sang R02-PV CANONICAL, giữ PHAN_VE và input. Bảy PEND đã resolve; tất cả DRAFT_NOT_EXECUTED.
 - 81 hàng logic/count/allergen không đổi phép toán, 22 regression/null-vs-missing đã gộp trong CSV chung và kiểm coverage tại [INTERNAL_STATE_TEST_PLAN.md](../M2/INTERNAL_STATE_TEST_PLAN.md).
 - Nonfinite giữ fixture_ref/allowlist, ValueError tuổi không hữu hạn; không eval/runner ngoài repo.
 - D10 không đổi: perf_counter_ns, 100 warm-up ngoài N>=1.000, nearest-rank p50/p95, full-path có audit I/O thật; chưa có số đo. [BENCHMARK_PLAN.md](../M2/BENCHMARK_PLAN.md)
-- QA Matrix chưa được cung cấp trong nguồn task này; không kết luận trạng thái công việc hiện tại của Việt Đức. Đối chiếu QA/peer review còn chờ xác nhận. Runtime/CI/benchmark NOT EXECUTED; Leader acceptance không do AI tự xác nhận.
+- [QA Matrix](../../m1-qa/QA_MATRIX.xlsx) đã tích hợp qua PR #4; các mục chọn mã đã cập nhật theo D13-E sau Issue #31 ở mức thiết kế và cần Việt Đức/Hải review. Runtime/CI/benchmark chưa có bằng chứng đạt; nghiệm thu cần xác nhận riêng.
