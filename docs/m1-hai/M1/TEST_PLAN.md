@@ -48,6 +48,8 @@ Với mọi CANONICAL, ly_do phải nêu mã đại diện, dữ liệu thiếu 
 
 **Kiểm lời giải thích sau review:** Các mẫu trong CSV chỉ hỗ trợ kiểm tra những cách diễn đạt được kiểm soát, không xác nhận đầy đủ ý nghĩa câu tự nhiên. Phải có ca đối chứng đúng và sai: mã đại diện chưa xác nhận riêng, dữ liệu/trường còn thiếu, khẳng định mâu thuẫn và giá trị chưa biết bị gán là đã quan sát. Ca Mixed phải phân biệt “chưa đủ thông tin để kết luận không có phản vệ” với khẳng định đã loại trừ phản vệ. D13E-004/005 còn cần nêu thiếu HATT hiện tại; D13E-015/016 cần nêu thiếu HATT nền để đánh giá nhánh sốc liên quan. Kiểm riêng privacy, lời khuyên điều trị và ngữ nghĩa toàn câu trên output thực tế; không suy các nội dung này đã đạt chỉ vì regex khớp. Ví dụ một câu đủ từ khóa rồi thêm “Vì vậy, R02-PV đã thỏa” có thể vẫn lọt regex dù mâu thuẫn; cần có kiểm tra riêng cho toàn bộ mẫu output thực tế. Không bắt lời giải thích phải giống nguyên văn một câu ví dụ. Chưa có kết quả thực thi nghiệp vụ.
 
+Với MISS-009, đối chứng hai cách giải thích cùng nêu R01 là mã đại diện chưa được xác nhận: câu có nêu thiếu thông tin dị nguyên nghi ngờ đạt điều kiện này; câu bỏ thông tin đó không đạt, kể cả khi khớp regex. Đây là ví dụ kiểm ngữ nghĩa, không bắt buộc dùng nguyên văn và chưa phải kết quả test.
+
 RULE-020 giữ HYPOTENSION_EVIDENCE TRUE nhưng TIER1_MATCH FALSE; xem [INTERNAL_STATE_TEST_PLAN](../M2/INTERNAL_STATE_TEST_PLAN.md). Đây là tên assertion nội bộ, không API helper mới bắt buộc.
 
 ## 4. Đối chiếu tiêu chí nghiệm thu

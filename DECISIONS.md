@@ -457,7 +457,7 @@ D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập n
 
 Xem `REQUIREMENTS.md` §5.1 cho `TA-EX-01`–`TA-EX-13`. Các expected 01–11 đối chiếu Issue #15; ca 12 phản ánh Mixed theo policy nhóm. Với ca 13, nhánh thiếu khóa tương ứng MISS-009 đã được thầy xác nhận mức/mã tại Issue #31; nhánh null tương ứng theo policy nhóm. Không coi thầy đã phê duyệt riêng mọi expected. Đầu vào thiếu/null hợp lệ, sau phân loại và audit thành công, dùng `SUCCESS`, không tự `INVALID_INPUT`.
 
-Theo [Integration Test Plan ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. Đây là thiết kế kiểm thử, chưa phải bằng chứng các test đã được thực thi.
+Theo [Integration Test Plan hiện hành](docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. [Bản ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md) là nguồn lịch sử. Đây là thiết kế kiểm thử, chưa phải bằng chứng các test đã được thực thi.
 
 ### 9.3. Tình trạng tài liệu kiểm thử M1-02 và QA M1-03
 
