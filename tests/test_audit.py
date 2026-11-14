@@ -1,3 +1,5 @@
+import json
+import logging
 import traceback
 from contextvars import Context
 from pathlib import Path
@@ -9,6 +11,35 @@ from rule_engine.classifier import classify
 
 
 _CANARY = "SYNTHETIC_PRIVATE_CANARY"
+_INTERNAL_CANARY = "SYNTHETIC_INTERNAL_ERROR"
+_PRESSURE_CANARY = 97136485
+
+
+@pytest.fixture
+def internal_error_patient(monkeypatch):
+    def fail(patient):
+        raise RuntimeError(f"{_INTERNAL_CANARY} {patient['huyet_ap_tam_thu']}")
+
+    monkeypatch.setattr("rule_engine.classifier._classify_valid", fail)
+    return {"tuoi": 15, "huyet_ap_tam_thu": _PRESSURE_CANARY}
+
+
+def _assert_no_payload(error, audit_file, capsys, caplog):
+    assert error.__cause__ is None and error.__context__ is None
+    output = capsys.readouterr()
+    rendered = (
+        str(error),
+        "".join(traceback.format_exception(error, chain=True)),
+        caplog.text,
+        output.out,
+        output.err,
+        audit_file.read_text(encoding="utf-8") if audit_file.exists() else "",
+    )
+    for surface in rendered:
+        for canary in (_CANARY, _INTERNAL_CANARY, str(_PRESSURE_CANARY)):
+            assert canary not in surface
+    assert output == ("", "")
+    assert not caplog.records
 
 
 def test_nested_sessions_restore_uuid_after_error_and_isolate_context(audit_records):
@@ -52,19 +83,30 @@ def test_validation_audit_and_error_are_safe(patient, error_type, audit_file, au
 
 
 @pytest.mark.parametrize("stage", ["mkdir", "open", "write", "short_write", "flush", "close"])
-@pytest.mark.parametrize("patient", [{}, {"tuoi": _CANARY}], ids=["valid", "invalid"])
-def test_audit_failures_take_precedence(stage, patient, audit_file, monkeypatch, capsys, caplog):
+@pytest.mark.parametrize("scenario", ["valid", "invalid", "internal"])
+def test_audit_failures_take_precedence(
+    stage, scenario, request, audit_file, monkeypatch, capsys, caplog
+):
+    patient = {}
+    if scenario == "invalid":
+        patient = {"tuoi": _CANARY}
+    elif scenario == "internal":
+        patient = request.getfixturevalue("internal_error_patient")
+    caplog.set_level(logging.DEBUG)
+
     def fail():
         raise OSError(_CANARY)
 
     real_mkdir = Path.mkdir
     real_open = Path.open
+    attempted_statuses = []
 
     class FailingFile:
         def __enter__(self):
             return self
 
         def write(self, line):
+            attempted_statuses.append(json.loads(line)["Status"])
             if stage == "write":
                 fail()
             return len(line) - 1 if stage == "short_write" else len(line)
@@ -92,7 +134,7 @@ def test_audit_failures_take_precedence(stage, patient, audit_file, monkeypatch,
     with monkeypatch.context() as patches:
         patches.setattr(Path, "mkdir", mkdir)
         patches.setattr(Path, "open", open_file)
-        with pytest.raises(AuditError) as caught:
+        with pytest.raises(AuditError, match="^Không thể hoàn tất bản ghi audit\\.$") as caught:
             classify(patient)
         assert _session_uuid.get() is None
         with audit_session() as session:
@@ -100,10 +142,12 @@ def test_audit_failures_take_precedence(stage, patient, audit_file, monkeypatch,
                 classify(patient)
             assert _session_uuid.get() == session
         assert _session_uuid.get() is None
-    assert caught.value.__cause__ is None and caught.value.__context__ is None
-    assert _CANARY not in "".join(traceback.format_exception(caught.value))
-    assert capsys.readouterr() == ("", "")
-    assert not caplog.records
+    expected_status = {"valid": "SUCCESS", "invalid": "INVALID_INPUT", "internal": "INTERNAL_ERROR"}
+    if stage in {"mkdir", "open"}:
+        assert attempted_statuses == []
+    else:
+        assert attempted_statuses == [expected_status[scenario]] * 2
+    _assert_no_payload(caught.value, audit_file, capsys, caplog)
 
 
 def test_audit_closes_real_file_before_classify_returns(audit_file, audit_records, monkeypatch):
@@ -182,14 +226,16 @@ def test_relative_path_and_repository_paths_fail_closed(audit_file, monkeypatch)
     assert not (other_repo / "audit.jsonl").exists()
 
 
-def test_unexpected_rule_error_has_no_audit_status_or_payload(audit_records, monkeypatch):
-    def fail(_patient):
-        raise RuntimeError(_CANARY)
-
-    monkeypatch.setattr("rule_engine.classifier._classify_valid", fail)
-    with pytest.raises(RuntimeError, match="Không thể hoàn tất phân loại") as caught:
-        classify({})
+def test_unexpected_rule_error_records_internal_error_without_payload(
+    internal_error_patient, audit_file, audit_records, capsys, caplog
+):
+    caplog.set_level(logging.DEBUG)
+    with audit_session() as session:
+        with pytest.raises(RuntimeError, match="^Không thể hoàn tất phân loại\\.$") as caught:
+            classify(internal_error_patient)
+        assert _session_uuid.get() == session
     assert _session_uuid.get() is None
-    assert caught.value.__cause__ is None and caught.value.__context__ is None
-    assert _CANARY not in "".join(traceback.format_exception(caught.value))
-    audit_records()
+    assert type(caught.value) is RuntimeError
+    record, = audit_records("INTERNAL_ERROR")
+    assert record["User_UUID"] == str(session)
+    _assert_no_payload(caught.value, audit_file, capsys, caplog)

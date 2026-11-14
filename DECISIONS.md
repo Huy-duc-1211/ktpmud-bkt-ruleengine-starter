@@ -176,6 +176,8 @@ Kiểm chứng M2: direct call không cấu hình path; đổi working directory
 | Truy vết | Q FR-07, FR-09; NFR-02, NFR-03; A-04, A-06. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D08, Q §§4, 6 và L; OPEN-03 ngày 08/11/2026 là APPROVED BY LEAD — PENDING PEER TECHNICAL REVIEW. Tên exception audit cụ thể có thể hoàn thiện khi implement. |
 
+**INT-013 trên nhánh M2 (chờ review):** Khi logic phân loại lỗi sau validation, `classify()` thử ghi một bản ghi `CLASSIFY / INTERNAL_ERROR`. Nếu ghi xong, hàm báo `RuntimeError` với thông báo chung. Nếu ghi cũng lỗi, hàm báo `AuditError`. Vẫn dùng đúng bốn trường và dọn UUID theo scope khi thoát. Test dò input và lỗi gốc trong thông báo, traceback công khai, log và JSONL. Hải và Việt Đức review status mới và cách xử lý lỗi kép. Chưa có xác nhận của thầy. [Kế hoạch test tích hợp](docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md)
+
 ### 5.6. D09 — Kiểm thử theo hành vi và ranh giới
 
 **Đọc nhanh:** Kiểm tra ca thường, biên, thiếu, sai và giao nhau giữa các rule; test mẫu của starter chưa phải test nghiệp vụ.
@@ -494,7 +496,7 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 |---|---|
 | **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; ca thiết kế đã đồng bộ, còn cần review kỹ thuật và test thực tế. |
 | **Default audit path** | Đề xuất §5.4.1 **chưa được duyệt**; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
-| **Unexpected internal exception** | Chưa chốt cách audit/propagate khi helper lỗi trước ghi audit; không tự gán SUCCESS/INVALID_INPUT, thêm status hoặc log input; cần review Dev/QA. |
+| **Lỗi nội bộ trước khi ghi audit** | Bản M2 thử ghi `INTERNAL_ERROR` theo §5.5. Dev và QA cần review tên status, lỗi kép và khả năng rò input. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |
 | **Kiểm thử/CI/benchmark** | Đã có [`pytest.ini`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/pytest.ini) theo Issue #16. Chưa có bằng chứng engine nghiệp vụ, pytest nghiệp vụ từ clean checkout, CI nghiệp vụ được kiểm chứng hay số liệu latency. |
 | **Review của nhóm** | Leader tiếp tục hậu kiểm thủ công; Hải và Việt Đức đối chiếu core/audit/Test Plan/QA, ghi lại nhận xét thực tế trước các thay đổi tiếp theo. |

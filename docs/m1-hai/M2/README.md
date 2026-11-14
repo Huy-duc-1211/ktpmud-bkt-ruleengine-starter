@@ -1,16 +1,16 @@
-# Kế hoạch cho giai đoạn sau — M2/M3
+# Bàn giao M2 và kế hoạch M3
 
-Thư mục này giữ kế hoạch M2/M3 từ bản của Hải và các bản sửa do Huy Đức phụ trách với AI hỗ trợ. Nhánh M2 đã triển khai cách chọn mã sau Issue #31, chạy các ca nghiệp vụ và bổ sung test audit. Xem cách chạy tại [README](../../../README.md).
+Tôi chuyển bộ ca M1 sang pytest để kiểm tra `classify()` trên nhánh M2. Phần chọn mã theo Issue #31 lấy từ bản cập nhật của Huy Đức, có AI hỗ trợ. Tôi gửi kèm test audit để Việt Đức chạy và review. [Cách chạy](../../../README.md)
 
-- [INTERNAL_STATE_TEST_PLAN.md](INTERNAL_STATE_TEST_PLAN.md) và [INTERNAL_STATE_CASES.csv](INTERNAL_STATE_CASES.csv): chi tiết helper/Enum và 81 ca logic nội bộ.
-- [INTEGRATION_TEST_PLAN.md](INTEGRATION_TEST_PLAN.md): public call, context UUID, audit, lỗi và isolation.
-- [FIXTURE_CONTRACT.md](FIXTURE_CONTRACT.md), [fixtures/NONFINITE_INPUTS.json](fixtures/NONFINITE_INPUTS.json): cách dựng test data đặc biệt cho pytest M2.
-- [BENCHMARK_PLAN.md](BENCHMARK_PLAN.md): protocol đo hiệu năng sẽ thực hiện ở M3 sau khi có runtime chạy được.
+- Thiết kế helper, Enum và 81 ca logic nội bộ. [Kế hoạch test](INTERNAL_STATE_TEST_PLAN.md) · [CSV](INTERNAL_STATE_CASES.csv)
+- Gọi trực tiếp `classify()`, kiểm UUID theo phiên, đường lỗi audit và file riêng cho từng test. [Kế hoạch test tích hợp](INTEGRATION_TEST_PLAN.md)
+- Cách tạo fixture NaN và Infinity cho pytest. [Quy ước fixture](FIXTURE_CONTRACT.md) · [Dữ liệu fixture](fixtures/NONFINITE_INPUTS.json)
+- Cách đo hiệu năng ở M3. [Kế hoạch benchmark](BENCHMARK_PLAN.md)
 
-Mã case giữ dạng gốc. CSV chính 175 ca và quyết định logic nằm trong M1; không tạo bộ input/expected thứ hai ở đây.
+Pytest đọc input và expected của 175 ca từ CSV ở M1, dùng mã ca gốc.
 
 ## Các điểm cần review trên bản M2
 
-- `INT-010`: bản hiện tại dùng thư mục người dùng và tạo một file audit riêng cho mỗi lần nạp chương trình. Đường dẫn này theo đề xuất tại ADR §5.4.1, còn chờ nhóm chốt.
-- `INT-013`: lỗi bất ngờ từ logic phân loại trả `RuntimeError` với thông báo chung. Ca thử lỗi xác nhận chương trình không ghi `SUCCESS` hay `INVALID_INPUT` và không đưa lỗi gốc vào chuỗi lỗi công khai. Nhóm cần chốt hành vi này khi review.
-- Hải và Việt Đức đối chiếu `ly_do` thực tế với INT-021, kiểm đường dẫn và lỗi audit. Kết quả pytest local cần bổ sung bằng chứng GitHub Actions sau khi nhánh M2 lên PR. Benchmark vẫn theo kế hoạch M3.
+- `INT-010` dùng thư mục người dùng và tạo file audit riêng cho mỗi lần nạp chương trình, theo đề xuất ở ADR §5.4.1. Nhóm còn cần chốt đường dẫn mặc định.
+- `INT-013` thử ghi `INTERNAL_ERROR` khi logic phân loại gặp lỗi. Ghi xong thì báo `RuntimeError` với thông báo chung. Nếu ghi cũng lỗi thì báo `AuditError`. Nhờ Việt Đức review tên status và ca lỗi kép. Đây là phương án của nhóm đang chờ review, chưa có xác nhận của thầy.
+- Tôi sẽ đối chiếu `ly_do` thực tế theo INT-021 cùng Việt Đức. Khi có PR M2, Việt Đức thu thêm kết quả GitHub Actions để đối chiếu với lần chạy local. Benchmark làm ở M3.

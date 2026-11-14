@@ -5,7 +5,7 @@ Nhóm `173820_n27` xây dựng mô-đun Python phân loại theo [Decision Table
 ## Trạng thái phát triển
 
 - **M1:** Requirements, ADR, Rule Design, Test Plan, các ca thiết kế và QA Matrix đã tích hợp qua [PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1), [PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2), [PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3), [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) ngày 10/11/2026.
-- **M2:** Đã triển khai `classify(patient)`, kiểm tra input, phân loại theo bảng quyết định và ghi audit JSONL. Bộ pytest chạy ca nghiệp vụ, logic ba trạng thái và các đường lỗi audit.
+- **M2:** `classify(patient)` đã chạy được. Hàm kiểm tra input, xét rule theo bảng quyết định rồi ghi audit JSONL. Bộ pytest có ca rule, ca ở ranh giới, dữ liệu thiếu và lỗi ghi audit.
 
 ## Cấu trúc repository
 
@@ -43,9 +43,11 @@ print(classify({
 }))
 ```
 
-Mẫu trên trả `PHAN_VE / R01-PV`. Có thể đặt biến môi trường `DR_MAY_DAY_AUDIT_PATH` thành đường dẫn tuyệt đối tới file JSONL riêng ngoài repository. Khi chưa đặt biến, bản M2 dùng đường dẫn thử nghiệm `~/.173820_n27/dr_may_day/runs/<run-id>/audit.jsonl`. Gọi nhiều lần trong `with audit_session():` (import từ `rule_engine.audit`) để dùng chung UUID giả lập trong phiên. Mỗi lần gọi ngoài phiên có UUID riêng.
+Ví dụ trên trả `PHAN_VE / R01-PV`. Muốn chỉ định file audit, đặt `DR_MAY_DAY_AUDIT_PATH` thành đường dẫn tuyệt đối tới file JSONL ngoài repo. Nếu chưa đặt biến này, bản M2 ghi thử vào `~/.173820_n27/dr_may_day/runs/<run-id>/audit.jsonl`. Để dùng chung UUID giả lập cho nhiều lần gọi, đặt các lệnh gọi trong `with audit_session():` (import từ `rule_engine.audit`). Mỗi lần gọi ngoài phiên có UUID riêng.
 
-Hàm ghi xong audit mới trả kết quả. Input sai được ghi `INVALID_INPUT` rồi báo `TypeError` hoặc `ValueError`. Nếu ghi audit lỗi, hàm báo `AuditError`. File audit dùng cho các lần ghi tuần tự trong một lần chạy.
+Hàm ghi xong audit mới trả kết quả. Nếu input sai, hàm ghi `INVALID_INPUT` rồi báo `TypeError` hoặc `ValueError`. Nếu ghi audit thất bại, hàm báo `AuditError`. Các lần ghi vào cùng file diễn ra tuần tự.
+
+Với INT-013, nhánh này thử ghi `INTERNAL_ERROR` khi logic phân loại gặp lỗi sau validation, rồi báo `RuntimeError` với thông báo chung. Nếu ghi bản ghi đó cũng lỗi, hàm báo `AuditError`. Bản ghi vẫn có bốn trường và không chứa input. Việt Đức và Huy Đức còn cần review cách xử lý này. [Ghi chú M2](docs/m1-hai/M2/README.md)
 
 ## Tài liệu tham chiếu
 

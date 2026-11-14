@@ -55,7 +55,9 @@ def _audit_path() -> Path:
     return path
 
 
-def _write_record(user_uuid: UUID, status: Literal["SUCCESS", "INVALID_INPUT"]) -> None:
+def _write_record(
+    user_uuid: UUID, status: Literal["SUCCESS", "INVALID_INPUT", "INTERNAL_ERROR"]
+) -> None:
     record = {
         "Timestamp": datetime.now(timezone.utc).isoformat(),
         "User_UUID": str(user_uuid),

@@ -221,9 +221,10 @@ def classify(patient: PatientInput) -> ClassificationResult:
         try:
             result = _classify_valid(patient)
         except Exception:
-            # INT-013: lỗi nội bộ không thuộc hai trạng thái audit hiện hành.
+            # Ra khỏi except trước khi ghi audit để lỗi gốc không đi theo lỗi công khai.
             pass
         else:
             _write_record(user_uuid, "SUCCESS")
             return result
+        _write_record(user_uuid, "INTERNAL_ERROR")
         raise RuntimeError("Không thể hoàn tất phân loại.") from None

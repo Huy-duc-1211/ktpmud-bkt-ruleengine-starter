@@ -223,7 +223,7 @@ Audit JSONL giữ đúng bốn trường sau, không trường thứ năm. Allow
 | Timestamp | ISO 8601 có timezone UTC |
 | User_UUID | UUID hợp lệ, synthetic theo scope phiên người thao tác, không phải định danh bệnh nhân/danh tính thật |
 | Action_Type | CLASSIFY |
-| Status | SUCCESS hoặc INVALID_INPUT |
+| Status | `SUCCESS` hoặc `INVALID_INPUT` theo D08. Bản M2 thử thêm `INTERNAL_ERROR` cho INT-013, chờ nhóm review. |
 
 ContextVar là hướng triển khai đã được chọn ngoài PatientInput. Các call trong cùng phiên tường minh dùng chung UUID, reset khi kết thúc scope. Không có phiên tường minh thì mỗi call độc lập tạo UUID tạm mới, dùng để audit và reset trong finally kể cả exception; không tái sử dụng giữa hai call độc lập. Không thêm UUID vào chín input keys hoặc đổi chữ ký classify(patient). [L OPEN-01–OPEN-02]
 
@@ -234,9 +234,11 @@ ContextVar là hướng triển khai đã được chọn ngoài PatientInput. C
 | Validation thành công, audit lỗi | Raise lỗi audit vận hành an toàn, không trả thành công và không mặc định record đã lưu |
 | Validation và audit cùng lỗi | Ưu tiên lỗi audit an toàn ra public boundary, không giả định record INVALID_INPUT tồn tại; message/chaining không lộ raw input |
 
+**INT-013 trên nhánh M2:** Nếu logic phân loại lỗi sau validation, hàm thử ghi `CLASSIFY / INTERNAL_ERROR` với đúng bốn trường rồi báo `RuntimeError` bằng thông báo chung. Nếu audit cũng lỗi, hàm báo `AuditError`. Input và lỗi gốc không xuất hiện trong bản ghi, thông báo, traceback công khai hay log. Nhóm còn review giá trị status này và chưa có xác nhận của thầy. [Ca kiểm thử](docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md)
+
 Fail-closed có kiểm soát chỉ áp dụng module bài thi synthetic; không mặc nhiên áp dụng sản phẩm y tế thực tế. Path audit cấu hình ngoài input, trong vùng dữ liệu sinh của lần chạy, độc lập working directory; test dùng file/thư mục riêng, không commit runtime log. V1 ghi tuần tự, quyền sở hữu writer/file rõ; không cam kết thread/process-safe khi ghi chung file. [L OPEN-03–OPEN-06]
 
-Writer M2 hoàn tất open append/write/close theo từng record trước khi public call báo thành công; lỗi write/flush/close phải được nhận biết theo fail-closed. Không retry vô hạn, không tạo trường/status mới hoặc mặc định fsync/durability sau mất điện. [L OPEN-09]
+Writer M2 hoàn tất open append/write/close theo từng record trước khi public call báo thành công; lỗi write/flush/close phải được nhận biết theo fail-closed. Không retry vô hạn, không tạo thêm trường hay status riêng cho lỗi writer, không mặc định fsync/durability sau mất điện. [L OPEN-09]
 
 **Kiểm chứng tích hợp M2 — còn cần peer review:** direct `classify(patient)` khi chưa cấu hình audit path phải được đưa vào kế hoạch kiểm chứng. Cơ chế chọn path mặc định ổn định ngoài repository, không phụ thuộc working directory, là đề xuất chưa được Leader duyệt; cần kiểm tra override ngoài PatientInput cho test/demo, fail-closed khi không tạo/ghi được file và hướng dẫn nơi lưu/cấu hình trong README khi triển khai. Giữ nguyên signature và chín input keys. [TASK 02C.4 Patch A]
 
@@ -292,6 +294,8 @@ NFR (*Non-functional Requirement*) mô tả chất lượng và ràng buộc khi
 Protocol D10 đã được Leader chốt: sắp N mẫu tăng dần, lấy phần tử tại vị trí `ceil(p × N)` theo chỉ số bắt đầu từ 1; p50 dùng p=0,50 và p95 dùng p=0,95. Chuyển nanosecond sang millisecond bằng chia 1.000.000. Loại 100 warm-up khỏi mẫu; không mock writer trong phép đo full-path. p95 <100 ms là ngưỡng của đề, chưa có kết quả để kết luận đạt. [L OPEN-10; E A-10]
 
 ## 7. Tiêu chí nghiệm thu
+
+Trạng thái trong bảng ghi lại mốc thiết kế M1. Nhánh M2 đã có classifier và pytest để nhóm review. Xem hướng dẫn chạy tại [README](README.md).
 
 Trạng thái dưới đây phản ánh bằng chứng của từng tiêu chí. `NOT IMPLEMENTED` là chưa có chức năng hoặc tài liệu cần thiết. `PARTIALLY AVAILABLE` là có khung nhưng thiếu bằng chứng nghiệp vụ. `TA CONFIRMED` ghi nhận yêu cầu đã được TA làm rõ. `VERIFIED` ghi nhận điều kiện nghiệm thu của tiêu chí đã được đối chiếu trực tiếp với bằng chứng được dẫn. A-11 được kiểm tra bằng README. Các tiêu chí về thực thi vẫn cần kết quả runtime, test nghiệp vụ, CI hoặc benchmark tương ứng.
 
@@ -389,7 +393,7 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | Sai ngoặc/ngưỡng hoặc suy BP mặc định | Đối chiếu biểu thức gốc, boundary và >30% nghiêm ngặt; không tạo rule y khoa mới |
 | Audit SUCCESS/INVALID_INPUT bị dùng nhầm | Allowed missing/null không tự là lỗi; giữ D04 cho invalid thực sự, bốn trường và error precedence |
 | Direct call chưa cấu hình audit path | Tiếp tục review đề xuất ở ADR, không tự chọn/duyệt path trong task này |
-| Unexpected internal exception trước audit thành công | Residual implementation risk / review item: không SUCCESS hoặc tự gán INVALID_INPUT; không thêm status/schema hoặc log payload; Hải/Việt Đức review cách xử lý |
+| Lỗi nội bộ trước khi ghi audit | Hải và Việt Đức review `INTERNAL_ERROR` theo §4.4, gồm ca ghi thành công, lỗi kép và kiểm rò input. |
 | Nhầm review tài liệu với nghiệm thu | Ghi nhận `VERIFIED` cho A-11 theo README tại §7. A-01 đến A-10 tiếp tục cần bằng chứng theo từng tiêu chí. Nghiệm thu phạm vi của TA cần xác nhận riêng. |
 | Nguồn snapshot lịch sử hoặc tài liệu liên quan còn policy cũ | Giữ snapshot là lịch sử. ADR, Test Plan, test cases và QA Matrix đã cập nhật chính sách chọn mã ở mức thiết kế; tiếp tục review và không dùng expected cũ làm chính sách hiện hành. |
 | AI-use hoặc phối hợp thiếu bằng chứng | Ghi công cụ/phạm vi/kiểm chứng/quyết định và người chịu trách nhiệm thực tế; Huy review nguồn, Hải M1-02, Việt Đức M1-03 |

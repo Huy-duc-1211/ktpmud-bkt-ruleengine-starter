@@ -7,8 +7,9 @@ Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md), [ADR](../../../D
 - Base input: RULE-001 (tuổi 15, HATT 110, boolean False), hoặc RULE-002/INV-003/INV-041 khi cần. Dùng input đủ dữ liệu để cô lập integration; D01–D03 đã có kết quả theo T15, không còn pending.
 - Provider ContextVar và writer/path cấu hình ngoài PatientInput. Dùng pytest tmp_path; assert path đã resolve nằm ngoài repo, không mặc định mọi cấu hình --basetemp đều an toàn.
 - File riêng theo run/test; fixture reset token trong finally/teardown cả khi assertion/engine/writer lỗi. V1 ghi tuần tự; không tuyên bố file concurrent-safe.
-- Audit đúng bốn key; Timestamp ISO 8601 UTC, UUID synthetic hợp lệ, CLASSIFY, SUCCESS/INVALID_INPUT. Count theo delta của file riêng, không dựa audit cũ.
+- Audit có đúng bốn trường. Kiểm Timestamp theo ISO 8601 UTC, UUID giả lập, CLASSIFY và status theo từng ca. Nhánh M2 thử thêm `INTERNAL_ERROR` cho INT-013, còn chờ nhóm review. Đếm số dòng mới trong file riêng của test.
 - Test double/fault injection được dùng cho đường lỗi; đường success integration phải có kiểm chứng writer thật. Chặn stdout/stderr trong harness không đủ chứng minh privacy: cần quan sát log thật của module.
+- Khi chạy demo, dùng traceback mặc định hoặc chỉ hiển thị thông báo lỗi. Chế độ debug in biến cục bộ có thể hiện `patient`. Test dò rò dữ liệu dùng traceback mặc định có bật exception chaining.
 - Không cam kết không tồn tại file/record sau writer failure: write/flush/close có thể để lại dòng hoàn chỉnh hoặc không hoàn chỉnh; chỉ khóa fail-closed và không tuyên bố đã lưu thành công.
 
 ## 2. Các tình huống cần kiểm thử
@@ -27,7 +28,7 @@ Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md), [ADR](../../../D
 | INT-010 | Direct call chưa cấu hình audit path, đổi cwd | Kiểm chứng đề xuất A §5.4.1: gốc ổn định ngoài repo, override được, không fallback về cwd/repo; không tạo/ghi được thì fail-closed. Chưa khóa path cụ thể hoặc expected output khi cơ chế chưa duyệt | PROPOSED — AWAITING PEER REVIEW; Hải/Việt Đức, Huy quyết định |
 | INT-011 | Override path test/demo ngoài input; path bị từ chối hoặc không có quyền | Giữ signature/chín keys; override hợp lệ vào file riêng; lỗi cấu hình/I/O không được bỏ audit để báo success | OPEN-04 đã duyệt; path cụ thể là chi tiết M2 |
 | INT-012 | Nhiều tests đổi thứ tự, một test lỗi, test sau mở phiên mới | Không rò context/file; teardown vẫn chạy; UUID/file đúng scope; không xem kết quả kiểm context là bằng chứng concurrent-safe writer | OPEN-05/06; Việt Đức |
-| INT-013 | Input valid nhưng helper phát sinh unexpected internal exception trước audit | Invariants: không tự gọi SUCCESS/INVALID_INPUT, không thêm status/schema, không payload. Cơ chế audit/propagation cụ thể chưa được chốt, giữ residual review item, không invent expected exception | RESIDUAL REVIEW ITEM; Hải/Việt Đức |
+| INT-013 | Input hợp lệ có giá trị synthetic dễ dò. Dùng monkeypatch để helper ném lỗi có chứa giá trị đó. Thử thêm lỗi ở writer. | Writer chạy được thì ghi đúng một record `INTERNAL_ERROR` có bốn trường, rồi báo `RuntimeError` với thông báo chung. Writer lỗi thì ưu tiên `AuditError` và kiểm dọn UUID. Dò input và chuỗi đánh dấu của hai lỗi trong JSONL, thông báo, traceback có chain, log và stdout/stderr. | Bản M2 đã thử phương án này. Hải/Việt Đức review, chưa có xác nhận của thầy. |
 | INT-014 | Thêm UUID/path như khóa input synthetic | ValueError khóa thừa khi audit INVALID_INPUT thành công; cấu hình phải ở context/provider, không mở rộng PatientInput | D04/D12; Hải |
 | INT-015 | Synthetic canary trong giá trị lỗi/cause; thu audit/log/public error | Không raw clinical input/canary nhạy cảm qua audit, stdout/stderr, message hoặc rendered chain; không trường/status ngoài allowlist | D06/D07/D08; Việt Đức |
 | INT-016 | Review README runtime sau M2 | Mô tả nơi lưu/cấu hình/override, lỗi ghi và disclaimer; cơ chế default path chỉ mô tả như đã chọn sau khi Huy duyệt | A §5.4.1; Huy/Việt Đức |
