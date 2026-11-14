@@ -1,6 +1,6 @@
 # Hồ sơ quyết định kiến trúc — Track A (ADR)
 
-> **Mục đích:** Ghi lại *vì sao* nhóm lựa chọn kiến trúc và cách kiểm chứng. Chi tiết trường dữ liệu, FR/NFR/AC ở [`REQUIREMENTS.md`](REQUIREMENTS.md); toàn bộ test cases ở `docs/m1-hai/`, QA Matrix ở `docs/m1-qa/`. Đây là **thiết kế**, không phải báo cáo engine đã chạy.
+> **Mục đích:** Ghi lại *vì sao* nhóm lựa chọn kiến trúc và cách kiểm chứng. Chi tiết trường dữ liệu, FR/NFR/AC ở [`REQUIREMENTS.md`](REQUIREMENTS.md); toàn bộ test cases ở `docs/`, QA Matrix ở `docs/qa/`. Đây là **thiết kế**, không phải báo cáo engine đã chạy.
 
 ## 1. Thông tin và trạng thái
 
@@ -176,7 +176,7 @@ Kiểm chứng M2: direct call không cấu hình path; đổi working directory
 | Truy vết | Q FR-07, FR-09; NFR-02, NFR-03; A-04, A-06. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D08, Q §§4, 6 và L; OPEN-03 ngày 08/11/2026 là APPROVED BY LEAD — PENDING PEER TECHNICAL REVIEW. Tên exception audit cụ thể có thể hoàn thiện khi implement. |
 
-**INT-013 trên nhánh M2 (chờ review):** Khi logic phân loại lỗi sau validation, `classify()` thử ghi một bản ghi `CLASSIFY / INTERNAL_ERROR`. Nếu ghi xong, hàm báo `RuntimeError` với thông báo chung. Nếu ghi cũng lỗi, hàm báo `AuditError`. Vẫn dùng đúng bốn trường và dọn UUID theo scope khi thoát. Test dò input và lỗi gốc trong thông báo, traceback công khai, log và JSONL. Hải và Việt Đức review status mới và cách xử lý lỗi kép. Chưa có xác nhận của thầy. [Kế hoạch test tích hợp](docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md)
+**INT-013 trên nhánh M2 (chờ review):** Khi logic phân loại lỗi sau validation, `classify()` thử ghi một bản ghi `CLASSIFY / INTERNAL_ERROR`. Nếu ghi xong, hàm báo `RuntimeError` với thông báo chung. Nếu ghi cũng lỗi, hàm báo `AuditError`. Vẫn dùng đúng bốn trường và dọn UUID theo scope khi thoát. Test dò input và lỗi gốc trong thông báo, traceback công khai, log và JSONL. Hải và Việt Đức review status mới và cách xử lý lỗi kép. Chưa có xác nhận của thầy. [Kế hoạch test tích hợp](docs/testing/INTEGRATION_TEST_PLAN.md)
 
 ### 5.6. D09 — Kiểm thử theo hành vi và ranh giới
 
@@ -288,7 +288,7 @@ Ví dụ `MISS-009`: tuổi 15, HATT 110; thiếu `co_di_nguyen_nghi_ngo`; da, h
 
 Với cùng dữ liệu boolean: đủ bằng chứng tụt HATT → `SOC_PHAN_VE / R-SOC`; thiếu HATT → `PHAN_VE` CANONICAL; thiếu tuổi → `THEO_DOI / null`. Với Mixed, ví dụ G hoặc I quyết định một rule có thỏa không, chọn `THEO_DOI / null` và giải thích thiếu thông tin.
 
-**Ví dụ vừa có rule chắc chắn vừa có rule ưu tiên cao hơn có thể thỏa:** Với `MISS-013/014`, R03 chắc chắn và R02 có thể thỏa. Sau Issue #31, Leader chọn `PHAN_VE / R02-PV` CANONICAL; `ly_do` nói R02 là mã đại diện do dữ liệu thiếu và chưa được xác nhận riêng, có thể nêu thêm R03 đã chắc chắn đúng. Issue #31 nêu quy tắc chung và xác nhận trực tiếp MISS-009; thầy chưa xác nhận riêng hai fixture này. [Test Cases hiện hành](docs/m1-hai/M1/TEST_CASES.csv) đã cập nhật expected ở mức thiết kế, chưa phải kết quả chạy. [TA31; L; Q §4.2]
+**Ví dụ vừa có rule chắc chắn vừa có rule ưu tiên cao hơn có thể thỏa:** Với `MISS-013/014`, R03 chắc chắn và R02 có thể thỏa. Sau Issue #31, Leader chọn `PHAN_VE / R02-PV` CANONICAL; `ly_do` nói R02 là mã đại diện do dữ liệu thiếu và chưa được xác nhận riêng, có thể nêu thêm R03 đã chắc chắn đúng. Issue #31 nêu quy tắc chung và xác nhận trực tiếp MISS-009; thầy chưa xác nhận riêng hai fixture này. [Test Cases hiện hành](TEST_CASES.csv) đã cập nhật expected ở mức thiết kế, chưa phải kết quả chạy. [TA31; L; Q §4.2]
 
 Trong hai fixture này, trường còn thiếu lần lượt là hô hấp ở `MISS-013` và da/niêm mạc ở `MISS-014`; các trường khác giữ theo [Test Cases ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M1/TEST_CASES.csv). Đây là mốc của fixture, trước cập nhật Requirements tại `45e0870`:
 
@@ -453,13 +453,13 @@ D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập n
 
 ### 9.1. Những nhóm kiểm thử quan trọng
 
-Ưu tiên các tình huống: (1) rule overlap và ngưỡng biên; (2) null/missing/invalid kiểu và khóa; (3) missing age/BP/nền; (4) Enum, T/U, AllPV/Mixed; khi AllPV, chọn mã ưu tiên cao nhất trong Poss, rồi kiểm DIRECT/CANONICAL theo việc rule mang mã có thuộc Def; (5) đúng `ly_do` và không tiết lộ dữ liệu; (6) explicit/single-call UUID, reset `finally` và context isolation; (7) writer open/write/flush/close thất bại, lỗi kép, path ngoài repo; (8) benchmark full-path. Các case cụ thể nằm ở `docs/m1-hai/M1/TEST_CASES.csv`, `docs/m1-hai/M2/INTERNAL_STATE_CASES.csv` và QA Matrix; không cần tái chép tất cả trong ADR.
+Ưu tiên các tình huống: (1) rule overlap và ngưỡng biên; (2) null/missing/invalid kiểu và khóa; (3) missing age/BP/nền; (4) Enum, T/U, AllPV/Mixed; khi AllPV, chọn mã ưu tiên cao nhất trong Poss, rồi kiểm DIRECT/CANONICAL theo việc rule mang mã có thuộc Def; (5) đúng `ly_do` và không tiết lộ dữ liệu; (6) explicit/single-call UUID, reset `finally` và context isolation; (7) writer open/write/flush/close thất bại, lỗi kép, path ngoài repo; (8) benchmark full-path. Các case cụ thể nằm ở `TEST_CASES.csv`, `tests/fixtures/INTERNAL_STATE_CASES.csv` và QA Matrix; không cần tái chép tất cả trong ADR.
 
 ### 9.2. Các ví dụ chính thức và giới hạn thẩm quyền
 
 Xem `REQUIREMENTS.md` §5.1 cho `TA-EX-01`–`TA-EX-13`. Các expected 01–11 đối chiếu Issue #15; ca 12 phản ánh Mixed theo policy nhóm. Với ca 13, nhánh thiếu khóa tương ứng MISS-009 đã được thầy xác nhận mức/mã tại Issue #31; nhánh null tương ứng theo policy nhóm. Không coi thầy đã phê duyệt riêng mọi expected. Đầu vào thiếu/null hợp lệ, sau phân loại và audit thành công, dùng `SUCCESS`, không tự `INVALID_INPUT`.
 
-Theo [Integration Test Plan hiện hành](docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. [Bản ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md) là nguồn lịch sử. Đây là thiết kế kiểm thử, chưa phải bằng chứng các test đã được thực thi.
+Theo [Integration Test Plan hiện hành](docs/testing/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. [Bản ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md) là nguồn lịch sử. Đây là thiết kế kiểm thử, chưa phải bằng chứng các test đã được thực thi.
 
 ### 9.3. Tình trạng tài liệu kiểm thử M1-02 và QA M1-03
 

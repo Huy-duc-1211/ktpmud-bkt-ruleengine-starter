@@ -8,8 +8,8 @@ Dùng đề thi và errata chính thức, sau đó Decision Table và phản h�
 
 | Ký hiệu | Nguồn | Phạm vi |
 |---|---|---|
-| Q | [REQUIREMENTS.md hiện hành](../../../../REQUIREMENTS.md) | §3 validation/normalization, §4.2 D13-E, §5 output attribution, §8.2 sáu expected |
-| A | [DECISIONS.md hiện hành](../../../../DECISIONS.md) | §5.8 D13-E, §9.4 sáu expected và các mục còn mở |
+| Q | [REQUIREMENTS.md hiện hành](../../REQUIREMENTS.md) | §3 validation/normalization, §4.2 D13-E, §5 output attribution, §8.2 sáu expected |
+| A | [DECISIONS.md hiện hành](../../DECISIONS.md) | §5.8 D13-E, §9.4 sáu expected và các mục còn mở |
 | D | [Official Decision Table V1](https://github.com/fossbk-spec/ktpmud-bkt-ruleengine-starter/blob/bkt-2026-v1/docs/decision-table.md), tag bkt-2026-v1, blob95c2bbd43be8e80c8c7ecb938761a273d062c17e | Chín input, ba output, formulas và ngưỡng duy nhất |
 | T15 | [fossbk-spec comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), created/updated 2026-11-08T14:01:50Z | D01–D03, null/missing và quyền chọn policy khoảng trống |
 | T31 | [Phản hồi Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) | Cách chọn mã đại diện khi thiếu boolean; xác nhận trực tiếp MISS-009 và yêu cầu có test |
@@ -35,6 +35,6 @@ Nguồn trước approval D13-E: Requirements tại `c855c6d4f2135a14ad94485734d
 
 Baseline của Hải 768f196e6a9ec3b1142c44399ce8288f7cc2e87e trên docs/m1-tests-hai; giữ tác giả/lịch sử và original branch. Bản sửa trên review/m1-02-leader-remediation, owner Huy Đức/AI hỗ trợ. TASK 02D review độc lập chỉ là evidence/rationale, TASK 02F là recommendation; approval D13-E nằm ở Q/A Revision 04 sau TASK 02G.
 
-Tại TASK 02E, QA Matrix chưa được cung cấp/xác minh. Hiện [QA Matrix](../../../m1-qa/QA_MATRIX.xlsx) đã tích hợp qua [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) và các mục thực thi vẫn `NOT RUN`. Mapping thiết kế và các báo cáo lịch sử là nguồn để review, chưa xác nhận nghiệm thu hoặc runtime.
+Tại TASK 02E, QA Matrix chưa được cung cấp/xác minh. Hiện [QA Matrix](../qa/QA_MATRIX.xlsx) đã tích hợp qua [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) và các mục thực thi vẫn `NOT RUN`. Mapping thiết kế và các báo cáo lịch sử là nguồn để review, chưa xác nhận nghiệm thu hoặc runtime.
 
 Default audit path vẫn PROPOSED — AWAITING PEER REVIEW, unexpected internal exception vẫn là residual review item, CON-004 nonmutation vẫn là đề nghị kỹ thuật riêng.

@@ -2,7 +2,7 @@
 
 **Phạm vi hiện tại là thiết kế/test case M1.** Các phần nhắc thực thi pytest/audit/benchmark là dự kiến cho giai đoạn sau; tài liệu chi tiết đã ở M2, chưa cần thực hiện khi review M1.
 
-Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md) (Q), [ADR](../../../DECISIONS.md) (A), [Decision Table](../../decision-table.md) (D), [làm rõ Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) (T31). Leader duyệt D13-E ngày 09/11/2026 và cập nhật cách chọn mã sau Issue #31. Hải là tác giả baseline; Huy Đức phụ trách TASK 02E và các bản sửa với AI hỗ trợ. Review kỹ thuật của các thành viên và kết quả thực thi cần bằng chứng riêng. Xem [sources](sources/README.md) cho các snapshot lịch sử.
+Nguồn hiện hành: [Requirements](../../REQUIREMENTS.md) (Q), [ADR](../../DECISIONS.md) (A), [Decision Table](../decision-table.md) (D), [làm rõ Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) (T31). Leader duyệt D13-E ngày 09/11/2026 và cập nhật cách chọn mã sau Issue #31. Hải là tác giả baseline; Huy Đức phụ trách TASK 02E và các bản sửa với AI hỗ trợ. Review kỹ thuật của các thành viên và kết quả thực thi cần bằng chứng riêng. Xem [sources](../references/README.md) cho các snapshot lịch sử.
 
 **175 ca DRAFT_NOT_EXECUTED; 0 ca PENDING_TA_CONFIRMATION.** Static data/oracle checks không phải kết quả classifier.
 
@@ -13,7 +13,7 @@ Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md) (Q), [ADR](../../
 - Expected TypeError/ValueError public có precondition audit INVALID_INPUT thành công; lỗi kép vẫn audit precedence, không đổi vì T15.
 - Tuổi thiếu/null: THEO_DOI/null. Có tuổi và Tầng 2 đủ, thiếu HATT/nền cần thiết: PHAN_VE với mã rule và reason thiếu dữ liệu; không tự gán nền. Overlap chọn R01 > R02 > R03; có bằng chứng sốc luôn R-SOC.
 - Boolean thiếu/null không gây exception vì nullable và không hạ mức khi đã đủ kết luận. Số/chuỗi khác null vẫn sai kiểu theo policy nhóm.
-- Fixture encoding=json/fixture_ref và registry nonfinite giữ trong repo, không eval. [FIXTURE_CONTRACT.md](../M2/FIXTURE_CONTRACT.md)
+- Fixture encoding=json/fixture_ref và registry nonfinite giữ trong repo, không eval. [FIXTURE_CONTRACT.md](FIXTURE_CONTRACT.md)
 - Internal assertions là notation helper, không field PatientInput/output/audit. HYPOTENSION có thể UNKNOWN; HYPOTENSION_EVIDENCE chỉ bằng chứng số đo, TIER1_MATCH kết hợp TIER2_COVERAGE với HYPOTENSION; không suy SOC từ HATT thấp đơn độc.
 
 ## 2. Các nhóm kiểm thử
@@ -50,7 +50,7 @@ Với mọi CANONICAL, ly_do phải nêu mã đại diện, dữ liệu thiếu 
 
 Với MISS-009, đối chứng hai cách giải thích cùng nêu R01 là mã đại diện chưa được xác nhận: câu có nêu thiếu thông tin dị nguyên nghi ngờ đạt điều kiện này; câu bỏ thông tin đó không đạt, kể cả khi khớp regex. Đây là ví dụ kiểm ngữ nghĩa, không bắt buộc dùng nguyên văn và chưa phải kết quả test.
 
-RULE-020 giữ HYPOTENSION_EVIDENCE TRUE nhưng TIER1_MATCH FALSE; xem [INTERNAL_STATE_TEST_PLAN](../M2/INTERNAL_STATE_TEST_PLAN.md). Đây là tên assertion nội bộ, không API helper mới bắt buộc.
+RULE-020 giữ HYPOTENSION_EVIDENCE TRUE nhưng TIER1_MATCH FALSE; xem [INTERNAL_STATE_TEST_PLAN](INTERNAL_STATE_TEST_PLAN.md). Đây là tên assertion nội bộ, không API helper mới bắt buộc.
 
 ## 4. Đối chiếu tiêu chí nghiệm thu
 

@@ -1,6 +1,6 @@
 # TASK 02N-C — Quyết định cho Huy Đức
 
-> **Bối cảnh lịch sử:** Ghi chú được lập trước PR #4 và trước cập nhật cách chọn mã sau Issue #31. Xem [QA Matrix hiện hành](QA_MATRIX.xlsx) và [Test Cases](../m1-hai/M1/TEST_CASES.csv); trạng thái review của các thành viên và runtime vẫn cần bằng chứng riêng.
+> **Bối cảnh lịch sử:** Ghi chú được lập trước PR #4 và trước cập nhật cách chọn mã sau Issue #31. Xem [QA Matrix hiện hành](QA_MATRIX.xlsx) và [Test Cases](../../TEST_CASES.csv); trạng thái review của các thành viên và runtime vẫn cần bằng chứng riêng.
 
 **Kết luận kỹ thuật: bản ứng viên sẵn sàng để Huy xem xét nghiệm thu thiết kế và quyết định mở Draft PR #4.** Các sai lệch đã xác minh trong lượt audit được sửa trên bản sao. Chưa có quyết định nghiệm thu, peer review độc lập của thành viên hay xác minh runtime.
 

@@ -1,6 +1,6 @@
 # D13-E — Internal math và public selection, kế hoạch M2
 
-Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md), [ADR](../../../DECISIONS.md), [Decision Table](../../decision-table.md), [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002). Leader duyệt D13-E ngày 09/11/2026 và cập nhật cách chọn mã sau Issue #31. Hải là tác giả baseline M1-02; Huy Đức phụ trách các bản sửa với AI hỗ trợ. Peer review và kết quả thực thi cần bằng chứng riêng.
+Nguồn hiện hành: [Requirements](../../REQUIREMENTS.md), [ADR](../../DECISIONS.md), [Decision Table](../decision-table.md), [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002). Leader duyệt D13-E ngày 09/11/2026 và cập nhật cách chọn mã sau Issue #31. Hải là tác giả baseline M1-02; Huy Đức phụ trách các bản sửa với AI hỗ trợ. Peer review và kết quả thực thi cần bằng chứng riêng.
 
 ## 1. Phân tầng assertion
 
@@ -8,7 +8,7 @@ Pure helper dùng Enum identity trước priority, không Python truthiness. Pub
 
 ## 2. Bảng logic 81 hàng giữ nguyên
 
-[INTERNAL_STATE_CASES.csv](INTERNAL_STATE_CASES.csv) không đổi byte: 9 AND+9 OR+3 NOT+15 cặp T/U khả thi+45 AND(count,S). Count T>=2 TRUE, T+U<2 FALSE, còn lại UNKNOWN rồi AND S. Independent static recomputation phải kiểm từng hàng, không chỉ parse; chưa gọi helper nhóm.
+[INTERNAL_STATE_CASES.csv](../../tests/fixtures/INTERNAL_STATE_CASES.csv) không đổi byte: 9 AND+9 OR+3 NOT+15 cặp T/U khả thi+45 AND(count,S). Count T>=2 TRUE, T+U<2 FALSE, còn lại UNKNOWN rồi AND S. Independent static recomputation phải kiểm từng hàng, không chỉ parse; chưa gọi helper nhóm.
 
 RULE-009–013/sáu PAIR assert count/R02 riêng, RULE-014/016/017 R02 FALSE khi R03 TRUE; MISS-010/011/012 T/U. Với MISS-013/014, R03 definite và R02 possible: R02-PV là mã đại diện theo priority trong Poss, nhưng helper R02 vẫn UNKNOWN. Giữ cả helper và public assertion.
 
@@ -35,9 +35,9 @@ C(p) là mọi True/False completion của boolean UNKNOWN, giữ known values; 
 
 DIRECT/CANONICAL là nhãn nội bộ, không thêm public key hoặc audit status. Issue #31 xác nhận trực tiếp MISS-009 và nêu quy tắc chọn mã; áp dụng cho overlap definite/possible là cách nhóm áp dụng quy tắc. Giữ Enum/Kleene/T-U, không gán UNKNOWN=False. Kiểm ngữ nghĩa và disclosure để tránh hiểu mã đại diện là rule đã chắc chắn.
 
-Sáu approved cases ở [ISSUE15_SYNC §4](../M1/ISSUE15_SYNC.md) phải giữ helper UNKNOWN ở MISS-009 nhưng canonical R01 ở public. 175 ca chính gồm 18 equivalence groups. Cặp null/missing so level/ID, không UUID hoặc reason nguyên văn.
+Sáu approved cases ở [ISSUE15_SYNC §4](../reviews/classifier/ISSUE15_SYNC.md) phải giữ helper UNKNOWN ở MISS-009 nhưng canonical R01 ở public. 175 ca chính gồm 18 equivalence groups. Cặp null/missing so level/ID, không UUID hoặc reason nguyên văn.
 
-[D13E-001–018](../M1/TEST_CASES.csv) thêm multi-U/crossovers/max64/near18; các ca MISS-013/014/TA15-BOOL3 và PEND-001 cũ đã có fixture phù hợp nên tăng selection asserts. Explanation patterns trong Expected là điều kiện cho controlled template families; required_all/forbidden_any được dùng cho ly_do, không so như public fields. Kiểm câu unsafe mẫu bị reject không chứng minh mọi câu tự nhiên đúng; cần peer review actual templates.
+[D13E-001–018](../../TEST_CASES.csv) thêm multi-U/crossovers/max64/near18; các ca MISS-013/014/TA15-BOOL3 và PEND-001 cũ đã có fixture phù hợp nên tăng selection asserts. Explanation patterns trong Expected là điều kiện cho controlled template families; required_all/forbidden_any được dùng cho ly_do, không so như public fields. Kiểm câu unsafe mẫu bị reject không chứng minh mọi câu tự nhiên đúng; cần peer review actual templates.
 
 ## 5. Property checks cần triển khai M2
 

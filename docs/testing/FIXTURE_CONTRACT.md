@@ -1,6 +1,6 @@
 # Fixture NaN/Infinity — khai báo an toàn cho M2
 
-Nguồn Q/A Revision 04 theo [sources](../M1/sources/README.md), Q §3.1/A §5.1. INV-005/006/007 expected **ValueError vì tuổi không hữu hạn**, không phải TypeError. Mapping public áp dụng khi audit INVALID_INPUT thành công; lỗi kép theo OPEN-03.
+Nguồn Q/A Revision 04 theo [sources](../references/README.md), Q §3.1/A §5.1. INV-005/006/007 expected **ValueError vì tuổi không hữu hạn**, không phải TypeError. Mapping public áp dụng khi audit INVALID_INPUT thành công; lỗi kép theo OPEN-03.
 
 | Test ID / fixture ID | Fixture encoding | Input cell |
 |---|---|---|
@@ -10,7 +10,7 @@ Nguồn Q/A Revision 04 theo [sources](../M1/sources/README.md), Q §3.1/A §5.1
 
 Input ba ca trên là **descriptor của test harness**, không phải PatientInput để truyền trực tiếp vào classifier. 172 ca khác có Fixture encoding=json; giữ đúng kiểu và khóa thiếu trong ô Input.
 
-Registry [fixtures/NONFINITE_INPUTS.json](fixtures/NONFINITE_INPUTS.json) có schema_version=1, base_patient synthetic đầy đủ và ba fixture chỉ override tuoi bằng token NAN/POSITIVE_INFINITY/NEGATIVE_INFINITY. Không chứa biểu thức Python, NaN không chuẩn JSON hoặc đường dẫn module/code.
+Registry [fixtures/NONFINITE_INPUTS.json](../../tests/fixtures/NONFINITE_INPUTS.json) có schema_version=1, base_patient synthetic đầy đủ và ba fixture chỉ override tuoi bằng token NAN/POSITIVE_INFINITY/NEGATIVE_INFINITY. Không chứa biểu thức Python, NaN không chuẩn JSON hoặc đường dẫn module/code.
 
 ## Hợp đồng dựng fixture ở pytest M2
 

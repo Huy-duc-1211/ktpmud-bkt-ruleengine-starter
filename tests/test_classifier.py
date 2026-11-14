@@ -1,14 +1,12 @@
-import csv
-import json
 import math
 import re
 from collections import defaultdict
 from copy import deepcopy
 from itertools import product
-from pathlib import Path
 
 import pytest
 
+from run_case import DEFAULT_CSV, FIXTURES_DIR, load_patient, read_cases, read_json
 from rule_engine.classifier import (
     _BOOLEAN_FIELDS,
     _RULE_IDS,
@@ -24,66 +22,23 @@ from rule_engine.classifier import (
 )
 
 
-_DOCS = Path(__file__).resolve().parents[1] / "docs" / "m1-hai"
-
-
-def _unique_object(pairs):
-    obj = dict(pairs)
-    if len(obj) != len(pairs):
-        raise ValueError("Duplicate JSON keys")
-    return obj
-
-
-def _reject_constant(token):
-    raise ValueError(f"Nonstandard JSON constant: {token}")
-
-
-def _json(source):
-    return json.loads(source, object_pairs_hook=_unique_object, parse_constant=_reject_constant)
-
-
-def _read_cases(file):
-    with file.open(encoding="utf-8-sig", newline="") as source:
-        return list(csv.DictReader(source))
-
-
-_PUBLIC_CASES = _read_cases(_DOCS / "M1" / "TEST_CASES.csv")
-_INTERNAL_CASES = _read_cases(_DOCS / "M2" / "INTERNAL_STATE_CASES.csv")
-_REGISTRY = _json(
-    (_DOCS / "M2" / "fixtures" / "NONFINITE_INPUTS.json").read_text(encoding="utf-8")
-)
-
-
-def _patient(case):
-    data = _json(case["Input"])
-    encoding = case["Fixture encoding"]
-    if encoding == "json":
-        return data
-
-    assert encoding == "fixture_ref"
-    assert data == {"fixture_ref": case["Test ID"]}
-    assert set(_REGISTRY) == {"schema_version", "kind", "base_patient", "fixtures"}
-    assert _REGISTRY["schema_version"] == 1
-    assert _REGISTRY["kind"] == "nonfinite_age_fixture_registry"
-    fixture = _REGISTRY["fixtures"][data["fixture_ref"]]
-    assert set(fixture) == {"override_field", "float_token"}
-    assert fixture["override_field"] == "tuoi"
-    token = fixture["float_token"]
-    value = {"NAN": math.nan, "POSITIVE_INFINITY": math.inf, "NEGATIVE_INFINITY": -math.inf}[token]
-    assert type(value) is float
-    if token == "NAN":
-        assert math.isnan(value)
-    else:
-        assert math.isinf(value) and (value > 0) == (token == "POSITIVE_INFINITY")
-    patient = deepcopy(_REGISTRY["base_patient"])
-    patient["tuoi"] = value
-    return patient
+_PUBLIC_CASES = read_cases(DEFAULT_CSV)
+_INTERNAL_CASES = read_cases(FIXTURES_DIR / "INTERNAL_STATE_CASES.csv")
 
 
 @pytest.mark.parametrize("case", _PUBLIC_CASES, ids=[case["Test ID"] for case in _PUBLIC_CASES])
 def test_designed_case(case, audit_records, capsys, caplog):
-    patient = _patient(case)
-    expected = _json(case["Expected"])
+    patient = load_patient(case)
+    expected = read_json(case["Expected"])
+    if case["Fixture encoding"] == "fixture_ref":
+        age = patient["tuoi"]
+        assert type(age) is float
+        matches = {
+            "INV-005": math.isnan(age),
+            "INV-006": math.isinf(age) and age > 0,
+            "INV-007": math.isinf(age) and age < 0,
+        }
+        assert matches[case["Test ID"]]
     if "exception_class" in expected:
         error_type = {"TypeError": TypeError, "ValueError": ValueError}[expected["exception_class"]]
         with pytest.raises(error_type) as caught:
@@ -116,7 +71,7 @@ def test_designed_case(case, audit_records, capsys, caplog):
 
 _CASES_WITH_STATES = [
     case for case in _PUBLIC_CASES
-    if case["Internal assertions"] and "states" in _json(case["Internal assertions"])
+    if case["Internal assertions"] and "states" in read_json(case["Internal assertions"])
 ]
 
 
@@ -124,8 +79,8 @@ _CASES_WITH_STATES = [
     "case", _CASES_WITH_STATES, ids=[case["Test ID"] for case in _CASES_WITH_STATES]
 )
 def test_designed_internal_states(case):
-    patient = _patient(case)
-    internal = _json(case["Internal assertions"])
+    patient = load_patient(case)
+    internal = read_json(case["Internal assertions"])
     values = tuple(_Truth(patient.get(field)) for field in _BOOLEAN_FIELDS)
     states = _rule_states(values)
     coverage = _tier2_coverage(values, states)
@@ -229,7 +184,7 @@ for _case in _PUBLIC_CASES:
 
 @pytest.mark.parametrize("group", _EQUIVALENT_CASES)
 def test_missing_and_null_are_equivalent(group):
-    first, second = (classify(_patient(case)) for case in _EQUIVALENT_CASES[group])
+    first, second = (classify(load_patient(case)) for case in _EQUIVALENT_CASES[group])
     assert (first["muc_do"], first["rule_id"]) == (second["muc_do"], second["rule_id"])
 
 
@@ -243,7 +198,7 @@ def test_missing_and_null_are_equivalent(group):
 ])
 def test_canonical_names_the_missing_field_and_limits_attribution(case_id, explanation):
     case = next(case for case in _PUBLIC_CASES if case["Test ID"] == case_id)
-    assert classify(_patient(case))["ly_do"].endswith(explanation)
+    assert classify(load_patient(case))["ly_do"].endswith(explanation)
 
 
 def test_unbounded_integer_pressures_keep_exact_30_percent_boundary():

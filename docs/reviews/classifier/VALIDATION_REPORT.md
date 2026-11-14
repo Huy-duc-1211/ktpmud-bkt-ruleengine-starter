@@ -1,12 +1,12 @@
 # TASK 02E — Kiểm chứng tĩnh remediation
 
-> **Bối cảnh lịch sử:** Nội dung dưới ghi nhận TASK 02E/02Q tại thời điểm thực hiện; các chữ “hiện hành” hoặc “chờ review” trong báo cáo phản ánh mốc đó. Sau Issue #31, cách chọn mã đã được nhóm cập nhật: xem [RULE_DESIGN](RULE_DESIGN.md), [TEST_PLAN](TEST_PLAN.md) và [Requirements](../../../REQUIREMENTS.md). Không dùng báo cáo tĩnh cũ làm bằng chứng chạy hoặc kết quả kiểm cho selector mới.
+> **Bối cảnh lịch sử:** Nội dung dưới ghi nhận TASK 02E/02Q tại thời điểm thực hiện; các chữ “hiện hành” hoặc “chờ review” trong báo cáo phản ánh mốc đó. Sau Issue #31, cách chọn mã đã được nhóm cập nhật: xem [RULE_DESIGN](../../design/RULE_DESIGN.md), [TEST_PLAN](../../testing/TEST_PLAN.md) và [Requirements](../../../REQUIREMENTS.md). Không dùng báo cáo tĩnh cũ làm bằng chứng chạy hoặc kết quả kiểm cho selector mới.
 
 Owner: Huy Đức/AI hỗ trợ — 09/11/2026. Nhánh review/m1-02-leader-remediation, base768f196e6a9ec3b1142c44399ce8288f7cc2e87e. Đây là báo cáo static design/data checks; Leader chưa final acceptance.
 
 ## 1. Nguồn và cách kiểm
 
-Theo [sources](sources/README.md): D+T15, Q Revision04 a574ce20fbf307ad90f0d60064da394652462aea và A Revision04 7af011f3f95e21ac829a163ee4be36200c1e7d88. Oracle scratch độc lập từ các biểu thức official +D13-E, không lấy Expected của CSV làm định nghĩa luật hoặc import runtime nhóm. Dữ liệu fixture_ref dựng bằng allowlist math và deepcopy; không eval.
+Theo [sources](../../references/README.md): D+T15, Q Revision04 a574ce20fbf307ad90f0d60064da394652462aea và A Revision04 7af011f3f95e21ac829a163ee4be36200c1e7d88. Oracle scratch độc lập từ các biểu thức official +D13-E, không lấy Expected của CSV làm định nghĩa luật hoặc import runtime nhóm. Dữ liệu fixture_ref dựng bằng allowlist math và deepcopy; không eval.
 
 Trong workspace Leader có script kiểm ở work/reviews/task-02e/verify_remediation.py (ngoài tracked project); [REMEDIATION_EVIDENCE.json](REMEDIATION_EVIDENCE.json) lưu summary và per-case static status để review. Công thức và coverage được mô tả đủ trong RULE_DESIGN/TEST_PLAN, không phụ thuộc script ngoài repo để chạy classifier. Runtime fixture factory còn là việc M2.
 

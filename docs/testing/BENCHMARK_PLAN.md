@@ -1,6 +1,6 @@
 # D10 — Kế hoạch đo benchmark
 
-Nguồn Q/A Revision 04 pin ở [sources](../M1/sources/README.md), Q NFR-01/§6; A §§5.7,8.10–8.11. T15 không thay protocol benchmark; phần nullable/selection theo [ISSUE15_SYNC](../M1/ISSUE15_SYNC.md) và D13-E đã duyệt. 100 warm-up/nearest-rank là lựa chọn Leader đã duyệt, không còn là đề xuất cần chọn. Ở M1, tôi chỉ đối chiếu protocol và công thức; chưa có số đo để kết luận A-10 đạt.
+Nguồn Q/A Revision 04 pin ở [sources](../references/README.md), Q NFR-01/§6; A §§5.7,8.10–8.11. T15 không thay protocol benchmark; phần nullable/selection theo [ISSUE15_SYNC](../reviews/classifier/ISSUE15_SYNC.md) và D13-E đã duyệt. 100 warm-up/nearest-rank là lựa chọn Leader đã duyệt, không còn là đề xuất cần chọn. Ở M1, tôi chỉ đối chiếu protocol và công thức; chưa có số đo để kết luận A-10 đạt.
 
 ## Phép đo chính M3
 

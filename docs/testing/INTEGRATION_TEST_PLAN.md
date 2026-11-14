@@ -1,6 +1,6 @@
 # Kế hoạch public integration, context và audit
 
-Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md), [ADR](../../../DECISIONS.md), [Decision Table](../../decision-table.md), [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002); snapshot lịch sử ở [sources](../M1/sources/README.md). Đây là kế hoạch, **chưa thực thi**. Tên helper/session factory/exception audit là chi tiết triển khai, không đổi signature `classify(patient)`. Missing/null hợp lệ theo T15; cách chọn mã được Leader cập nhật sau Issue #31. Thầy xác nhận trực tiếp MISS-009, còn overlap definite/possible là cách nhóm áp dụng quy tắc chung.
+Nguồn hiện hành: [Requirements](../../REQUIREMENTS.md), [ADR](../../DECISIONS.md), [Decision Table](../decision-table.md), [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002); snapshot lịch sử ở [sources](../references/README.md). Đây là kế hoạch, **chưa thực thi**. Tên helper/session factory/exception audit là chi tiết triển khai, không đổi signature `classify(patient)`. Missing/null hợp lệ theo T15; cách chọn mã được Leader cập nhật sau Issue #31. Thầy xác nhận trực tiếp MISS-009, còn overlap definite/possible là cách nhóm áp dụng quy tắc chung.
 
 ## 1. Fixture và oracle chung
 
@@ -44,7 +44,7 @@ Tên exception audit không bị tự đặt ở tài liệu này; M2 assert the
 
 Tại thời điểm TASK 02E, QA Matrix chưa được cung cấp/xác minh trong nguồn. Bảng INT/AUD được chuẩn bị theo A §8. Bản remediation M1-02 do Huy phụ trách trên baseline của Hải.
 
-**TASK 02Q và cập nhật sau Issue #31:** Mapping dưới đây được đối chiếu với [QA Matrix cùng phiên bản](../../m1-qa/QA_MATRIX.xlsx). [QA Matrix tại commit PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) là mốc lịch sử. Các nhóm liên kết theo fixture hoặc assertion tương ứng và không thay expected của §2.
+**TASK 02Q và cập nhật sau Issue #31:** Mapping dưới đây được đối chiếu với [QA Matrix cùng phiên bản](../qa/QA_MATRIX.xlsx). [QA Matrix tại commit PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/d7f7e34860c3878cdbc07b4486f785cf4ae1ca99/docs/m1-qa/QA_MATRIX_M1_CODEX_FINAL_CANDIDATE.xlsx) là mốc lịch sử. Các nhóm liên kết theo fixture hoặc assertion tương ứng và không thay expected của §2.
 
 | Ca QA / checklist | Mục INT tương ứng và phạm vi |
 |---|---|

@@ -1,6 +1,6 @@
 # M1-02 — Thiết kế rule và xử lý dữ liệu thiếu
 
-Nguồn hiện hành: [Requirements](../../../REQUIREMENTS.md) (Q), [ADR](../../../DECISIONS.md) (A), [Decision Table](../../decision-table.md) (D), [làm rõ Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) (T31). Leader duyệt D13-E ngày 09/11/2026 và cập nhật cách chọn mã sau Issue #31. Hải là tác giả baseline; Huy Đức phụ trách TASK 02E và các bản sửa với AI hỗ trợ. Review kỹ thuật của các thành viên và kết quả thực thi cần bằng chứng riêng. Xem [sources](sources/README.md) cho các snapshot lịch sử.
+Nguồn hiện hành: [Requirements](../../REQUIREMENTS.md) (Q), [ADR](../../DECISIONS.md) (A), [Decision Table](../decision-table.md) (D), [làm rõ Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) (T31). Leader duyệt D13-E ngày 09/11/2026 và cập nhật cách chọn mã sau Issue #31. Hải là tác giả baseline; Huy Đức phụ trách TASK 02E và các bản sửa với AI hỗ trợ. Review kỹ thuật của các thành viên và kết quả thực thi cần bằng chứng riêng. Xem [sources](../references/README.md) cho các snapshot lịch sử.
 
 ## 1. Đầu vào, đầu ra và validation
 
@@ -111,12 +111,12 @@ JSONL chỉ Timestamp ISO 8601 UTC, User_UUID synthetic hợp lệ, Action_Type 
 
 Writer path ngoài input, độc lập cwd, runtime log ngoài repo, ownership/file riêng, V1 tuần tự. Mỗi record open append/write/close trước khi báo hoàn tất; lỗi open/write/flush/close được nhận biết, không retry vô hạn hoặc cam kết fsync/durability. Không mặc định ghi chung file concurrent-safe.
 
-Default path mechanism A §5.4.1 còn PROPOSED; unexpected internal exception còn residual item. T15 không phê duyệt thay hai điểm này. [INTEGRATION_TEST_PLAN.md](../M2/INTEGRATION_TEST_PLAN.md) có kế hoạch kiểm và cập nhật nullable.
+Default path mechanism A §5.4.1 còn PROPOSED; unexpected internal exception còn residual item. T15 không phê duyệt thay hai điểm này. [INTEGRATION_TEST_PLAN.md](../testing/INTEGRATION_TEST_PLAN.md) có kế hoạch kiểm và cập nhật nullable.
 
 ## 7. Test, benchmark và bàn giao
 
 - CSV chung có 175 ca thiết kế, gồm 157 ID/input baseline và 18 ca bổ sung. TASK 02E từng giữ mức/mã/lớp lỗi của baseline; sau Issue #31, bốn ca MISS-013/014 và TA15-BOOL3-NULL/MISSING đổi mã dự kiến từ R03-PV sang R02-PV CANONICAL, giữ PHAN_VE và input. Bảy PEND đã resolve; tất cả DRAFT_NOT_EXECUTED.
-- 81 hàng logic/count/allergen không đổi phép toán, 22 regression/null-vs-missing đã gộp trong CSV chung và kiểm coverage tại [INTERNAL_STATE_TEST_PLAN.md](../M2/INTERNAL_STATE_TEST_PLAN.md).
+- 81 hàng logic/count/allergen không đổi phép toán, 22 regression/null-vs-missing đã gộp trong CSV chung và kiểm coverage tại [INTERNAL_STATE_TEST_PLAN.md](../testing/INTERNAL_STATE_TEST_PLAN.md).
 - Nonfinite giữ fixture_ref/allowlist, ValueError tuổi không hữu hạn; không eval/runner ngoài repo.
-- D10 không đổi: perf_counter_ns, 100 warm-up ngoài N>=1.000, nearest-rank p50/p95, full-path có audit I/O thật; chưa có số đo. [BENCHMARK_PLAN.md](../M2/BENCHMARK_PLAN.md)
-- [QA Matrix](../../m1-qa/QA_MATRIX.xlsx) đã tích hợp qua PR #4; các mục chọn mã đã cập nhật theo D13-E sau Issue #31 ở mức thiết kế và cần Việt Đức/Hải review. Runtime/CI/benchmark chưa có bằng chứng đạt; nghiệm thu cần xác nhận riêng.
+- D10 không đổi: perf_counter_ns, 100 warm-up ngoài N>=1.000, nearest-rank p50/p95, full-path có audit I/O thật; chưa có số đo. [BENCHMARK_PLAN.md](../testing/BENCHMARK_PLAN.md)
+- [QA Matrix](../qa/QA_MATRIX.xlsx) đã tích hợp qua PR #4; các mục chọn mã đã cập nhật theo D13-E sau Issue #31 ở mức thiết kế và cần Việt Đức/Hải review. Runtime/CI/benchmark chưa có bằng chứng đạt; nghiệm thu cần xác nhận riêng.
