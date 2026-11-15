@@ -162,7 +162,7 @@ Kiểm chứng M2: direct call không cấu hình path; đổi working directory
 
 ### 5.5. D08 — Audit lần thành công và lần thử input lỗi
 
-**INT-013 — Leader chọn hướng, cần peer review/test:** Sau validation hợp lệ, nếu xử lý rule lỗi nội bộ, thử ghi `CLASSIFY/INTERNAL_ERROR` với đúng bốn trường; ghi xong báo `ClassificationInternalError` an toàn, không trả kết quả. Nếu ghi audit cũng lỗi, ưu tiên `AuditError` an toàn, không khẳng định record đã lưu. Khôi phục context và không lộ input qua traceback/log. Status mới là chính sách nhóm, chưa có xác nhận riêng của thầy. Test bổ sung lỗi bất ngờ ở validation và writer/path; phạm vi/cách phân loại các lỗi đó cần review, không tự gán INVALID_INPUT.
+**INT-013 — Leader chọn hướng, cần peer review/test:** Sau validation hợp lệ, nếu xử lý rule lỗi nội bộ, thử ghi `CLASSIFY/INTERNAL_ERROR` với đúng bốn trường; ghi xong báo `RuntimeError` an toàn, không trả kết quả. Nếu ghi audit cũng lỗi, ưu tiên `AuditError` an toàn, không khẳng định record đã lưu. Khôi phục context và không lộ input qua traceback/log. Status mới là chính sách nhóm, chưa có xác nhận riêng của thầy. Test bổ sung lỗi bất ngờ ở validation và writer/path; phạm vi/cách phân loại các lỗi đó cần review, không tự gán INVALID_INPUT.
 
 **Đọc nhanh:** Ghi SUCCESS khi xử lý hợp lệ hoàn tất; ghi INVALID_INPUT cho lỗi đầu vào thực sự nếu audit thành công. Lỗi audit được xử lý fail-closed.
 
@@ -496,7 +496,7 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 |---|---|
 | **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; ca thiết kế đã đồng bộ, còn cần review kỹ thuật và test thực tế. |
 | **Default audit path** | Leader chọn hướng §5.4.1, chưa nghiệm thu; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
-| **Unexpected internal exception** | Leader chọn ghi INTERNAL_ERROR khi lỗi rule nội bộ, giữ bốn trường; báo ClassificationInternalError nếu ghi thành công, ưu tiên AuditError an toàn nếu ghi thất bại. Không log input; cần peer review và test, kể cả lỗi bất ngờ ở validation/writer. |
+| **Unexpected internal exception** | Leader chọn ghi INTERNAL_ERROR khi lỗi rule nội bộ, giữ bốn trường; báo RuntimeError nếu ghi thành công, ưu tiên AuditError an toàn nếu ghi thất bại. Không log input; cần peer review và test, kể cả lỗi bất ngờ ở validation/writer. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |
 | **Kiểm thử/CI/benchmark** | Đã có [`pytest.ini`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/pytest.ini) theo Issue #16. Chưa có bằng chứng engine nghiệp vụ, pytest nghiệp vụ từ clean checkout, CI nghiệp vụ được kiểm chứng hay số liệu latency. |
 | **Review của nhóm** | Leader tiếp tục hậu kiểm thủ công; Hải và Việt Đức đối chiếu core/audit/Test Plan/QA, ghi lại nhận xét thực tế trước các thay đổi tiếp theo. |
