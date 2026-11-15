@@ -58,7 +58,7 @@ Starter chỉ cung cấp `classify(patient)` còn `NotImplementedError`. Nhóm x
 | D05 | Public `classify()` điều phối, helper rule thuần và writer audit riêng | APPROVED BY LEAD |
 | D06 | `ly_do` tất định, giải thích DIRECT/CANONICAL, không raw input hoặc lời khuyên điều trị | APPROVED BY LEAD; tôn trọng TA |
 | D07 | JSONL audit riêng, ContextVar/UUID ngoài patient input, file theo lần chạy | APPROVED BY LEAD |
-| D08 | Audit `CLASSIFY` với `SUCCESS/INVALID_INPUT`; fail-closed, lỗi kép ưu tiên audit | APPROVED BY LEAD |
+| D08 | Audit `CLASSIFY` với `SUCCESS/INVALID_INPUT/INTERNAL_ERROR`; fail-closed, lỗi kép ưu tiên audit | APPROVED BY LEAD |
 | D09 | Test nghiệp vụ normal/boundary/missing/invalid, ngữ nghĩa D13-E; test isolation | APPROVED BY LEAD |
 | D10 | Benchmark `perf_counter_ns`, 100 warm-up, ≥1.000 mẫu, nearest-rank p50/p95, full-path I/O thật | APPROVED BY LEAD |
 | D11 | Không đổi clinical rules/ngưỡng từ Decision Table | FACT / SPECIFIED |
@@ -78,7 +78,7 @@ Starter chỉ cung cấp `classify(patient)` còn `NotImplementedError`. Nhóm x
 5. **Chọn mã nếu là PHAN_VE:** khi AllPV nhưng chưa xác nhận sốc, chọn rule có ưu tiên cao nhất trong tập các rule có thể thỏa (Poss). Nếu rule mang mã đó chưa chắc chắn đúng, `ly_do` phải nói rõ mã là đại diện, kể cả khi rule ưu tiên thấp hơn chắc chắn đúng.
 6. **Ghi audit rồi trả:** với input hợp lệ, hoàn tất ghi `CLASSIFY / SUCCESS` trước khi trả đúng ba trường. Với input invalid, ghi `INVALID_INPUT` thành công rồi phát sinh `TypeError` hoặc `ValueError` theo D04. Nếu audit thất bại, kể cả lỗi kép, ưu tiên lỗi audit an toàn và không báo thành công (§5.5, OPEN-03).
 
-**Phiên và audit:** Các lần gọi trong phiên tường minh dùng chung UUID synthetic; một lần gọi độc lập không có phiên dùng UUID tạm mới rồi reset trong `finally`. UUID/context ở ngoài input. Writer JSONL ghi đúng bốn trường, mở/ghi/đóng theo từng lần; `ContextVar` không bảo đảm nhiều tiến trình/luồng ghi chung file an toàn. Đường dẫn mặc định khi gọi trực tiếp **chưa được duyệt** (§5.4.1); lỗi helper nội bộ bất ngờ vẫn cần review.
+**Phiên và audit:** Các lần gọi trong phiên tường minh dùng chung UUID synthetic; một lần gọi độc lập không có phiên dùng UUID tạm mới rồi reset trong `finally`. UUID/context ở ngoài input. Writer JSONL ghi đúng bốn trường, mở/ghi/đóng theo từng lần; `ContextVar` không bảo đảm nhiều tiến trình/luồng ghi chung file an toàn. Leader đã chọn hướng đường dẫn mặc định và audit lỗi nội bộ (§5.4.1, §5.5); chi tiết cần peer review và test.
 
 Tại mốc đối chiếu, `rule_engine/classifier.py` vẫn là stub; test starter chưa chứng minh nghiệp vụ. Chưa có bằng chứng test/CI nghiệp vụ hoặc benchmark thực tế đạt. A-11 đã được đối chiếu riêng bằng disclaimer trong README (§9).
 
@@ -141,7 +141,7 @@ Các phương án thay thế và lập luận dưới đây là hồ sơ thiết
 | Thành phần ADR | Nội dung |
 |---|---|
 | Bối cảnh / vấn đề | Cần audit bốn trường cho thao tác nhưng pure rule evaluation không cần UUID hay file I/O. Thêm UUID vào `PatientInput` sẽ vượt danh sách khóa đã khóa. |
-| Quyết định | Writer JSONL riêng ghi đúng Timestamp, User_UUID, Action_Type, Status. Timestamp ISO 8601 có timezone UTC; UUID synthetic hợp lệ; Action_Type=CLASSIFY, Status=SUCCESS/INVALID_INPUT. classify() công khai tự điều phối audit. ContextVar nằm ngoài PatientInput để cấp UUID cho phiên tường minh hoặc một call tạm. Path cấu hình ngoài input, trong vùng dữ liệu sinh của lần chạy; V1 ghi tuần tự và có chủ sở hữu file rõ. Mỗi record hoàn tất open/append/write/close trước khi báo xong. Xem OPEN-01/02/04/05/09. |
+| Quyết định | Writer JSONL riêng ghi đúng Timestamp, User_UUID, Action_Type, Status. Timestamp ISO 8601 có timezone UTC; UUID synthetic hợp lệ; Action_Type=CLASSIFY, Status=SUCCESS/INVALID_INPUT/INTERNAL_ERROR; status thứ ba là quyết định nhóm, chưa được thầy xác nhận riêng. classify() công khai tự điều phối audit. ContextVar nằm ngoài PatientInput để cấp UUID cho phiên tường minh hoặc một call tạm. Path cấu hình ngoài input, trong vùng dữ liệu sinh của lần chạy; V1 ghi tuần tự và có chủ sở hữu file rõ. Mỗi record hoàn tất open/append/write/close trước khi báo xong. Xem OPEN-01/02/04/05/09. |
 | Phương án khác | Ghi file trực tiếp trong từng nhánh rule dễ bắt đầu nhưng lặp code và khiến test logic phụ thuộc I/O. CSV cũng lưu được bốn trường nhưng cần thống nhất escaping và kiểm tra kiểu/schema, trong khi JSONL cho từng bản ghi dạng object rõ hơn. |
 | Lý do lựa chọn | Writer riêng tập trung kiểm soát dữ liệu được phép, hỗ trợ kiểm tra riêng format và I/O. JSONL đủ cho phạm vi bài thi, tránh kéo thêm cơ sở dữ liệu hoặc hạ tầng. Ranh giới writer tạo điểm thay cách lưu về sau, không phải mục tiêu tích hợp production hiện tại. |
 | Hệ quả / đánh đổi | Rule test được thuần, writer tập trung schema/privacy và path độc lập working directory. Có overhead mở/đóng từng record và quản lý context; chấp nhận để giảm state M2, đo thực tế trước khi đề xuất tối ưu. Không bảo đảm fsync/durability sau mất điện. |
@@ -152,15 +152,17 @@ Các phương án thay thế và lập luận dưới đây là hồ sơ thiết
 
 #### 5.4.1. Direct call chưa cấu hình audit path — đề xuất tích hợp M2
 
-**PROPOSED — AWAITING PEER REVIEW.** Cần kiểm chứng `classify(patient)` khi bên gọi chưa thiết lập audit path. OPEN-04 đã duyệt cấu hình ngoài input và độc lập working directory; cơ chế chọn path mặc định dưới đây là đề xuất bổ sung, chưa được Leader phê duyệt.
+**LEADER CHỌN HƯỚNG — CẦN PEER REVIEW VÀ TEST.** Cần kiểm chứng `classify(patient)` khi bên gọi chưa thiết lập audit path. OPEN-04 đã duyệt cấu hình ngoài input và độc lập working directory; Leader chọn hướng mặc định ngoài repo theo thư mục người dùng.
 
 Đề xuất dùng một gốc tuyệt đối từ thư mục người dùng do hệ điều hành xác định, ví dụ `<user-home>/.173820_n27/dr_may_day/runs/<run-id>/audit.jsonl`. Gốc ổn định không suy ra từ current working directory; thư mục con theo lần chạy giữ ownership/file riêng theo OPEN-05. `run-id` chỉ tổ chức file, không thêm input hoặc trường audit. Hải/Việt Đức cần review cách xác định gốc, vòng đời run-id, quyền truy cập và kiểm tra đích nằm ngoài repository trước khi chọn đường dẫn thực tế.
 
 Cho phép override path qua cấu hình provider/writer bên ngoài PatientInput cho test/demo; không đổi `classify(patient)` hoặc chín input keys. Mặc định và override đều phải tránh lưu runtime audit vào repository. Nếu không xác định/tạo/ghi được đích hợp lệ thì giữ fail-closed, không bỏ audit hoặc fallback về working directory/repository để báo thành công.
 
-Kiểm chứng M2: direct call không cấu hình path; đổi working directory vẫn xác định đúng gốc; override test/demo ở thư mục riêng ngoài repository; lỗi tạo thư mục/mở/ghi/đóng vẫn không báo thành công. README khi triển khai phải mô tả nơi lưu mặc định, cách cấu hình/override và hành vi khi không tạo/ghi được file. Hải chủ trì public integration; Việt Đức review path/privacy/isolation và phối hợp kiểm chứng; Huy xem kết quả review trước khi phê duyệt cơ chế đề xuất này.
+Kiểm chứng M2: direct call không cấu hình path; đổi working directory vẫn xác định đúng gốc; override test/demo ở thư mục riêng ngoài repository; lỗi tạo thư mục/mở/ghi/đóng vẫn không báo thành công. README khi triển khai phải mô tả nơi lưu mặc định, cách cấu hình/override và hành vi khi không tạo/ghi được file. Hải chủ trì public integration; Việt Đức review path/privacy/isolation và phối hợp kiểm chứng; Huy xem kết quả review trước khi chốt chi tiết triển khai.
 
 ### 5.5. D08 — Audit lần thành công và lần thử input lỗi
+
+**INT-013 — Leader chọn hướng, cần peer review/test:** Sau validation hợp lệ, nếu xử lý rule lỗi nội bộ, thử ghi `CLASSIFY/INTERNAL_ERROR` với đúng bốn trường; ghi xong báo `ClassificationInternalError` an toàn, không trả kết quả. Nếu ghi audit cũng lỗi, ưu tiên `AuditError` an toàn, không khẳng định record đã lưu. Khôi phục context và không lộ input qua traceback/log. Status mới là chính sách nhóm, chưa có xác nhận riêng của thầy. Test bổ sung lỗi bất ngờ ở validation và writer/path; phạm vi/cách phân loại các lỗi đó cần review, không tự gán INVALID_INPUT.
 
 **Đọc nhanh:** Ghi SUCCESS khi xử lý hợp lệ hoàn tất; ghi INVALID_INPUT cho lỗi đầu vào thực sự nếu audit thành công. Lỗi audit được xử lý fail-closed.
 
@@ -170,7 +172,7 @@ Kiểm chứng M2: direct call không cấu hình path; đổi working directory
 | Quyết định | Ghi CLASSIFY/SUCCESS khi thao tác hợp lệ hoàn tất; CLASSIFY/INVALID_INPUT khi validation lỗi thực sự. Missing/null được TA cho phép không tự là INVALID_INPUT. Giữ bốn trường, không ghi payload/chi tiết exception. Invalid + audit thành công → raise TypeError/ValueError; valid + audit thất bại → lỗi audit an toàn; lỗi kép ưu tiên lỗi audit và không giả định đã lưu INVALID_INPUT. Không để message/chaining lộ input. Xem OPEN-03. |
 | Phương án khác | Chỉ audit thành công giảm số bản ghi nhưng thiếu truy vết lỗi input. Ghi lỗi chi tiết thuận debug nhưng vượt giới hạn dữ liệu và schema. |
 | Lý do lựa chọn | Trạng thái tổng quát đủ cho mục đích nhận biết một lần thử đã thành công/thất bại mà không tái tạo dữ liệu input. Phạm vi mở rộng sang invalid là quyết định nội bộ, tách khỏi yêu cầu chính thức audit mỗi lần phân loại. |
-| Hệ quả / đánh đổi | Tăng khả năng truy vết và giảm rò dữ liệu, nhưng giảm chi tiết debug. Hai Status đã duyệt mô tả xử lý thao tác, không ánh xạ trực tiếp mức phản vệ. Fail-closed có thể ngăn trả kết quả dù logic đã tính xong. Schema không có trường thứ năm hoặc status mới cho lỗi writer. |
+| Hệ quả / đánh đổi | Tăng khả năng truy vết và giảm rò dữ liệu, nhưng giảm chi tiết debug. Ba Status theo quyết định nhóm mô tả xử lý thao tác, không ánh xạ trực tiếp mức phản vệ. Fail-closed có thể ngăn trả kết quả dù logic đã tính xong. Schema không có trường thứ năm hoặc status mới cho lỗi writer. |
 | Rủi ro / giảm thiểu | Exception chaining hoặc logging mặc định có thể lộ input; nhiều lớp ghi có thể gây trùng. Public boundary chịu trách nhiệm điều phối và làm sạch lỗi, writer chỉ nhận allowlist. Không retry vô hạn, không tự coi lỗi ghi là có bản ghi, không thêm telemetry hoặc trường thứ năm. |
 | Kiểm chứng dự kiến | Kiểm tra bốn đường ở phần 4, đặc biệt ba ca OPEN-03; loại lỗi validation khi audit thành công, lỗi audit công khai khi audit thất bại; không lộ input trong message/chaining, không trả kết quả thành công và không giả định record tồn tại sau lỗi ghi. Chưa có bằng chứng chạy. |
 | Truy vết | Q FR-07, FR-09; NFR-02, NFR-03; A-04, A-06. |
@@ -339,7 +341,7 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 | OPEN-09 | Mỗi record open append/write/close bằng cơ chế quản lý tài nguyên. | Việt Đức | Hải, Huy Đức | Write/flush/close, timing thật. |
 | OPEN-10 | `perf_counter_ns`; 100 warm-up; N≥1.000; nearest-rank p50/p95; full-path audit thật. | Việt Đức | Hải, Huy Đức | Chỉ số, đơn vị, protocol và thực đo. |
 
-Đường dẫn audit **mặc định cụ thể khi gọi trực tiếp** ở §5.4.1 vẫn là đề xuất chờ review; không nhầm với nguyên tắc cấu hình path ngoài input đã chọn tại OPEN-04.
+Đường dẫn audit **mặc định cụ thể khi gọi trực tiếp** ở §5.4.1 đã được Leader chọn về hướng, còn chờ peer review và test; không nhầm với nguyên tắc cấu hình path ngoài input đã chọn tại OPEN-04.
 
 ### 8.2. OPEN-01 — UUID context provider
 
@@ -359,7 +361,7 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 
 ### 8.4. OPEN-03 — Ưu tiên lỗi validation và audit
 
-- **Lựa chọn và lý do:** Lỗi kép ưu tiên lỗi audit an toàn ở public boundary. Fail-closed phải biểu đạt nghĩa vụ audit chưa hoàn tất. Giữ bề mặt lỗi nhỏ, không thêm trường thứ năm/status mới.
+- **Lựa chọn và lý do:** Lỗi kép ưu tiên lỗi audit an toàn ở public boundary. Fail-closed phải biểu đạt nghĩa vụ audit chưa hoàn tất. Giữ bề mặt lỗi nhỏ, không thêm trường thứ năm hoặc status riêng cho lỗi writer.
 - **Phương án khác:** Giữ TypeError/ValueError công khai khi audit cũng lỗi giúp caller nhận lỗi input trước, nhưng cần kênh vận hành khác và có thể che thất bại audit. Không chọn; không thêm telemetry.
 - **Đánh đổi và rủi ro:** Trong lỗi kép caller nhận lỗi audit thay vì loại lỗi input đầu tiên; test riêng validation để không che mapping D04. Exception chaining hoặc message có thể lộ raw input; public error phải an toàn, không giả định INVALID_INPUT đã được lưu.
 - **Kiểm chứng cần có:** (1) Invalid + audit thành công: có INVALID_INPUT, raise TypeError/ValueError. (2) Valid + audit thất bại: lỗi audit, không trả thành công. (3) Invalid + audit thất bại: lỗi audit ưu tiên, không cam kết record, không lộ input qua message/chaining. Tên exception audit là chi tiết implement.
@@ -427,7 +429,7 @@ Mười hướng OPEN đã chọn; trước code M2, Hải và Việt Đức c�
 
 OPEN-10 đã chốt protocol trong M1; benchmark và bằng chứng đầy đủ có thể thực hiện M3. Coverage, clean-checkout và CI evidence tiếp tục theo kế hoạch nhóm. Concurrency mở rộng không tự trở thành nhiệm vụ M3 bắt buộc.
 
-D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập nhật chọn mã theo §5.8 và cần peer/test review khi triển khai. Default path vẫn chờ review theo §5.4.1; lỗi nội bộ bất ngờ còn cần review. Đây là mốc quản lý nội bộ, không tạo AC hoặc deadline mới. Tên helper, exception audit, path cụ thể hoặc UTC dùng `Z`/`+00:00` cần nhất quán khi code; không tự tạo vòng phê duyệt kiến trúc mới nếu giữ chính sách đã duyệt.
+D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập nhật chọn mã theo §5.8 và cần peer/test review khi triển khai. Default path và lỗi nội bộ đã có hướng Leader chọn, còn cần review theo §5.4.1 và §5.5. Đây là mốc quản lý nội bộ, không tạo AC hoặc deadline mới. Tên helper, exception audit, path cụ thể hoặc UTC dùng `Z`/`+00:00` cần nhất quán khi code; không tự tạo vòng phê duyệt kiến trúc mới nếu giữ chính sách đã duyệt.
 
 ## 9. Ma trận truy vết và bằng chứng kiểm chứng
 
@@ -493,8 +495,8 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 | Hạng mục | Trạng thái / hành động kiểm chứng |
 |---|---|
 | **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; ca thiết kế đã đồng bộ, còn cần review kỹ thuật và test thực tế. |
-| **Default audit path** | Đề xuất §5.4.1 **chưa được duyệt**; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
-| **Unexpected internal exception** | Chưa chốt cách audit/propagate khi helper lỗi trước ghi audit; không tự gán SUCCESS/INVALID_INPUT, thêm status hoặc log input; cần review Dev/QA. |
+| **Default audit path** | Leader chọn hướng §5.4.1, chưa nghiệm thu; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
+| **Unexpected internal exception** | Leader chọn ghi INTERNAL_ERROR khi lỗi rule nội bộ, giữ bốn trường; báo ClassificationInternalError nếu ghi thành công, ưu tiên AuditError an toàn nếu ghi thất bại. Không log input; cần peer review và test, kể cả lỗi bất ngờ ở validation/writer. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |
 | **Kiểm thử/CI/benchmark** | Đã có [`pytest.ini`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/pytest.ini) theo Issue #16. Chưa có bằng chứng engine nghiệp vụ, pytest nghiệp vụ từ clean checkout, CI nghiệp vụ được kiểm chứng hay số liệu latency. |
 | **Review của nhóm** | Leader tiếp tục hậu kiểm thủ công; Hải và Việt Đức đối chiếu core/audit/Test Plan/QA, ghi lại nhận xét thực tế trước các thay đổi tiếp theo. |
