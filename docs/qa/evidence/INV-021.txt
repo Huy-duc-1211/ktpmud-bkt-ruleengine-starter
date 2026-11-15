@@ -1,0 +1,5 @@
+﻿{
+  "muc_do": "THEO_DOI",
+  "rule_id": null,
+  "ly_do": "Các dữ kiện hiện có không khớp quy tắc phản vệ nào trong bảng quyết định."
+}

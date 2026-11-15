@@ -1,0 +1,4 @@
+﻿{
+  "exception_class": "TypeError",
+  "message": "co_ton_thuong_da_niem_mac phải là boolean."
+}

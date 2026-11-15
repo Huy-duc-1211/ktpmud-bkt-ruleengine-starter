@@ -1,0 +1,4 @@
+﻿{
+  "exception_class": "TypeError",
+  "message": "co_di_nguyen_nghi_ngo phải là boolean."
+}

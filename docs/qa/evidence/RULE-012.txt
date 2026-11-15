@@ -1,0 +1,5 @@
+﻿{
+  "muc_do": "PHAN_VE",
+  "rule_id": "R02-PV",
+  "ly_do": "Thỏa R02-PV theo dữ kiện hiện có."
+}

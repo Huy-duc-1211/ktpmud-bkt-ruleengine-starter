@@ -1,0 +1,5 @@
+﻿{
+  "muc_do": "THEO_DOI",
+  "rule_id": null,
+  "ly_do": "Chưa kết luận vì thiếu tuổi để chọn ngưỡng huyết áp."
+}

@@ -1,0 +1,5 @@
+﻿{
+  "muc_do": "SOC_PHAN_VE",
+  "rule_id": "R-SOC",
+  "ly_do": "Thỏa R-SOC vì đủ tiêu chí phản vệ và tụt huyết áp tâm thu theo tuổi."
+}

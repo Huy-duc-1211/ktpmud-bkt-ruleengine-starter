@@ -1,0 +1,4 @@
+﻿{
+  "exception_class": "ValueError",
+  "message": "huyet_ap_tam_thu_nen nằm ngoài miền hợp lệ."
+}
