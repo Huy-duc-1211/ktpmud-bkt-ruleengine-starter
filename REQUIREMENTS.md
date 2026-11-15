@@ -233,8 +233,8 @@ ContextVar là hướng triển khai đã được chọn ngoài PatientInput. C
 | Validation lỗi thực sự theo D04, audit thành công | Có record INVALID_INPUT, raise TypeError/ValueError đúng D04; không trả THEO_DOI |
 | Validation thành công, audit lỗi | Raise lỗi audit vận hành an toàn, không trả thành công và không mặc định record đã lưu |
 | Validation và audit cùng lỗi | Ưu tiên lỗi audit an toàn ra public boundary, không giả định record INVALID_INPUT tồn tại; message/chaining không lộ raw input |
-| Xử lý rule lỗi nội bộ sau validation; ghi audit thành công | Ghi INTERNAL_ERROR, không trả phân loại; báo RuntimeError an toàn |
-| Xử lý rule lỗi nội bộ và ghi audit thất bại | Ưu tiên AuditError an toàn; không khẳng định record đã được lưu |
+| Validator lỗi bất ngờ hoặc xử lý rule lỗi nội bộ; ghi audit thành công | Thử ghi INTERNAL_ERROR, không trả phân loại; báo RuntimeError an toàn. Phân biệt với input invalid thực sự |
+| Validator hoặc xử lý rule lỗi nội bộ và ghi audit thất bại | Ưu tiên AuditError an toàn; không khẳng định record đã được lưu |
 
 Fail-closed có kiểm soát chỉ áp dụng module bài thi synthetic; không mặc nhiên áp dụng sản phẩm y tế thực tế. Path audit cấu hình ngoài input, trong vùng dữ liệu sinh của lần chạy, độc lập working directory; test dùng file/thư mục riêng, không commit runtime log. V1 ghi tuần tự, quyền sở hữu writer/file rõ; không cam kết thread/process-safe khi ghi chung file. [L OPEN-03–OPEN-06]
 
@@ -377,7 +377,7 @@ TA-05 bắt buộc missing/null boolean không tự gây exception và không h�
 
 **D13-E hiện hành:** Leader đã duyệt normalization, coverage, Mixed fallback và canonical attribution trong M1 ngày 09/11/2026. Sau Issue #31, Leader cập nhật cách chọn mã: khi AllPV và chưa xác nhận sốc, chọn rule ưu tiên cao nhất trong Poss; nếu rule đó chưa chắc chắn đúng thì công bố mã đại diện theo §4.2, kể cả khi rule ưu tiên thấp hơn đã chắc chắn đúng. Cách chọn definite trước được giữ trong lịch sử, không còn là chính sách chọn mã hiện hành. Issue #31 xác nhận trực tiếp ca MISS-009 và nêu quy tắc áp dụng chung; ví dụ overlap definite/possible là cách nhóm áp dụng quy tắc và chưa được thầy xác nhận riêng. ADR và thiết kế test liên quan đã cập nhật; còn cần peer review và test tự động. Phê duyệt và phản hồi không phải bằng chứng triển khai.
 
-Các quyết định ContextVar, UUID scope, JSONL, fail-closed, error precedence, isolation, Enum và benchmark vẫn giữ nguyên ngoài phần bị TA thay thế. Tên helper/exception audit và path cụ thể là chi tiết triển khai. Default path vẫn đề xuất chờ peer review; unexpected internal exception vẫn residual review item. Các tài liệu M1 hiện hành đã nằm cùng nhánh `track-a-development`, gồm `DECISIONS.md`; giữ liên kết pin commit cho nguồn lịch sử và sử dụng đường dẫn hiện hành khi điều hướng trong fork.
+Các quyết định ContextVar, UUID scope, JSONL, fail-closed, error precedence, isolation, Enum và benchmark vẫn giữ nguyên ngoài phần bị TA thay thế. Tên helper/exception audit và path cụ thể là chi tiết triển khai. Leader đã chọn hướng default path và xử lý lỗi nội bộ; chi tiết còn chờ peer review và kiểm thử. Các tài liệu M1 hiện hành đã nằm cùng nhánh `track-a-development`, gồm `DECISIONS.md`; giữ liên kết pin commit cho nguồn lịch sử và sử dụng đường dẫn hiện hành khi điều hướng trong fork.
 
 Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_nguyen_nghi_ngo; tiếp tục giữ biểu thức và chín tên khóa như D. Không suy thêm khóa hoặc rule. [D; TA]
 
@@ -391,7 +391,7 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | Sai ngoặc/ngưỡng hoặc suy BP mặc định | Đối chiếu biểu thức gốc, boundary và >30% nghiêm ngặt; không tạo rule y khoa mới |
 | Audit SUCCESS/INVALID_INPUT bị dùng nhầm | Allowed missing/null không tự là lỗi; giữ D04 cho invalid thực sự, bốn trường và error precedence |
 | Direct call chưa cấu hình audit path | Tiếp tục review đề xuất ở ADR, không tự chọn/duyệt path trong task này |
-| Unexpected internal exception trước audit thành công | Residual implementation risk / review item: Leader chọn thử ghi INTERNAL_ERROR, giữ bốn trường; ghi thành công thì báo RuntimeError, audit thất bại ưu tiên AuditError an toàn; không log payload, cần peer review và test |
+| Unexpected internal exception trước audit thành công | Residual implementation risk / review item: Leader chọn thử ghi INTERNAL_ERROR cho lỗi bất ngờ ở validator hoặc rule, giữ bốn trường; ghi thành công thì báo RuntimeError, audit thất bại ưu tiên AuditError an toàn; không log payload, cần peer review và test |
 | Nhầm review tài liệu với nghiệm thu | Ghi nhận `VERIFIED` cho A-11 theo README tại §7. A-01 đến A-10 tiếp tục cần bằng chứng theo từng tiêu chí. Nghiệm thu phạm vi của TA cần xác nhận riêng. |
 | Nguồn snapshot lịch sử hoặc tài liệu liên quan còn policy cũ | Giữ snapshot là lịch sử. ADR, Test Plan, test cases và QA Matrix đã cập nhật chính sách chọn mã ở mức thiết kế; tiếp tục review và không dùng expected cũ làm chính sách hiện hành. |
 | AI-use hoặc phối hợp thiếu bằng chứng | Ghi công cụ/phạm vi/kiểm chứng/quyết định và người chịu trách nhiệm thực tế; Huy review nguồn, Hải M1-02, Việt Đức M1-03 |
