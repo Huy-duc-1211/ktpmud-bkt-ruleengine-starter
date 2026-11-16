@@ -392,7 +392,7 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | Ép UNKNOWN thành False hoặc hiểu nhầm mã đại diện | Với AllPV, chọn rule ưu tiên cao nhất trong Poss; nếu mã chưa definite thì công bố là mã đại diện và nêu thông tin thiếu, kể cả khi rule khác đã definite. QA cần assertion kiểm tra không gọi rule đại diện là đã xác nhận độc lập. |
 | Sai ngoặc/ngưỡng hoặc suy BP mặc định | Đối chiếu biểu thức gốc, boundary và >30% nghiêm ngặt; không tạo rule y khoa mới |
 | Audit SUCCESS/INVALID_INPUT bị dùng nhầm | Allowed missing/null không tự là lỗi; giữ D04 cho invalid thực sự, bốn trường và error precedence |
-| Direct call chưa cấu hình audit path | Tiếp tục review đề xuất ở ADR, không tự chọn/duyệt path trong task này |
+| Direct call chưa cấu hình audit path | Leader đã chọn hướng mặc định ngoài repo; tiếp tục peer review chi tiết path, quyền ghi và kiểm thử theo ADR |
 | Unexpected internal exception trước audit thành công | Residual implementation risk / review item: Leader chọn thử ghi INTERNAL_ERROR cho lỗi bất ngờ ở validator hoặc rule, giữ bốn trường; ghi thành công thì báo RuntimeError, audit thất bại ưu tiên AuditError an toàn; không log payload, cần peer review và test |
 | Nhầm review tài liệu với nghiệm thu | Ghi nhận `VERIFIED` cho A-11 theo README tại §7. A-01 đến A-10 tiếp tục cần bằng chứng theo từng tiêu chí. Nghiệm thu phạm vi của TA cần xác nhận riêng. |
 | Nguồn snapshot lịch sử hoặc tài liệu liên quan còn policy cũ | Giữ snapshot là lịch sử. ADR, Test Plan, test cases và QA Matrix đã cập nhật chính sách chọn mã ở mức thiết kế; tiếp tục review và không dùng expected cũ làm chính sách hiện hành. |

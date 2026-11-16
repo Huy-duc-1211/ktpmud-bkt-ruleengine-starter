@@ -26,4 +26,4 @@ A-11 trong Requirements ghi `VERIFIED` cho disclaimer trong README gốc. Phạm
 
 Đối chiếu rule, ca thiết kế và kế hoạch kiểm thử qua [chỉ mục M1-02](../m1-hai/M1/README.md).
 
-**Cập nhật quyết định M2:** Leader chọn thử ghi `INTERNAL_ERROR` cho lỗi bất ngờ ở validator hoặc rule; phân biệt lỗi input sai thực sự, giữ bốn trường và ưu tiên lỗi audit khi ghi thất bại. Xem [Integration Test Plan](../m1-hai/M2/INTEGRATION_TEST_PLAN.md#2-các-tình-huống-cần-kiểm-thử). Các ô workbook mô tả lỗi rule chưa bao phủ riêng lỗi validator; bổ sung test/review theo kế hoạch này, không suy ra kết quả chạy. Cách xử lý đuôi JSONL còn chờ quyết định.
+**Cập nhật quyết định M2:** Leader chọn thử ghi `INTERNAL_ERROR` cho lỗi bất ngờ ở validator hoặc rule; phân biệt lỗi input sai thực sự, giữ bốn trường và ưu tiên lỗi audit khi ghi thất bại. Xem [Integration Test Plan](../m1-hai/M2/INTEGRATION_TEST_PLAN.md#2-các-tình-huống-cần-kiểm-thử). Các ô workbook mô tả lỗi rule chưa bao phủ riêng lỗi validator; bổ sung test/review theo kế hoạch này, không suy ra kết quả chạy. Leader đã chọn hướng xử lý đuôi JSONL theo phương án Hải; phần triển khai và kiểm thử còn cần peer review.
