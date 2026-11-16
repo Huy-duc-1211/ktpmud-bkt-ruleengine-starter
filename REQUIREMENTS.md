@@ -223,7 +223,7 @@ Audit JSONL giữ đúng bốn trường sau, không trường thứ năm. Allow
 | Timestamp | ISO 8601 có timezone UTC |
 | User_UUID | UUID hợp lệ, synthetic theo scope phiên người thao tác, không phải định danh bệnh nhân/danh tính thật |
 | Action_Type | CLASSIFY |
-| Status | `SUCCESS` hoặc `INVALID_INPUT` theo D08. Bản M2 thử thêm `INTERNAL_ERROR` cho INT-013, chờ nhóm review. |
+| Status | `SUCCESS`, `INVALID_INPUT` hoặc `INTERNAL_ERROR` theo quyết định nhóm. Thầy chưa xác nhận riêng status của INT-013. |
 
 ContextVar là hướng triển khai đã được chọn ngoài PatientInput. Các call trong cùng phiên tường minh dùng chung UUID, reset khi kết thúc scope. Không có phiên tường minh thì mỗi call độc lập tạo UUID tạm mới, dùng để audit và reset trong finally kể cả exception; không tái sử dụng giữa hai call độc lập. Không thêm UUID vào chín input keys hoặc đổi chữ ký classify(patient). [L OPEN-01–OPEN-02]
 
@@ -233,14 +233,18 @@ ContextVar là hướng triển khai đã được chọn ngoài PatientInput. C
 | Validation lỗi thực sự theo D04, audit thành công | Có record INVALID_INPUT, raise TypeError/ValueError đúng D04; không trả THEO_DOI |
 | Validation thành công, audit lỗi | Raise lỗi audit vận hành an toàn, không trả thành công và không mặc định record đã lưu |
 | Validation và audit cùng lỗi | Ưu tiên lỗi audit an toàn ra public boundary, không giả định record INVALID_INPUT tồn tại; message/chaining không lộ raw input |
+| Validator hoặc logic phân loại bất ngờ lỗi, audit thành công | Ghi `INTERNAL_ERROR` rồi báo `RuntimeError` với thông báo chung |
+| Lỗi nội bộ và audit cùng thất bại | Ưu tiên `AuditError` với thông báo chung, không khẳng định bản ghi đã lưu |
 
-**INT-013 trên nhánh M2:** Nếu logic phân loại lỗi sau validation, hàm thử ghi `CLASSIFY / INTERNAL_ERROR` với đúng bốn trường rồi báo `RuntimeError` bằng thông báo chung. Nếu audit cũng lỗi, hàm báo `AuditError`. Input và lỗi gốc không xuất hiện trong bản ghi, thông báo, traceback công khai hay log. Nhóm còn review giá trị status này và chưa có xác nhận của thầy. [Ca kiểm thử](docs/testing/INTEGRATION_TEST_PLAN.md)
+**INT-013:** Validator trả về lỗi khi chủ động phát hiện input sai theo D04. Exception ngoài dự kiến, kể cả `TypeError` hay `ValueError` phát sinh trong validator, đi theo nhánh lỗi nội bộ. Cả hai nhánh đều giữ bốn trường audit. Test dùng chuỗi đánh dấu synthetic để dò input và lỗi gốc trong bản ghi, thông báo, traceback có chain và log. [Ca kiểm thử](docs/testing/INTEGRATION_TEST_PLAN.md)
 
 Fail-closed có kiểm soát chỉ áp dụng module bài thi synthetic; không mặc nhiên áp dụng sản phẩm y tế thực tế. Path audit cấu hình ngoài input, trong vùng dữ liệu sinh của lần chạy, độc lập working directory; test dùng file/thư mục riêng, không commit runtime log. V1 ghi tuần tự, quyền sở hữu writer/file rõ; không cam kết thread/process-safe khi ghi chung file. [L OPEN-03–OPEN-06]
 
 Writer M2 hoàn tất open append/write/close theo từng record trước khi public call báo thành công; lỗi write/flush/close phải được nhận biết theo fail-closed. Không retry vô hạn, không tạo thêm trường hay status riêng cho lỗi writer, không mặc định fsync/durability sau mất điện. [L OPEN-09]
 
-**Kiểm chứng tích hợp M2 — còn cần peer review:** direct `classify(patient)` khi chưa cấu hình audit path phải được đưa vào kế hoạch kiểm chứng. Cơ chế chọn path mặc định ổn định ngoài repository, không phụ thuộc working directory, là đề xuất chưa được Leader duyệt; cần kiểm tra override ngoài PatientInput cho test/demo, fail-closed khi không tạo/ghi được file và hướng dẫn nơi lưu/cấu hình trong README khi triển khai. Giữ nguyên signature và chín input keys. [TASK 02C.4 Patch A]
+Mỗi bản ghi audit mới kết thúc bằng `\n`. Khi file có nội dung và thiếu dấu xuống dòng ở cuối, writer thêm dấu phân cách trước bản ghi mới. Nếu không kiểm tra hoặc ghi được file, writer báo `AuditError`. Công cụ truy vấn đọc từng dòng, bỏ qua dòng hỏng và báo số bản ghi đọc được, số dòng lỗi cùng vị trí. [ADR §5.4.2](DECISIONS.md)
+
+**INT-010:** Leader chọn đặt file audit mặc định dưới thư mục người dùng, ngoài repository và độc lập với working directory. Test kiểm đường mặc định, tùy chọn override ngoài PatientInput và hành vi fail-closed. Cơ chế vẫn cần peer review trước khi nghiệm thu. Giữ nguyên signature và chín input keys. [ADR §5.4.1](DECISIONS.md)
 
 ## 5. Đặc tả dữ liệu đầu ra
 

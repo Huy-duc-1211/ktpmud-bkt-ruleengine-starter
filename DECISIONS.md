@@ -78,7 +78,7 @@ Starter chỉ cung cấp `classify(patient)` còn `NotImplementedError`. Nhóm x
 5. **Chọn mã nếu là PHAN_VE:** khi AllPV nhưng chưa xác nhận sốc, chọn rule có ưu tiên cao nhất trong tập các rule có thể thỏa (Poss). Nếu rule mang mã đó chưa chắc chắn đúng, `ly_do` phải nói rõ mã là đại diện, kể cả khi rule ưu tiên thấp hơn chắc chắn đúng.
 6. **Ghi audit rồi trả:** với input hợp lệ, hoàn tất ghi `CLASSIFY / SUCCESS` trước khi trả đúng ba trường. Với input invalid, ghi `INVALID_INPUT` thành công rồi phát sinh `TypeError` hoặc `ValueError` theo D04. Nếu audit thất bại, kể cả lỗi kép, ưu tiên lỗi audit an toàn và không báo thành công (§5.5, OPEN-03).
 
-**Phiên và audit:** Các lần gọi trong phiên tường minh dùng chung UUID synthetic; một lần gọi độc lập không có phiên dùng UUID tạm mới rồi reset trong `finally`. UUID/context ở ngoài input. Writer JSONL ghi đúng bốn trường, mở/ghi/đóng theo từng lần; `ContextVar` không bảo đảm nhiều tiến trình/luồng ghi chung file an toàn. Đường dẫn mặc định khi gọi trực tiếp **chưa được duyệt** (§5.4.1); lỗi helper nội bộ bất ngờ vẫn cần review.
+**Phiên và audit:** Các lần gọi trong phiên tường minh dùng chung UUID synthetic; một lần gọi độc lập không có phiên dùng UUID tạm mới rồi reset trong `finally`. UUID/context ở ngoài input. Writer JSONL ghi đúng bốn trường, mở/ghi/đóng theo từng lần; `ContextVar` không bảo đảm nhiều tiến trình/luồng ghi chung file an toàn. Leader đã chọn hướng cho đường dẫn mặc định (§5.4.1) và lỗi nội bộ (INT-013). Hai mục còn cần peer review.
 
 Tại mốc đối chiếu, `rule_engine/classifier.py` vẫn là stub; test starter chưa chứng minh nghiệp vụ. Chưa có bằng chứng test/CI nghiệp vụ hoặc benchmark thực tế đạt. A-11 đã được đối chiếu riêng bằng disclaimer trong README (§9).
 
@@ -152,13 +152,19 @@ Các phương án thay thế và lập luận dưới đây là hồ sơ thiết
 
 #### 5.4.1. Direct call chưa cấu hình audit path — đề xuất tích hợp M2
 
-**PROPOSED — AWAITING PEER REVIEW.** Cần kiểm chứng `classify(patient)` khi bên gọi chưa thiết lập audit path. OPEN-04 đã duyệt cấu hình ngoài input và độc lập working directory; cơ chế chọn path mặc định dưới đây là đề xuất bổ sung, chưa được Leader phê duyệt.
+**LEADER CHỌN HƯỚNG — CẦN PEER REVIEW VÀ TEST.** Khi bên gọi chưa cấu hình đường dẫn audit, dùng thư mục người dùng để xác định vị trí ngoài repo và độc lập với working directory.
 
 Đề xuất dùng một gốc tuyệt đối từ thư mục người dùng do hệ điều hành xác định, ví dụ `<user-home>/.173820_n27/dr_may_day/runs/<run-id>/audit.jsonl`. Gốc ổn định không suy ra từ current working directory; thư mục con theo lần chạy giữ ownership/file riêng theo OPEN-05. `run-id` chỉ tổ chức file, không thêm input hoặc trường audit. Hải/Việt Đức cần review cách xác định gốc, vòng đời run-id, quyền truy cập và kiểm tra đích nằm ngoài repository trước khi chọn đường dẫn thực tế.
 
 Cho phép override path qua cấu hình provider/writer bên ngoài PatientInput cho test/demo; không đổi `classify(patient)` hoặc chín input keys. Mặc định và override đều phải tránh lưu runtime audit vào repository. Nếu không xác định/tạo/ghi được đích hợp lệ thì giữ fail-closed, không bỏ audit hoặc fallback về working directory/repository để báo thành công.
 
 Kiểm chứng M2: direct call không cấu hình path; đổi working directory vẫn xác định đúng gốc; override test/demo ở thư mục riêng ngoài repository; lỗi tạo thư mục/mở/ghi/đóng vẫn không báo thành công. README khi triển khai phải mô tả nơi lưu mặc định, cách cấu hình/override và hành vi khi không tạo/ghi được file. Hải chủ trì public integration; Việt Đức review path/privacy/isolation và phối hợp kiểm chứng; Huy xem kết quả review trước khi phê duyệt cơ chế đề xuất này.
+
+#### 5.4.2. Ghi tiếp khi file audit đã tồn tại
+
+Writer kiểm byte cuối trước khi append. File trống bắt đầu bằng bản ghi JSON, kết thúc dòng bằng `\n`. Với file đã có nội dung, writer thêm `\n` trước bản ghi mới nếu byte cuối chưa phải dấu xuống dòng. Cách này giữ nguyên nội dung đã lưu và ngăn phần ghi dở dính vào bản ghi mới. Writer vẫn báo `AuditError` nếu kiểm tra, ghi, flush hoặc đóng file thất bại.
+
+`query_audit.py` đọc từng dòng và chỉ xuất bản ghi hợp lệ. Báo cáo ghi số bản ghi đọc được, số dòng bỏ qua và số thứ tự từng dòng lỗi. Nếu hai bản ghi đã dính nhau từ trước, cả dòng đó bị bỏ qua. Dữ liệu lỗi vẫn còn trong file để đối chiếu. Trạng thái `SUCCESS` xác nhận bản ghi mới đã ghi xong. Phạm vi là một tiến trình ghi tuần tự.
 
 ### 5.5. D08 — Audit lần thành công và lần thử input lỗi
 
@@ -176,7 +182,7 @@ Kiểm chứng M2: direct call không cấu hình path; đổi working directory
 | Truy vết | Q FR-07, FR-09; NFR-02, NFR-03; A-04, A-06. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D08, Q §§4, 6 và L; OPEN-03 ngày 08/11/2026 là APPROVED BY LEAD — PENDING PEER TECHNICAL REVIEW. Tên exception audit cụ thể có thể hoàn thiện khi implement. |
 
-**INT-013 trên nhánh M2 (chờ review):** Khi logic phân loại lỗi sau validation, `classify()` thử ghi một bản ghi `CLASSIFY / INTERNAL_ERROR`. Nếu ghi xong, hàm báo `RuntimeError` với thông báo chung. Nếu ghi cũng lỗi, hàm báo `AuditError`. Vẫn dùng đúng bốn trường và dọn UUID theo scope khi thoát. Test dò input và lỗi gốc trong thông báo, traceback công khai, log và JSONL. Hải và Việt Đức review status mới và cách xử lý lỗi kép. Chưa có xác nhận của thầy. [Kế hoạch test tích hợp](docs/testing/INTEGRATION_TEST_PLAN.md)
+**INT-013 (quyết định nhóm, chờ peer review):** Validator trả lỗi validation khi chủ động xác định input sai. Exception nó ném ngoài dự kiến, kể cả `TypeError` hay `ValueError`, đi cùng nhánh với lỗi bất ngờ của rule. Hàm thử ghi `CLASSIFY / INTERNAL_ERROR` rồi báo `RuntimeError` với thông báo chung. Nếu audit thất bại từ lúc tạo bản ghi đến lúc đóng file, hàm ưu tiên `AuditError`. Writer và classifier tạo lỗi công khai bên ngoài khối `except` để tránh giữ exception gốc trong chain. Test synthetic mô phỏng từng điểm lỗi để truy nguyên mà không cần in payload, đường dẫn hay exception gốc ở runtime. Thầy chưa xác nhận riêng status này. [Kế hoạch test tích hợp](docs/testing/INTEGRATION_TEST_PLAN.md)
 
 ### 5.6. D09 — Kiểm thử theo hành vi và ranh giới
 
@@ -341,7 +347,7 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 | OPEN-09 | Mỗi record open append/write/close bằng cơ chế quản lý tài nguyên. | Việt Đức | Hải, Huy Đức | Write/flush/close, timing thật. |
 | OPEN-10 | `perf_counter_ns`; 100 warm-up; N≥1.000; nearest-rank p50/p95; full-path audit thật. | Việt Đức | Hải, Huy Đức | Chỉ số, đơn vị, protocol và thực đo. |
 
-Đường dẫn audit **mặc định cụ thể khi gọi trực tiếp** ở §5.4.1 vẫn là đề xuất chờ review; không nhầm với nguyên tắc cấu hình path ngoài input đã chọn tại OPEN-04.
+Đường dẫn audit mặc định khi gọi trực tiếp theo hướng Leader chọn ở §5.4.1. Cách triển khai cụ thể cần peer review.
 
 ### 8.2. OPEN-01 — UUID context provider
 
@@ -495,7 +501,7 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 | Hạng mục | Trạng thái / hành động kiểm chứng |
 |---|---|
 | **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; ca thiết kế đã đồng bộ, còn cần review kỹ thuật và test thực tế. |
-| **Default audit path** | Đề xuất §5.4.1 **chưa được duyệt**; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
+| **Default audit path** | Leader chọn theo §5.4.1; peer review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed. |
 | **Lỗi nội bộ trước khi ghi audit** | Bản M2 thử ghi `INTERNAL_ERROR` theo §5.5. Dev và QA cần review tên status, lỗi kép và khả năng rò input. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |
 | **Kiểm thử/CI/benchmark** | Đã có [`pytest.ini`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/pytest.ini) theo Issue #16. Chưa có bằng chứng engine nghiệp vụ, pytest nghiệp vụ từ clean checkout, CI nghiệp vụ được kiểm chứng hay số liệu latency. |

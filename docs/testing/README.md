@@ -11,6 +11,7 @@ Pytest đọc input và expected của 175 ca từ [CSV ở thư mục gốc](..
 
 ## Các điểm cần review
 
-- `INT-010` dùng thư mục người dùng và tạo file audit riêng cho mỗi lần nạp chương trình, theo đề xuất ở ADR §5.4.1. Nhóm còn cần chốt đường dẫn mặc định.
-- `INT-013` thử ghi `INTERNAL_ERROR` khi logic phân loại gặp lỗi. Ghi xong thì báo `RuntimeError` với thông báo chung. Nếu ghi cũng lỗi thì báo `AuditError`. Nhờ Việt Đức review tên status và ca lỗi kép. Đây là phương án của nhóm đang chờ review, chưa có xác nhận của thầy.
-- Tôi sẽ đối chiếu `ly_do` thực tế theo INT-021 cùng Việt Đức. Khi có PR M2, Việt Đức thu thêm kết quả GitHub Actions để đối chiếu với lần chạy local. Benchmark làm ở M3.
+- `INT-010` dùng thư mục người dùng và tạo file audit riêng cho mỗi lần nạp chương trình. Leader đã chọn hướng này ở ADR §5.4.1, còn cần peer review.
+- `INT-013` thử ghi `INTERNAL_ERROR` khi validator hoặc rule bất ngờ gặp lỗi. Ghi xong thì báo `RuntimeError` với thông báo chung. Nếu audit cũng thất bại thì báo `AuditError`. Test dùng dữ liệu synthetic để kiểm lỗi kép và các đầu ra có thể lộ dữ liệu. Thầy chưa xác nhận riêng status mới.
+- `INT-021` kiểm cả output `ly_do` thật và câu đối chứng. Việt Đức và Hải review nội dung giải thích. Kết quả CI và benchmark cần lấy riêng.
+- Writer kiểm byte cuối trước khi ghi. Test dùng file thật để kiểm trường hợp thiếu newline và ghi dở. Lần ghi tiếp theo phải giữ nội dung cũ, tạo bản ghi mới trên dòng riêng và đọc lại được. Công cụ truy vấn báo số dòng lỗi đã bỏ qua.

@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterator, Literal
+from typing import BinaryIO, Iterator, Literal
 from uuid import UUID, uuid4
 
 
@@ -55,24 +55,38 @@ def _audit_path() -> Path:
     return path
 
 
+def _separator_before_append(output: BinaryIO) -> bytes:
+    """Tách bản ghi mới khỏi dòng cuối, kể cả khi dòng đó bị ghi dở."""
+    end = output.seek(0, os.SEEK_END)
+    if end == 0:
+        return b""
+
+    output.seek(end - 1)
+    last_byte = output.read(1)
+    if not last_byte:
+        raise OSError("Không đọc được đuôi file audit.")
+    return b"" if last_byte == b"\n" else b"\n"
+
+
 def _write_record(
     user_uuid: UUID, status: Literal["SUCCESS", "INVALID_INPUT", "INTERNAL_ERROR"]
 ) -> None:
-    record = {
-        "Timestamp": datetime.now(timezone.utc).isoformat(),
-        "User_UUID": str(user_uuid),
-        "Action_Type": "CLASSIFY",
-        "Status": status,
-    }
     try:
+        record = {
+            "Timestamp": datetime.now(timezone.utc).isoformat(),
+            "User_UUID": str(user_uuid),
+            "Action_Type": "CLASSIFY",
+            "Status": status,
+        }
+        line = (json.dumps(record) + "\n").encode("utf-8")
         path = _audit_path()
         path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("a", encoding="utf-8", newline="\n") as output:
-            line = json.dumps(record) + "\n"
-            if output.write(line) != len(line):
+        with path.open("a+b") as output:
+            payload = _separator_before_append(output) + line
+            if output.write(payload) != len(payload):
                 raise OSError("Bản ghi audit chưa được ghi đầy đủ.")
             output.flush()
-    except (OSError, ValueError, RuntimeError):
+    except Exception:
         pass
     else:
         return

@@ -6,6 +6,9 @@ from pathlib import Path
 
 import pytest
 
+import query_audit
+import rule_engine.audit as audit
+import rule_engine.classifier as classifier
 from rule_engine.audit import AuditError, _session_uuid, audit_session
 from rule_engine.classifier import classify
 
@@ -105,6 +108,9 @@ def test_audit_failures_take_precedence(
         def __enter__(self):
             return self
 
+        def seek(self, *_):
+            return 0  # File giả lập đang trống.
+
         def write(self, line):
             attempted_statuses.append(json.loads(line)["Status"])
             if stage == "write":
@@ -161,6 +167,9 @@ def test_audit_closes_real_file_before_classify_returns(audit_file, audit_record
         def __enter__(self):
             self.file.__enter__()
             return self
+
+        def __getattr__(self, name):
+            return getattr(self.file, name)
 
         def write(self, line):
             events.append("write")
@@ -239,3 +248,192 @@ def test_unexpected_rule_error_records_internal_error_without_payload(
     record, = audit_records("INTERNAL_ERROR")
     assert record["User_UUID"] == str(session)
     _assert_no_payload(caught.value, audit_file, capsys, caplog)
+
+
+@pytest.mark.parametrize("error_type", [KeyError, TypeError, ValueError])
+def test_unexpected_validator_error_is_internal(
+    error_type, audit_file, audit_records, monkeypatch, capsys, caplog
+):
+    caplog.set_level(logging.DEBUG)
+
+    def fail(patient):
+        raise error_type(f"{_INTERNAL_CANARY} {patient['huyet_ap_tam_thu']}")
+
+    monkeypatch.setattr(classifier, "_validate", fail)
+    with pytest.raises(RuntimeError, match=r"^Không thể hoàn tất phân loại\.$") as caught:
+        classify({"tuoi": 15, "huyet_ap_tam_thu": _PRESSURE_CANARY})
+    assert type(caught.value) is RuntimeError
+    assert _session_uuid.get() is None
+    audit_records("INTERNAL_ERROR")
+    _assert_no_payload(caught.value, audit_file, capsys, caplog)
+
+
+@pytest.mark.parametrize("stage", ["record", "path", "open", "check_tail"])
+@pytest.mark.parametrize("scenario", ["valid", "invalid", "validator", "rule"])
+def test_unexpected_audit_error_is_safe(
+    stage, scenario, audit_file, monkeypatch, capsys, caplog
+):
+    caplog.set_level(logging.DEBUG)
+    patient = {"tuoi": 15, "huyet_ap_tam_thu": _PRESSURE_CANARY}
+    if scenario == "invalid":
+        patient["tuoi"] = _CANARY
+    elif scenario in {"validator", "rule"}:
+        def fail_classification(_patient):
+            raise ValueError(_INTERNAL_CANARY)
+
+        helper = "_validate" if scenario == "validator" else "_classify_valid"
+        monkeypatch.setattr(classifier, helper, fail_classification)
+
+    def fail_audit(*_):
+        raise KeyError(_CANARY)
+
+    if stage == "record":
+        class BrokenClock:
+            now = staticmethod(fail_audit)
+
+        monkeypatch.setattr(audit, "datetime", BrokenClock)
+    elif stage == "path":
+        monkeypatch.setattr(audit, "_audit_path", fail_audit)
+    elif stage == "open":
+        real_open = Path.open
+
+        def fail_open(path, *args, **kwargs):
+            if path == audit_file:
+                fail_audit()
+            return real_open(path, *args, **kwargs)
+
+        monkeypatch.setattr(Path, "open", fail_open)
+    else:
+        monkeypatch.setattr(audit, "_separator_before_append", fail_audit)
+    with audit_session() as session:
+        with pytest.raises(AuditError, match=r"^Không thể hoàn tất bản ghi audit\.$") as caught:
+            classify(patient)
+        assert _session_uuid.get() == session
+    assert _session_uuid.get() is None
+    _assert_no_payload(caught.value, audit_file, capsys, caplog)
+
+
+@pytest.mark.parametrize("ending", [b"", b"\n", b"\r\n"], ids=["no-newline", "lf", "crlf"])
+def test_append_preserves_complete_audit_line(audit_file, audit_records, ending):
+    audit_file.touch()
+    classify({})
+    first_line = audit_file.read_bytes()
+    assert first_line.count(b"\n") == 1 and first_line.endswith(b"\n")
+    before = first_line + first_line.rstrip(b"\n") + ending
+    audit_file.write_bytes(before)
+
+    assert classify({})["muc_do"] == "THEO_DOI"
+    separator = b"" if ending else b"\n"
+    contents = audit_file.read_bytes()
+    assert contents.startswith(before + separator)
+    assert contents.count(b"\n") == 3 and contents.endswith(b"\n")
+    audit_records("SUCCESS", "SUCCESS", "SUCCESS")
+
+
+@pytest.mark.parametrize("tail", [
+    b'{"Timestamp":',
+    b'{"Timestamp":\n',
+    b'{"Timestamp":"2026-11-16T08:00:00Z"}',
+    b"\xff",
+], ids=["unfinished", "malformed-with-newline", "wrong-fields", "invalid-utf8"])
+def test_bad_audit_tail_is_preserved_as_its_own_line(audit_file, tail, capsys):
+    classify({})
+    classify({})
+    before = audit_file.read_bytes() + tail
+    audit_file.write_bytes(before)
+
+    assert classify({})["muc_do"] == "THEO_DOI"
+    separator = b"" if tail.endswith(b"\n") else b"\n"
+    contents = audit_file.read_bytes()
+    assert contents.startswith(before + separator)
+    assert contents.endswith(b"\n") and contents.count(b"\n") == 4
+    assert _session_uuid.get() is None
+    assert query_audit.main([str(audit_file)]) == 0
+    result = capsys.readouterr()
+    assert [json.loads(line)["Status"] for line in result.out.splitlines()] == ["SUCCESS"] * 3
+    assert result.err == "Đọc được 3 bản ghi, bỏ qua 1 dòng lỗi, lỗi tại các dòng: 3.\n"
+
+
+@pytest.mark.parametrize("raise_after_write", [False, True], ids=["short-write", "write-error"])
+def test_partial_write_to_real_file_keeps_next_record_readable(
+    raise_after_write, audit_file, audit_records, monkeypatch, capsys
+):
+    classify({})
+    audit_records("SUCCESS")
+    original = audit_file.read_bytes()
+    real_open = Path.open
+
+    class PartialWriter:
+        def __init__(self, file):
+            self.file = file
+
+        def __enter__(self):
+            self.file.__enter__()
+            return self
+
+        def __exit__(self, *args):
+            return self.file.__exit__(*args)
+
+        def __getattr__(self, name):
+            return getattr(self.file, name)
+
+        def write(self, payload):
+            count = self.file.write(payload[:len(payload) // 2])
+            self.file.flush()
+            if raise_after_write:
+                raise OSError(_CANARY)
+            return count
+
+    def open_partial(path, *args, **kwargs):
+        file = real_open(path, *args, **kwargs)
+        return PartialWriter(file) if path == audit_file else file
+
+    with monkeypatch.context() as patches:
+        patches.setattr(Path, "open", open_partial)
+        with pytest.raises(AuditError):
+            classify({})
+
+    damaged = audit_file.read_bytes()
+    assert damaged.startswith(original) and len(damaged) > len(original)
+    assert not damaged.endswith(b"\n")
+    assert classify({})["muc_do"] == "THEO_DOI"
+    contents = audit_file.read_bytes()
+    original_line, _, new_line = contents.splitlines()
+    assert contents.startswith(damaged + b"\n") and contents.endswith(b"\n")
+    assert _session_uuid.get() is None
+
+    assert query_audit.main([str(audit_file)]) == 0
+    result = capsys.readouterr()
+    assert [json.loads(line) for line in result.out.splitlines()] == [
+        json.loads(original_line), json.loads(new_line)
+    ]
+    assert json.loads(new_line)["Status"] == "SUCCESS"
+    assert result.err == "Đọc được 2 bản ghi, bỏ qua 1 dòng lỗi, lỗi tại các dòng: 2.\n"
+    assert audit_file.read_bytes() == contents
+
+
+def test_query_audit_reports_multiple_bad_lines_and_reads_valid_eof(audit_file, capsys):
+    classify({})
+    valid = audit_file.read_bytes()
+    invalid = json.loads(valid)
+    invalid["User_UUID"] = _CANARY
+    before = valid + b"\xff\n" + valid + json.dumps(invalid).encode() + b"\n" + valid.rstrip(b"\n")
+    audit_file.write_bytes(before)
+
+    assert query_audit.main([str(audit_file)]) == 0
+    result = capsys.readouterr()
+    assert [json.loads(line) for line in result.out.splitlines()] == [json.loads(valid)] * 3
+    assert result.err == "Đọc được 3 bản ghi, bỏ qua 2 dòng lỗi, lỗi tại các dòng: 2, 4.\n"
+    assert _CANARY not in result.out + result.err
+    assert audit_file.read_bytes() == before
+
+
+def test_query_audit_reports_empty_and_missing_file(audit_file, capsys):
+    assert query_audit.main([str(audit_file)]) == 1
+    assert capsys.readouterr() == ("", "Không thể đọc hết file audit.\n")
+
+    audit_file.touch()
+    assert query_audit.main([str(audit_file)]) == 0
+    assert capsys.readouterr() == (
+        "", "Đọc được 0 bản ghi, bỏ qua 0 dòng lỗi, lỗi tại các dòng: không có.\n"
+    )

@@ -104,32 +104,34 @@ def _tier2_coverage(
     return _Truth.UNKNOWN
 
 
-def _validate(patient: PatientInput) -> None:
+def _validate(patient: PatientInput) -> TypeError | ValueError | None:
+    """Trả lỗi input đã biết. Exception phát sinh ngoài dự kiến đi theo luồng lỗi nội bộ."""
     if not isinstance(patient, dict):
-        raise TypeError("Đầu vào phải là dict.")
+        return TypeError("Đầu vào phải là dict.")
     if any(type(key) is not str or key not in PatientInput.__annotations__ for key in patient):
-        raise ValueError("Đầu vào có khóa ngoài bảng quyết định.")
+        return ValueError("Đầu vào có khóa ngoài bảng quyết định.")
 
     age = patient.get("tuoi")
     if age is not None:
         if type(age) not in (int, float):
-            raise TypeError("Tuổi phải là số.")
+            return TypeError("Tuổi phải là số.")
         if age < 0 or (type(age) is float and not isfinite(age)):
-            raise ValueError("Tuổi phải hữu hạn và không âm.")
+            return ValueError("Tuổi phải hữu hạn và không âm.")
 
     for field, minimum in (("huyet_ap_tam_thu", 0), ("huyet_ap_tam_thu_nen", 1)):
         pressure = patient.get(field)
         if pressure is None:
             continue
         if type(pressure) is not int:
-            raise TypeError(f"{field} phải là số nguyên.")
+            return TypeError(f"{field} phải là số nguyên.")
         if pressure < minimum:
-            raise ValueError(f"{field} nằm ngoài miền hợp lệ.")
+            return ValueError(f"{field} nằm ngoài miền hợp lệ.")
 
     for field in _BOOLEAN_FIELDS:
         value = patient.get(field)
         if value is not None and type(value) is not bool:
-            raise TypeError(f"{field} phải là boolean.")
+            return TypeError(f"{field} phải là boolean.")
+    return None
 
 
 def _hypotension(age: float | None, pressure: int | None, baseline: int | None) -> _Truth:
@@ -209,21 +211,17 @@ def _classify_valid(patient: PatientInput) -> ClassificationResult:
 def classify(patient: PatientInput) -> ClassificationResult:
     """Phân loại dữ liệu giả lập và hoàn tất audit trước khi trả kết quả."""
     with _audit_call() as user_uuid:
-        validation_error = None
         try:
-            _validate(patient)
-        except (TypeError, ValueError) as error:
-            validation_error = error
-        if validation_error is not None:
-            _write_record(user_uuid, "INVALID_INPUT")
-            raise validation_error from None
-
-        try:
-            result = _classify_valid(patient)
+            validation_error = _validate(patient)
+            if validation_error is None:
+                result = _classify_valid(patient)
         except Exception:
             # Ra khỏi except trước khi ghi audit để lỗi gốc không đi theo lỗi công khai.
             pass
         else:
+            if validation_error is not None:
+                _write_record(user_uuid, "INVALID_INPUT")
+                raise validation_error from None
             _write_record(user_uuid, "SUCCESS")
             return result
         _write_record(user_uuid, "INTERNAL_ERROR")

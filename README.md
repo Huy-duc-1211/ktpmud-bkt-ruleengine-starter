@@ -18,6 +18,7 @@ Repo dùng vị trí `rule_engine/classifier.py` và `docs/decision-table.md` th
 ├── TEST_CASES.csv              # Input và expected theo mã ca
 ├── run_case.py                 # Chạy một ca và in kết quả thật
 ├── run_case.cmd                # Bấm đúp để chọn CSV và nhập mã ca
+├── query_audit.py               # Đọc bản ghi audit và báo dòng lỗi
 ├── rule_engine/
 │   ├── classifier.py          # Validation và logic phân loại
 │   └── audit.py                # UUID phiên và ghi JSONL
@@ -82,7 +83,19 @@ Ví dụ trên trả `PHAN_VE / R01-PV`. Muốn chỉ định file audit, đặt
 
 Hàm ghi xong audit mới trả kết quả. Nếu input sai, hàm ghi `INVALID_INPUT` rồi báo `TypeError` hoặc `ValueError`. Nếu ghi audit thất bại, hàm báo `AuditError`. Các lần ghi vào cùng file diễn ra tuần tự.
 
-Với INT-013, nhánh này thử ghi `INTERNAL_ERROR` khi logic phân loại gặp lỗi sau validation, rồi báo `RuntimeError` với thông báo chung. Nếu ghi bản ghi đó cũng lỗi, hàm báo `AuditError`. Bản ghi vẫn có bốn trường và không chứa input. Việt Đức và Huy Đức còn cần review cách xử lý này. [Ghi chú kiểm thử](docs/testing/README.md)
+Mỗi bản ghi kết thúc bằng `\n`. Trước khi ghi tiếp, chương trình xem byte cuối của file. Nếu file có nội dung và thiếu `\n`, chương trình thêm dấu phân cách để bản ghi mới nằm trên dòng riêng. Dữ liệu cũ, kể cả dòng bị ghi dở, vẫn nằm trong file.
+
+Với INT-013, nếu validator hoặc logic phân loại bất ngờ gặp lỗi, hàm thử ghi `INTERNAL_ERROR` rồi báo `RuntimeError` với thông báo chung. Nếu bước audit thất bại, hàm báo `AuditError`. Bản ghi có bốn trường và không chứa input. Đây là chính sách nhóm, chưa có xác nhận riêng của thầy. [Ghi chú kiểm thử](docs/testing/README.md)
+
+## Đọc audit
+
+Dùng đường dẫn tới file cần đọc. Lệnh in các bản ghi hợp lệ ra màn hình và lưu báo cáo truy vấn vào một file riêng.
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 .\query_audit.py 'D:\audit\audit.jsonl' 2> "$env:TEMP\audit-query.log"
+```
+
+Ví dụ báo cáo: “Đọc được 12 bản ghi, bỏ qua 2 dòng lỗi, lỗi tại các dòng: 3, 8.” Số dòng tính từ 1. Các bản ghi hợp lệ sau dòng lỗi vẫn xuất hiện. Nếu bỏ phần `2>`, báo cáo hiện ngay trong cửa sổ lệnh. [Cách xử lý file ghi dở](DECISIONS.md#542-ghi-tiếp-khi-file-audit-đã-tồn-tại)
 
 ## Cấu trúc hồ sơ nộp bài
 

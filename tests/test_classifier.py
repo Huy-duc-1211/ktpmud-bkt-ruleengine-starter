@@ -26,6 +26,60 @@ _PUBLIC_CASES = read_cases(DEFAULT_CSV)
 _INTERNAL_CASES = read_cases(FIXTURES_DIR / "INTERNAL_STATE_CASES.csv")
 
 
+def _assert_reason(result, patient, expected):
+    reason = result["ly_do"]
+    rule = result["rule_id"]
+    assert isinstance(reason, str) and reason.strip()
+    assertions = expected.get("explanation_assertions", {})
+    kind = assertions.get("attribution_kind")
+
+    # Kiểm toàn văn các mẫu ly_do cố định để phát hiện cả phần nội dung bị chèn thêm.
+    if result["muc_do"] == "THEO_DOI":
+        if patient.get("tuoi") is None:
+            assert reason == "Chưa kết luận vì thiếu tuổi để chọn ngưỡng huyết áp."
+        else:
+            mixed = "Chưa đủ thông tin để xác định có thỏa quy tắc phản vệ hay không."
+            unmatched = "Các dữ kiện hiện có không khớp quy tắc phản vệ nào trong bảng quyết định."
+            if kind == "MIXED":
+                assert reason == mixed
+            else:
+                assert reason in {mixed, unmatched}
+    elif result["muc_do"] == "SOC_PHAN_VE":
+        assert reason == "Thỏa R-SOC vì đủ tiêu chí phản vệ và tụt huyết áp tâm thu theo tuổi."
+    else:
+        suffix = ""
+        if patient.get("huyet_ap_tam_thu") is None:
+            suffix = " Chưa đánh giá được tiêu chí sốc vì thiếu huyết áp tâm thu hiện tại."
+        elif patient["tuoi"] >= 18 and patient.get("huyet_ap_tam_thu_nen") is None:
+            suffix = " Chưa đánh giá được mức giảm tương đối vì thiếu huyết áp nền."
+        assert reason.endswith(suffix)
+        core = reason.removesuffix(suffix)
+        direct = f"Thỏa {rule} theo dữ kiện hiện có."
+        if kind == "DIRECT":
+            assert core == direct
+        elif kind == "CANONICAL" or core != direct:
+            missing = ", ".join(
+                label for field, label in _BOOLEAN_FIELDS.items() if patient.get(field) is None
+            )
+            assert missing
+            prefix = "Mọi khả năng đều thỏa tiêu chí phản vệ qua ít nhất một trong các rule "
+            ending = (
+                f". {rule} là mã đại diện vì thiếu thông tin về {missing}. "
+                f"Chưa xác nhận riêng {rule}."
+            )
+            assert core.startswith(prefix) and core.endswith(ending)
+            possible = core[len(prefix):-len(ending)].split(", ")
+            assert possible[0] == rule
+            assert possible == [rule_id for rule_id in _RULE_IDS if rule_id in possible]
+
+    for phrase in expected.get("reason_must_mention", []):
+        assert phrase in reason.casefold()
+    for pattern in assertions.get("required_patterns_all", []):
+        assert re.search(pattern, reason), pattern
+    for pattern in assertions.get("forbidden_patterns_any", []):
+        assert not re.search(pattern, reason), pattern
+
+
 @pytest.mark.parametrize("case", _PUBLIC_CASES, ids=[case["Test ID"] for case in _PUBLIC_CASES])
 def test_designed_case(case, audit_records, capsys, caplog):
     patient = load_patient(case)
@@ -52,21 +106,37 @@ def test_designed_case(case, audit_records, capsys, caplog):
         assert set(result) == {"muc_do", "rule_id", "ly_do"}
         assert result["muc_do"] == expected["muc_do"]
         assert result["rule_id"] == expected["rule_id"]
-        reason = result["ly_do"]
-        assert isinstance(reason, str) and reason.strip()
-        assert result["rule_id"] is None or result["rule_id"] in reason
-        assert not re.search(r"\b\d+(?:[.,]\d+)?\s*mmHg\b", reason, re.IGNORECASE)
-        for phrase in expected.get("reason_must_mention", []):
-            assert phrase in reason.casefold()
-        assertions = expected.get("explanation_assertions", {})
-        for pattern in assertions.get("required_patterns_all", []):
-            assert re.search(pattern, reason), pattern
-        for pattern in assertions.get("forbidden_patterns_any", []):
-            assert not re.search(pattern, reason), pattern
+        _assert_reason(result, patient, expected)
         assert patient == original
         audit_records("SUCCESS")
     captured = capsys.readouterr()
     assert not captured.out and not captured.err and not caplog.records
+
+
+@pytest.mark.parametrize(("case_id", "bad_reason"), [
+    ("MISS-012", "Chưa đủ thông tin để xác định, nhưng chắc chắn không có phản vệ."),
+    ("MISS-012", "Chưa đủ thông tin để xác định. Đã loại trừ phản vệ."),
+    ("RULE-002", "Thỏa R01-PV theo dữ kiện hiện có. Hãy dùng thuốc ngay."),
+    ("PEND-003", "Thỏa R01-PV theo dữ kiện hiện có. Huyết áp tâm thu hiện tại đã rõ."),
+    ("MISS-009", "Mọi khả năng đều thỏa tiêu chí phản vệ qua ít nhất một trong các rule "
+     "R01-PV, R02-PV. R01-PV là mã đại diện vì thiếu thông tin. Chưa xác nhận riêng R01-PV."),
+    ("MISS-009", "Mọi khả năng đều thỏa tiêu chí phản vệ qua ít nhất một trong các rule "
+     "R01-PV, R02-PV. R01-PV là mã đại diện vì thiếu thông tin về dị nguyên nghi ngờ. "
+     "R01-PV đã được xác nhận chắc chắn."),
+], ids=[
+    "mixed-contradiction", "mixed-exclusion", "treatment-advice", "missing-pressure",
+    "canonical-no-field", "canonical-overclaim",
+])
+def test_ly_do_rejects_counterexamples(case_id, bad_reason):
+    case = next(case for case in _PUBLIC_CASES if case["Test ID"] == case_id)
+    patient = load_patient(case)
+    expected = read_json(case["Expected"])
+    result = classify(patient)
+    _assert_reason(result, patient, expected)
+
+    result["ly_do"] = bad_reason
+    with pytest.raises(AssertionError):
+        _assert_reason(result, patient, expected)
 
 
 _CASES_WITH_STATES = [
