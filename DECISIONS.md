@@ -409,6 +409,10 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 
 ### 8.10. OPEN-09 — Vòng đời ghi audit
 
+**JSONL sau ghi dở — Leader chọn hướng Hải, chờ peer review/test:** Writer tuần tự không tự xóa đoạn đuôi. Nếu file không kết thúc newline, thêm newline tách trước record mới; giữ nguyên đuôi, kể cả record JSON hợp lệ thiếu newline. Record mới phải đọc được riêng; file chứa dòng cũ hỏng vẫn không toàn vẹn. Công cụ truy vấn có thể bỏ qua dòng lỗi và báo số/vị trí, không lộ nội dung nhạy cảm. Lỗi ghi/đóng hoặc kiểm đuôi thất bại vẫn fail-closed; không cam kết concurrency hoặc durability sau mất điện. Test file thật với ghi một phần, JSON hợp lệ thiếu newline, file trống, lỗi I/O và context. Thông báo/mã thoát khi file hỏng cần review; không coi truy vấn đọc được một số dòng là toàn file hợp lệ. Benchmark full path sau triển khai.
+
+
+
 - **Lựa chọn và lý do:** Mỗi record open append/write/close bằng cơ chế quản lý tài nguyên an toàn. Vòng đời tài nguyên ngắn giảm lỗi quên đóng và vừa sức M2; chấp nhận overhead có thể đo. [PY3]
 - **Phương án khác:** Giữ stream theo phiên và flush mỗi record giảm open/close nhưng thêm state và đường teardown; chưa chọn cho M2. Chỉ cân nhắc tối ưu qua đề xuất/review sau số liệu.
 - **Đánh đổi và rủi ro:** Mở/đóng từng record tốn I/O hơn stream dài; close/flush không đồng nghĩa dữ liệu bền vững sau mất điện. Không mặc định fsync hoặc durability production. Lỗi write/flush/close phải được nhận biết theo fail-closed; có thể có dòng chưa hoàn chỉnh. Không báo thành công trước hoàn tất bước ghi theo policy.
