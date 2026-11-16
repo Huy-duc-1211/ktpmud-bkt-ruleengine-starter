@@ -1,5 +1,7 @@
 # Ghi chú remediation TASK 02E — Leader-owned
 
+> **Bối cảnh lịch sử:** Nội dung dưới ghi nhận TASK 02E/02Q tại thời điểm thực hiện; các chữ “hiện hành” hoặc “chờ review” trong báo cáo phản ánh mốc đó. Sau Issue #31, cách chọn mã đã được nhóm cập nhật: xem [RULE_DESIGN](RULE_DESIGN.md), [TEST_PLAN](TEST_PLAN.md) và [Requirements](../../../REQUIREMENTS.md). Không dùng báo cáo tĩnh cũ làm bằng chứng chạy hoặc kết quả kiểm cho selector mới.
+
 Nguồn hiện hành: [Requirements Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) (Q), [ADR Revision 04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md) (A), Decision Table (D) và [TA comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (T15). D13-E là **APPROVED BY LEAD — D13-E — 09/11/2026**, không phải canonical rule do TA định danh. Bản sửa TASK 02E do Leader Huy Đức sở hữu, AI hỗ trợ; chưa xác nhận Hải/Việt Đức peer review hoặc Leader nghiệm thu bản sửa.
 
 ## 1. Finding được tái hiện ở baseline và bản sửa

@@ -1,5 +1,7 @@
 # TASK 02N-C — Đối chiếu bản ChatGPT
 
+> **Bối cảnh lịch sử:** Nội dung đối chiếu TASK 02N-C phản ánh chính sách tại thời điểm review, trước Issue #31. Xem [QA Matrix hiện hành](QA_MATRIX.xlsx) và [Test Cases](../m1-hai/M1/TEST_CASES.csv) để đối chiếu cách chọn mã đã cập nhật.
+
 Phase A đã được ghi độc lập trước khi đối chiếu lịch sử. Phần này đánh giá các kết luận thể hiện trong `GAP_REVIEW!A2:L16`, các cột đã vá và 15 finding của audit TASK 02J. Đã tìm tại Downloads, attachments và workspace. Tìm được `QA_MATRIX.xlsx` ban đầu với SHA `9e423bf96969568278ab5e0473d0cd5a99b051ce9c3be9ab4264642d64ddb015`, khớp bản đã review 02J. Không tìm được `QA_MATRIX (1)(1).xlsx`, `QA_MATRIX_M1_LEADER_REMEDIATED.xlsx`, changelog/validation hoặc hai báo cáo self-review/rereview nêu trong yêu cầu. Do đó chỉ xác nhận hai mốc có file, không quy lỗi vào một lần sửa ChatGPT cụ thể.
 
 | Finding cũ | Kết luận | Ô và bằng chứng | Xử lý |

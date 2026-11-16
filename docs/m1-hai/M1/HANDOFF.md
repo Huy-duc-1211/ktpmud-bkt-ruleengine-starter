@@ -1,5 +1,7 @@
 # TASK 02E — Leader-owned remediation M1-02
 
+> **Bối cảnh lịch sử:** Nội dung dưới ghi nhận TASK 02E/02Q tại thời điểm thực hiện; các chữ “hiện hành” hoặc “chờ review” trong báo cáo phản ánh mốc đó. Sau Issue #31, cách chọn mã đã được nhóm cập nhật: xem [RULE_DESIGN](RULE_DESIGN.md), [TEST_PLAN](TEST_PLAN.md) và [Requirements](../../../REQUIREMENTS.md). Không dùng báo cáo tĩnh cũ làm bằng chứng chạy hoặc kết quả kiểm cho selector mới.
+
 Owner bản sửa: Huy Đức (Leader), AI hỗ trợ; ngày 09/11/2026. Baseline đóng góp Hải: docs/m1-tests-hai, SHA768f196e6a9ec3b1142c44399ce8288f7cc2e87e. Giữ lịch sử tác giả, không gán bản sửa/peer review cho Hải.
 
 ## 1. Nguồn và Git scope

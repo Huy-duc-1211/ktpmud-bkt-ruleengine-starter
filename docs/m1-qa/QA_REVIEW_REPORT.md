@@ -1,5 +1,7 @@
 # TASK 02N-C — Audit độc lập M1-03
 
+> **Bối cảnh lịch sử:** Báo cáo ghi nhận TASK 02N-C trước Issue #31; selector, expected và kết quả kiểm tĩnh dưới đây phản ánh thời điểm đó. Xem [QA Matrix hiện hành](QA_MATRIX.xlsx), [Test Cases](../m1-hai/M1/TEST_CASES.csv) và [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) cho thiết kế đã cập nhật. Báo cáo cũ không phải bằng chứng chạy selector mới.
+
 Nhóm 173820_n27, Track A. QA gốc do Việt Đức thực hiện. Bản sửa trước do Huy Đức với ChatGPT hỗ trợ. Audit này do Huy Đức với Codex hỗ trợ. Chưa xác lập review độc lập của thành viên.
 
 **Phase A, ghi trước khi đọc workbook cũ và nhận xét ChatGPT.** Bản self-review đã cải thiện nhiều phần thiết kế. Cần sửa cache và các lệch giữa input, test ID, procedure và expected trước khi chuyển bản ứng viên cho Leader. Không thấy sai mức/mã/lớp lỗi trong 21 JSON inline đã đối chiếu. Có lỗi tại dòng dùng fixture và thủ tục, ngoài phạm vi phép kiểm 21 JSON.

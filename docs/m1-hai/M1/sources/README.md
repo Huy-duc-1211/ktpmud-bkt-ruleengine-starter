@@ -1,6 +1,6 @@
 # Nguồn hiện hành Revision 04 và snapshots lịch sử
 
-TASK 02E ngày 09/11/2026 do Huy Đức phụ trách với AI hỗ trợ. Các file lưu dưới `sources/` là snapshot và bằng chứng lịch sử. Bảng §1 dẫn tới nguồn hiện hành.
+TASK 02E ngày 09/11/2026 do Huy Đức phụ trách với AI hỗ trợ. Các file nguồn được lưu dưới `sources/` là snapshot và bằng chứng lịch sử; README này là chỉ mục có thể cập nhật. Bảng §1 dẫn tới nguồn hiện hành.
 
 ## 1. Thứ tự thẩm quyền và nguồn hiện hành
 
@@ -12,9 +12,10 @@ Dùng đề thi và errata chính thức, sau đó Decision Table và phản h�
 | A | [DECISIONS.md hiện hành](../../../../DECISIONS.md) | §5.8 D13-E, §9.4 sáu expected và các mục còn mở |
 | D | [Official Decision Table V1](https://github.com/fossbk-spec/ktpmud-bkt-ruleengine-starter/blob/bkt-2026-v1/docs/decision-table.md), tag bkt-2026-v1, blob95c2bbd43be8e80c8c7ecb938761a273d062c17e | Chín input, ba output, formulas và ngưỡng duy nhất |
 | T15 | [fossbk-spec comment 6722429248](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), created/updated 2026-11-08T14:01:50Z | D01–D03, null/missing và quyền chọn policy khoảng trống |
+| T31 | [Phản hồi Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) | Cách chọn mã đại diện khi thiếu boolean; xác nhận trực tiếp MISS-009 và yêu cầu có test |
 | E | [Đề chính thức Track A](https://fossbk-spec.github.io/ktpmud-book/exams/KTPMUD_Hack_Marathon_2026_De_Thi_Chinh_Thuc_v1.0.0_20261103.html) | AC A-01–A-11, audit/privacy/CI/benchmark |
 
-Q/A trong CSV và M2 plans dùng nguồn hiện hành ở trên. Bản đã dùng khi remediation: [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) và [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md). Nhãn **APPROVED BY LEAD — D13-E — 09/11/2026** ghi nhận quyết định của nhóm về D13-E, gồm quy ước chọn mã CANONICAL.
+Q/A là ký hiệu cho Requirements và ADR hiện hành ở trên. Kế hoạch M2 và QA đã cập nhật cách chọn mã ở mức thiết kế, còn cần peer review và bằng chứng thực thi. Bản đã dùng khi remediation: [Requirements Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/a574ce20fbf307ad90f0d60064da394652462aea/REQUIREMENTS.md) và [ADR Rev04](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af011f3f95e21ac829a163ee4be36200c1e7d88/DECISIONS.md). Nhãn **APPROVED BY LEAD — D13-E — 09/11/2026** ghi nhận quyết định nhóm tại TASK 02E. Sau Issue #31, Leader cập nhật cách chọn mã trong Q/A hiện hành; các snapshot và báo cáo tĩnh cũ không tự trở thành bằng chứng cho selector mới.
 
 ## 2. Snapshots lịch sử bất biến
 

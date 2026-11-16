@@ -122,7 +122,7 @@ Bảng lưu lại các mốc quản lý nội bộ đã đề xuất trước Ch
 
 **Nguồn bàn giao:** [175 ca chính](m1-hai/M1/TEST_CASES.csv), [81 ca logic nội bộ](m1-hai/M2/INTERNAL_STATE_CASES.csv), [Test Plan](m1-hai/M1/TEST_PLAN.md), [Integration Test Plan có INT-021](m1-hai/M2/INTEGRATION_TEST_PLAN.md) và [QA Matrix](m1-qa/QA_MATRIX.xlsx). Đây là đầu vào thiết kế. Kết quả runtime, CI nghiệp vụ và benchmark cần được thu riêng.
 
-- **Hải** dự kiến triển khai validation và selector D13-E, chạy ca rule, biên và trạng thái nội bộ. Kiểm tra riêng definite thắng possible, AllPV, Mixed, ưu tiên sốc và các trường hợp thiếu tuổi/HATT. Review logic giải thích trong INT-021 cùng Việt Đức.
+- **Hải** dự kiến triển khai validation và selector D13-E, chạy ca rule, biên và trạng thái nội bộ. Kiểm tra ưu tiên trong Poss, phân biệt DIRECT/CANONICAL, overlap definite/possible, AllPV, Mixed, ưu tiên sốc và thiếu tuổi/HATT. Review logic giải thích trong INT-021 cùng Việt Đức.
 - **Việt Đức** đối chiếu QA Matrix A-01–A-11 với ID ca, test thực thi, nguồn bằng chứng và khoảng trống. Với INT-021/CHK-058, áp dụng `explanation_assertions` lên `ly_do` thực tế của DIRECT/CANONICAL/MIXED. Kiểm tra cả mẫu phải khớp và mẫu sai phải bị loại, rồi đọc lại ý nghĩa và privacy cùng Hải. Ghi kết quả chạy và nguồn bằng chứng tách khỏi mapping thiết kế. Kiểm tra gọi trực tiếp `classify(patient)`, validation, JSONL bốn trường, UUID/context theo phiên và việc dọn context, cô lập file test, đường lỗi audit/fail-closed và privacy ở output, audit, message và exception chaining.
 - **Huy Đức** đối chiếu Requirements–ADR–Test Plan, review bằng chứng và quyết định tích hợp. Đường dẫn audit mặc định và cách xử lý lỗi nội bộ ngoài dự kiến vẫn theo trạng thái review riêng trong ADR.
 

@@ -1,6 +1,6 @@
 # Kế hoạch cho giai đoạn sau — M2/M3
 
-Thư mục này giữ kế hoạch M2/M3 từ baseline Hải; TASK 02E chỉ đồng bộ phần bị D13-E/F01–F04 ảnh hưởng, không triển khai runtime. Runtime, test và benchmark ở đây chưa thực hiện. Khi đang review M1, quay lại [M1/README.md](../M1/README.md).
+Thư mục này giữ kế hoạch M2/M3 từ baseline Hải và các bản sửa do Huy Đức phụ trách với AI hỗ trợ. Cách chọn mã trong kế hoạch đã được cập nhật theo chính sách nhóm sau Issue #31; runtime, test nghiệp vụ và benchmark chưa được thực hiện. Khi đang review M1, quay lại [M1/README.md](../M1/README.md).
 
 - [INTERNAL_STATE_TEST_PLAN.md](INTERNAL_STATE_TEST_PLAN.md) và [INTERNAL_STATE_CASES.csv](INTERNAL_STATE_CASES.csv): chi tiết helper/Enum và 81 ca logic nội bộ.
 - [INTEGRATION_TEST_PLAN.md](INTEGRATION_TEST_PLAN.md): public call, context UUID, audit, lỗi và isolation.
