@@ -1,6 +1,6 @@
 # Hồ sơ quyết định kiến trúc — Track A (ADR)
 
-> **Mục đích:** Ghi lại *vì sao* nhóm lựa chọn kiến trúc và cách kiểm chứng. Chi tiết trường dữ liệu, FR/NFR/AC ở [`REQUIREMENTS.md`](REQUIREMENTS.md); toàn bộ test cases ở `docs/`, QA Matrix ở `docs/qa/`. Đây là **thiết kế**, không phải báo cáo engine đã chạy.
+> **Mục đích:** Ghi lại *vì sao* nhóm lựa chọn kiến trúc và cách kiểm chứng. Chi tiết trường dữ liệu, FR/NFR/AC ở [`REQUIREMENTS.md`](REQUIREMENTS.md); toàn bộ test cases ở `docs/`, QA Matrix ở `docs/qa/`. Đây là hồ sơ **quyết định thiết kế**; kết quả engine đã chạy được báo cáo riêng trong `TEST_REPORT.md` trong hồ sơ nộp bài.
 
 ## 1. Thông tin và trạng thái
 
@@ -11,7 +11,7 @@
 | Chủ trì | Lead (Huy Đức); Dev (Hải); QA (Việt Đức) |
 | Starter | `fossbk-spec/ktpmud-bkt-ruleengine-starter`, tag `bkt-2026-v1`, SHA `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
 | Trạng thái tài liệu | PR #1–#4 đã merge ngày 10/11/2026; mốc tích hợp M1 `9bc4fc186415d7a13cd9d49692c50f3c945ddf7b`. ADR ghi nhận cập nhật chọn mã sau Issue #31, đối chiếu Requirements tại `45e0870e0cae2c95b070c424e0de38e3c763bc9d`. |
-| Phê duyệt và giới hạn | Leader phê duyệt D13-E ngày 09/11 và sau Issue #31 cập nhật cách chọn mã; có approval PR từ `nvldvc` và comment của Leader trên các PR M1; chưa có bằng chứng cả Hải và Việt Đức đã review kỹ thuật vòng cuối. PR #7 có classifier, test và CI đạt tại HEAD `ebdc573`; benchmark là số đo sơ bộ, chưa nghiệm thu SHA freeze. |
+| Phê duyệt và giới hạn | Leader phê duyệt D13-E ngày 09/11 và sau Issue #31 cập nhật cách chọn mã; có approval PR từ `nvldvc` và comment của Leader trên các PR M1; chưa có bằng chứng cả Hải và Việt Đức đã review kỹ thuật vòng cuối. PR #7 đã merge; [CI tại `7a8da1e`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) đạt 490 test, 3 test Windows skip. Benchmark là số đo sơ bộ, chưa nghiệm thu SHA freeze. |
 
 **Thứ tự nguồn:** Đề/Decision Table và làm rõ chính thức tại [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) được ưu tiên trong phạm vi nội dung được làm rõ; tiếp theo là chính sách nhóm đã duyệt và các đề xuất. D01–D03 được TA làm rõ. Issue #31 làm rõ lựa chọn mã đại diện khi thiếu khóa boolean; việc áp dụng vào ca vừa có rule chắc chắn vừa có rule ưu tiên cao hơn chỉ có thể thỏa là quyết định nhóm. Không coi toàn bộ D13-E hoặc kiến trúc audit được TA phê duyệt. Merge PR không đồng nghĩa TA nghiệm thu hoặc mọi AC đạt.
 
@@ -39,7 +39,7 @@ ADR (*Architecture Decision Record*) là hồ sơ giải thích **nhóm chọn c
 | **Scope / context / isolation** | Phạm vi phiên / ngữ cảnh đang hoạt động / việc tách dữ liệu giữa các lần chạy hoặc ca test. |
 | **Public / helper / writer** | Hàm được gọi từ ngoài / hàm hỗ trợ bên trong / thành phần ghi audit. |
 
-**Nhãn trạng thái:** `TA CONFIRMED` = hành vi đã được TA xác nhận; `APPROVED BY LEAD` = quyết định nhóm; `PENDING PEER TECHNICAL REVIEW` = chưa có xác nhận kỹ thuật cuối của thành viên; `PROPOSED` = chưa phê duyệt. `OPEN-01`–`OPEN-10` là mã lịch sử, **đã chọn phương án** nhưng chưa nghiệm thu bằng code.
+**Nhãn trạng thái:** `TA CONFIRMED` = hành vi đã được TA xác nhận; `APPROVED BY LEAD` = quyết định nhóm; `PENDING PEER TECHNICAL REVIEW` = chưa có xác nhận kỹ thuật cuối của thành viên; `PROPOSED` = chưa phê duyệt. `OPEN-01`–`OPEN-10` là mã lịch sử, **đã chọn phương án**. PR #7 đã triển khai và có test liên quan; trạng thái từng bằng chứng và SHA freeze được ghi riêng, không mặc định mọi lựa chọn đã nghiệm thu.
 
 ## 2. Bối cảnh, phạm vi và các ràng buộc
 
@@ -63,7 +63,7 @@ Starter chỉ cung cấp `classify(patient)` còn `NotImplementedError`. Nhóm x
 | D10 | Benchmark `perf_counter_ns`, 100 warm-up, ≥1.000 mẫu, nearest-rank p50/p95, full-path I/O thật | APPROVED BY LEAD |
 | D11 | Không đổi clinical rules/ngưỡng từ Decision Table | FACT / SPECIFIED |
 | D12 | Giữ input/output/audit schema và giới hạn privacy | FACT / SPECIFIED |
-| D13 | Boolean thiếu/null → UNKNOWN; khi AllPV chọn rule ưu tiên cao nhất trong Poss, phân biệt mã trực tiếp và mã đại diện; Mixed theo §5.8 | Leader cập nhật cách chọn mã sau Issue #31; ADR và test vẫn cần review và kiểm chứng runtime. |
+| D13 | Boolean thiếu/null → UNKNOWN; khi AllPV chọn rule ưu tiên cao nhất trong Poss, phân biệt mã trực tiếp và mã đại diện; Mixed theo §5.8 | Leader cập nhật cách chọn mã sau Issue #31; PR #7 đã triển khai và có test, cần tiếp tục đối chiếu mapping và SHA freeze. |
 
 **Quan trọng:** D04 và các chi tiết triển khai D13-E là chính sách nhóm trong phạm vi được phép; các làm rõ chung của TA vẫn áp dụng theo nguồn tương ứng. Issue #31 đã xác nhận cách chọn mã đại diện trong trường hợp nêu; không suy ra TA đã duyệt toàn bộ thuật toán, kiến trúc hoặc mọi expected của nhóm. Chi tiết ở §5, phân công và phương án ở §8.
 
@@ -78,9 +78,9 @@ Starter chỉ cung cấp `classify(patient)` còn `NotImplementedError`. Nhóm x
 5. **Chọn mã nếu là PHAN_VE:** khi AllPV nhưng chưa xác nhận sốc, chọn rule có ưu tiên cao nhất trong tập các rule có thể thỏa (Poss). Nếu rule mang mã đó chưa chắc chắn đúng, `ly_do` phải nói rõ mã là đại diện, kể cả khi rule ưu tiên thấp hơn chắc chắn đúng.
 6. **Ghi audit rồi trả:** với input hợp lệ, hoàn tất ghi `CLASSIFY / SUCCESS` trước khi trả đúng ba trường. Với input invalid, ghi `INVALID_INPUT` thành công rồi phát sinh `TypeError` hoặc `ValueError` theo D04. Nếu audit thất bại, kể cả lỗi kép, ưu tiên lỗi audit an toàn và không báo thành công (§5.5, OPEN-03).
 
-**Phiên và audit:** Các lần gọi trong phiên tường minh dùng chung UUID synthetic; một lần gọi độc lập không có phiên dùng UUID tạm mới rồi reset trong `finally`. UUID/context ở ngoài input. Writer JSONL ghi đúng bốn trường, mở/ghi/đóng theo từng lần; `ContextVar` không bảo đảm nhiều tiến trình/luồng ghi chung file an toàn. Leader đã chọn hướng đường dẫn mặc định và audit lỗi nội bộ (§5.4.1, §5.5); chi tiết cần peer review và test.
+**Phiên và audit:** Các lần gọi trong phiên tường minh dùng chung UUID synthetic; một lần gọi độc lập không có phiên dùng UUID tạm mới rồi reset trong `finally`. UUID/context ở ngoài input. Writer JSONL ghi đúng bốn trường, mở/ghi/đóng theo từng lần; `ContextVar` không bảo đảm nhiều tiến trình/luồng ghi chung file an toàn. Leader đã chọn hướng đường dẫn mặc định và audit lỗi nội bộ (§5.4.1, §5.5); PR #7 đã triển khai/test các đường liên quan. Tiếp tục đối chiếu phạm vi review và SHA freeze.
 
-Tại mốc thiết kế M1, `rule_engine/classifier.py` vẫn là stub và test starter chưa chứng minh nghiệp vụ. Sau đó PR #7 bổ sung classifier và pytest; [CI của PR](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44081899432) đạt 483 test tại HEAD `ebdc573`. [Benchmark sơ bộ](docs/testing/BENCHMARK_REPORT.md) cần đối chiếu trên SHA freeze. A-11 được kiểm tra riêng bằng disclaimer README (§9).
+Tại mốc thiết kế M1, `rule_engine/classifier.py` vẫn là stub và test starter chưa chứng minh nghiệp vụ. Sau đó PR #7 bổ sung classifier và pytest, đã merge tại `925cea6`; [CI `7a8da1e`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) đạt 490 test, 3 test Windows skip. CI 483 test tại `ebdc573` là mốc lịch sử. [Benchmark sơ bộ](docs/testing/BENCHMARK_REPORT.md) cần đối chiếu trên SHA freeze. A-11 được kiểm tra riêng bằng disclaimer README (§9).
 
 ## 5. Các quyết định kiến trúc (Architecture Decision Records)
 
@@ -98,7 +98,7 @@ Các phương án thay thế và lập luận dưới đây là hồ sơ thiết
 | Lý do lựa chọn | Đầu vào nhỏ, cố định và giả lập cho phép yêu cầu bên gọi cung cấp đúng kiểu. Validation nghiêm giúp tìm lỗi sớm và giữ bằng chứng phân loại theo dữ liệu thực nhận. Các miền số là policy dữ liệu của nhóm, tách khỏi ngưỡng lâm sàng trong D. |
 | Hệ quả / đánh đổi | Giữ kiểm tra số hữu hạn, loại bool khỏi miền số và phân biệt unavailable với invalid thực sự. Tuổi missing/null có output TA quy định; thiếu current BP/nền không tự hạ Tầng 2 đã xác nhận. Không tự đổi current BP=0 thành invalid; baseline=0 vẫn ValueError theo policy số đã duyệt. |
 | Rủi ro / giảm thiểu | Validator cũ có thể nhận bool như số hoặc còn loại age/boolean null. Kiểm tra toàn bộ input, không bỏ qua field invalid không liên quan dù đã chứng minh rule; giữ message/chaining không chứa giá trị lâm sàng thô. Không gán INVALID_INPUT chỉ vì missing/null được phép. |
-| Kiểm chứng dự kiến | Test missing/null/non-null invalid, miền số/tuổi lẻ/khóa lạ/unrelated invalid và privacy. Nguồn Hải hiện có 36 invalid=28 TypeError+8 ValueError khi audit thành công; INV nullable và AUD-002 fixture đã thay được bàn giao ở §9.3. Lỗi kép vẫn OPEN-03. Chưa implementation/test evidence. |
+| Kiểm chứng dự kiến | Test missing/null/non-null invalid, miền số/tuổi lẻ/khóa lạ/unrelated invalid và privacy. Nguồn Hải hiện có 36 invalid=28 TypeError+8 ValueError khi audit thành công; INV nullable và AUD-002 fixture đã thay được bàn giao ở §9.3. Lỗi kép theo OPEN-03. Sau mốc M1, PR #7 đã có [test validation và audit](tests/test_audit.py); xem TEST_REPORT cho kết quả và giới hạn. |
 | Truy vết | Q FR-07; NFR-02, NFR-03, NFR-05; A-04, A-07. |
 | Nguồn / trạng thái | APPROVED BY LEAD — PARTIALLY SUPERSEDED BY TA. TA §§2–5 thay chính sách null tuổi/boolean cũ; mapping lỗi, miền số và OPEN-03 giữ phần đã duyệt. [TA](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248); Q §§3, 4.3, 8.1; L. Không coi toàn bộ D04 bị hủy. |
 
@@ -114,7 +114,7 @@ Các phương án thay thế và lập luận dưới đây là hồ sơ thiết
 | Lý do lựa chọn | Ranh giới theo validation, rule, quyết định kết quả, giải thích và audit cho phép review trực tiếp từng phần theo Q. Số quy tắc nhỏ nên chưa có căn cứ xây framework rule tổng quát. |
 | Hệ quả / đánh đổi | Các phần thuần dễ unit test, lỗi dễ định vị. Chi phí là định nghĩa ranh giới và bảo đảm các hàm phối hợp đúng, không tạo nhiều bước chỉ để chuyển dữ liệu qua lại. |
 | Rủi ro / giảm thiểu | Helper quá vụn hoặc trạng thái ẩn làm khó review. Hải chọn số lượng/tên helper tối thiểu; Việt Đức review testability và đường giao thoa core/audit. Kiểm chứng public orchestration cùng provider, không chỉ helper. |
-| Kiểm chứng dự kiến | Review signature không đổi; gọi trực tiếp vẫn audit; explicit session dùng cùng UUID, call độc lập dùng UUID mới và reset sau exception; rule test thuần và public integration test. Chưa có code hoặc kết quả chạy. |
+| Kiểm chứng dự kiến | Review signature không đổi; gọi trực tiếp vẫn audit; explicit session dùng cùng UUID, call độc lập dùng UUID mới và reset sau exception; rule test thuần và public integration test. Sau mốc M1, PR #7 đã có code và kết quả chạy; xem TEST_REPORT cho bằng chứng theo SHA. |
 | Truy vết | Q FR-01–FR-09; NFR-04, NFR-05; A-01, A-02, A-07–A-09. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D05, Q §4.3 và L; OPEN-01/02/07 ngày 08/11/2026 là APPROVED BY LEAD — PENDING PEER TECHNICAL REVIEW. Tên helper/module là chi tiết triển khai nhỏ, không phải hướng kiến trúc chưa chọn. |
 
@@ -146,19 +146,19 @@ Các phương án thay thế và lập luận dưới đây là hồ sơ thiết
 | Lý do lựa chọn | Writer riêng tập trung kiểm soát dữ liệu được phép, hỗ trợ kiểm tra riêng format và I/O. JSONL đủ cho phạm vi bài thi, tránh kéo thêm cơ sở dữ liệu hoặc hạ tầng. Ranh giới writer tạo điểm thay cách lưu về sau, không phải mục tiêu tích hợp production hiện tại. |
 | Hệ quả / đánh đổi | Rule test được thuần, writer tập trung schema/privacy và path độc lập working directory. Có overhead mở/đóng từng record và quản lý context; chấp nhận để giảm state M2, đo thực tế trước khi đề xuất tối ưu. Không bảo đảm fsync/durability sau mất điện. |
 | Rủi ro / giảm thiểu | I/O lỗi có thể để lại bản ghi chưa hoàn chỉnh; fail-closed không chứng minh audit đã lưu. Không truyền payload cho writer; không commit runtime log. Test dùng file riêng; không cam kết thread/process-safe ghi chung file. ContextVar không tạo atomicity cho JSONL. Mở rộng concurrency phải review riêng. |
-| Kiểm chứng dự kiến | Đọc lại JSONL, đúng bốn trường/UTC/UUID, explicit và single-call scope, reset sau exception; thử open/write/flush/close failure, path độc lập cwd và isolation bằng tmp_path. Benchmark chính giữ I/O thực. Chưa có audit runtime hoặc kết quả thử. |
+| Kiểm chứng dự kiến | Đọc lại JSONL, đúng bốn trường/UTC/UUID, explicit và single-call scope, reset sau exception; thử open/write/flush/close failure, path độc lập cwd và isolation bằng tmp_path. Benchmark chính giữ I/O thực. Sau mốc M1, PR #7 đã có audit runtime và test; xem TEST_REPORT cho kết quả theo SHA. |
 | Truy vết | Q FR-09; NFR-02, NFR-03, NFR-04; A-06. |
-| Nguồn / trạng thái | APPROVED BY LEAD theo G D07, Q FR-09/NFR-03 và L. E §§7.2–7.3 A-06 quy định bốn trường. OPEN-01/02/04/05/09 được Leader chọn ngày 08/11/2026, PENDING PEER TECHNICAL REVIEW; đường dẫn file thực tế chưa đặt. |
+| Nguồn / trạng thái | APPROVED BY LEAD theo G D07, Q FR-09/NFR-03 và L. E §§7.2–7.3 A-06 quy định bốn trường. OPEN-01/02/04/05/09 được Leader chọn ngày 08/11/2026. PR #7 đã triển khai path và test liên quan; [README code](README.md) mô tả path. Approval PR không tự chứng minh mọi peer review đã hoàn tất. |
 
-#### 5.4.1. Direct call chưa cấu hình audit path — đề xuất tích hợp M2
+#### 5.4.1. Direct call chưa cấu hình audit path — quyết định và triển khai M2
 
-**LEADER CHỌN HƯỚNG — CẦN PEER REVIEW VÀ TEST.** Cần kiểm chứng `classify(patient)` khi bên gọi chưa thiết lập audit path. OPEN-04 đã duyệt cấu hình ngoài input và độc lập working directory; Leader chọn hướng mặc định ngoài repo theo thư mục người dùng.
+**LEADER ĐÃ CHỌN HƯỚNG; PR #7 ĐÃ TRIỂN KHAI VÀ CÓ TEST.** Cần tiếp tục đối chiếu `classify(patient)` khi bên gọi chưa thiết lập audit path ở SHA freeze. OPEN-04 đã duyệt cấu hình ngoài input và độc lập working directory; Leader chọn hướng mặc định ngoài repo theo thư mục người dùng.
 
-Đề xuất dùng một gốc tuyệt đối từ thư mục người dùng do hệ điều hành xác định, ví dụ `<user-home>/.173820_n27/dr_may_day/runs/<run-id>/audit.jsonl`. Gốc ổn định không suy ra từ current working directory; thư mục con theo lần chạy giữ ownership/file riêng theo OPEN-05. `run-id` chỉ tổ chức file, không thêm input hoặc trường audit. Hải/Việt Đức cần review cách xác định gốc, vòng đời run-id, quyền truy cập và kiểm tra đích nằm ngoài repository trước khi chọn đường dẫn thực tế.
+Triển khai dùng một gốc tuyệt đối từ thư mục người dùng do hệ điều hành xác định: `<user-home>/.173820_n27/dr_may_day/runs/<run-id>/audit.jsonl`. Gốc ổn định không suy ra từ current working directory; thư mục con theo lần chạy giữ ownership/file riêng theo OPEN-05. `run-id` chỉ tổ chức file, không thêm input hoặc trường audit. Tiếp tục review cách xác định gốc, vòng đời run-id và quyền truy cập trong môi trường sử dụng; code đã kiểm tra đích nằm ngoài repository.
 
 Cho phép override path qua cấu hình provider/writer bên ngoài PatientInput cho test/demo; không đổi `classify(patient)` hoặc chín input keys. Mặc định và override đều phải tránh lưu runtime audit vào repository. Nếu không xác định/tạo/ghi được đích hợp lệ thì giữ fail-closed, không bỏ audit hoặc fallback về working directory/repository để báo thành công.
 
-Kiểm chứng M2: direct call không cấu hình path; đổi working directory vẫn xác định đúng gốc; override test/demo ở thư mục riêng ngoài repository; lỗi tạo thư mục/mở/ghi/đóng vẫn không báo thành công. README khi triển khai phải mô tả nơi lưu mặc định, cách cấu hình/override và hành vi khi không tạo/ghi được file. Hải chủ trì public integration; Việt Đức review path/privacy/isolation và phối hợp kiểm chứng; Huy xem kết quả review trước khi chốt chi tiết triển khai.
+Kiểm chứng M2: direct call không cấu hình path; đổi working directory vẫn xác định đúng gốc; override test/demo ở thư mục riêng ngoài repository; lỗi tạo thư mục/mở/ghi/đóng vẫn không báo thành công. README code đã mô tả nơi lưu mặc định, cấu hình/override và hành vi khi không ghi được file. Phân công Hải, Việt Đức và Huy ở kế hoạch ban đầu không tự chứng minh từng người đã hoàn tất review; tiếp tục đối chiếu kết quả test và SHA freeze.
 
 #### 5.4.2. Ghi tiếp khi file audit đã tồn tại
 
@@ -168,7 +168,7 @@ Writer kiểm byte cuối trước khi append. File trống bắt đầu bằng 
 
 ### 5.5. D08 — Audit lần thành công và lần thử input lỗi
 
-**INT-013 — Leader chọn hướng, cần peer review/test:** Nếu validator bất ngờ lỗi (kể cả TypeError/ValueError không do validator chủ động phát hiện input sai), hoặc sau validation hợp lệ xử lý rule lỗi nội bộ, thử ghi `CLASSIFY/INTERNAL_ERROR` với đúng bốn trường; ghi xong báo `RuntimeError` an toàn, không trả kết quả. Nếu ghi audit cũng lỗi, ưu tiên `AuditError` an toàn, không khẳng định record đã lưu. Khôi phục context và không lộ input qua traceback/log. Status mới là chính sách nhóm, chưa có xác nhận riêng của thầy. Phân biệt lỗi validator chủ động xác định input sai với exception bất ngờ; cách đánh dấu và triển khai cần peer review/test. Test bổ sung lỗi bất ngờ ở validation và writer/path; không tự gán INVALID_INPUT.
+**INT-013 — Leader chọn hướng; PR #7 đã triển khai và có test:** Nếu validator bất ngờ lỗi (kể cả TypeError/ValueError không do validator chủ động phát hiện input sai), hoặc sau validation hợp lệ xử lý rule lỗi nội bộ, thử ghi `CLASSIFY/INTERNAL_ERROR` với đúng bốn trường; ghi xong báo `RuntimeError` an toàn, không trả kết quả. Nếu ghi audit cũng lỗi, ưu tiên `AuditError` an toàn, không khẳng định record đã lưu. Khôi phục context và không lộ input qua traceback/log. Status mới là chính sách nhóm, chưa có xác nhận riêng của thầy. Phân biệt lỗi validator chủ động xác định input sai với exception bất ngờ; [test audit](tests/test_audit.py) có các đường validator, writer và lỗi kép. Không tự gán INVALID_INPUT; tiếp tục đối chiếu SHA freeze.
 
 **Đọc nhanh:** Ghi SUCCESS khi xử lý hợp lệ hoàn tất; ghi INVALID_INPUT cho lỗi đầu vào thực sự nếu audit thành công. Lỗi audit được xử lý fail-closed.
 
@@ -180,9 +180,9 @@ Writer kiểm byte cuối trước khi append. File trống bắt đầu bằng 
 | Lý do lựa chọn | Trạng thái tổng quát đủ cho mục đích nhận biết một lần thử đã thành công/thất bại mà không tái tạo dữ liệu input. Phạm vi mở rộng sang invalid là quyết định nội bộ, tách khỏi yêu cầu chính thức audit mỗi lần phân loại. |
 | Hệ quả / đánh đổi | Tăng khả năng truy vết và giảm rò dữ liệu, nhưng giảm chi tiết debug. Ba Status theo quyết định nhóm mô tả xử lý thao tác, không ánh xạ trực tiếp mức phản vệ. Fail-closed có thể ngăn trả kết quả dù logic đã tính xong. Schema không có trường thứ năm hoặc status mới cho lỗi writer. |
 | Rủi ro / giảm thiểu | Exception chaining hoặc logging mặc định có thể lộ input; nhiều lớp ghi có thể gây trùng. Public boundary chịu trách nhiệm điều phối và làm sạch lỗi, writer chỉ nhận allowlist. Không retry vô hạn, không tự coi lỗi ghi là có bản ghi, không thêm telemetry hoặc trường thứ năm. |
-| Kiểm chứng dự kiến | Kiểm tra bốn đường ở phần 4, đặc biệt ba ca OPEN-03; loại lỗi validation khi audit thành công, lỗi audit công khai khi audit thất bại; không lộ input trong message/chaining, không trả kết quả thành công và không giả định record tồn tại sau lỗi ghi. Chưa có bằng chứng chạy. |
+| Kiểm chứng dự kiến | Kiểm tra bốn đường ở phần 4, đặc biệt ba ca OPEN-03; loại lỗi validation khi audit thành công, lỗi audit công khai khi audit thất bại; không lộ input trong message/chaining, không trả kết quả thành công và không giả định record tồn tại sau lỗi ghi. PR #7 đã có test các đường audit/lỗi; xem TEST_REPORT cho bằng chứng và phạm vi. |
 | Truy vết | Q FR-07, FR-09; NFR-02, NFR-03; A-04, A-06. |
-| Nguồn / trạng thái | APPROVED BY LEAD theo G D08, Q §§4, 6 và L; OPEN-03 ngày 08/11/2026 là APPROVED BY LEAD — PENDING PEER TECHNICAL REVIEW. Tên exception audit cụ thể có thể hoàn thiện khi implement. |
+| Nguồn / trạng thái | APPROVED BY LEAD theo G D08, Q §§4, 6 và L; OPEN-03 ngày 08/11/2026 là APPROVED BY LEAD — PENDING PEER TECHNICAL REVIEW. PR #7 dùng `AuditError`; tiếp tục đối chiếu hành vi tại SHA freeze. |
 
 Trong bản M2, validator trả về đối tượng lỗi khi chủ động phát hiện input sai. Writer và classifier phát sinh lỗi công khai sau khi thoát khỏi khối `except` để tránh giữ exception gốc trong chain. Test dùng dữ liệu giả lập để mô phỏng từng điểm lỗi mà không cần in payload, đường dẫn hay exception gốc ở runtime. [Kế hoạch test tích hợp](docs/testing/INTEGRATION_TEST_PLAN.md)
 
@@ -197,7 +197,7 @@ Trong bản M2, validator trả về đối tượng lỗi khi chủ động ph�
 | Phương án khác | Chỉ dùng ca điển hình và một ví dụ cho mỗi nhãn nhanh hơn nhưng dễ bỏ qua sai dấu và dữ liệu thiếu. Chỉ đo tỷ lệ dòng code được chạy cũng chưa chứng minh các điều kiện rule được hiểu đúng. |
 | Lý do lựa chọn | Nhóm ca bám yêu cầu A-07 và các đường rủi ro thực tế. Giá trị bằng ngưỡng thất bại nhánh so sánh nghiêm ngặt, nên các ca tại/sát biên cần được review, kể cả biên tuổi và giảm đúng 30%. |
 | Hệ quả / đánh đổi | Dễ phát hiện lỗi nhỏ làm đổi kết quả, nhưng cần thời gian lập kỳ vọng và bảo trì dữ liệu synthetic. Kiểm tra helper hỗ trợ chẩn đoán lỗi, vẫn cần kiểm tra từ interface công khai. |
-| Rủi ro / giảm thiểu | Không copy implementation thành oracle, giữ null expected cũ hoặc coi approval là PASS runtime. Bộ thiết kế ban đầu 157 ca đã được mở rộng lên 175 ca chính trong M1-02; 81 ca logic nội bộ vẫn là tập riêng. Hải/Việt Đức cần review kỹ thuật và mapping QA/AC/status, canonical reason và nguồn hiện hành. Leader đã phê duyệt policy; chưa có runtime verification. |
+| Rủi ro / giảm thiểu | Không copy implementation thành oracle, giữ null expected cũ hoặc coi approval là PASS runtime. Bộ thiết kế ban đầu 157 ca đã được mở rộng lên 175 ca chính trong M1-02; 81 ca logic nội bộ vẫn là tập riêng. Hải/Việt Đức cần review kỹ thuật và mapping QA/AC/status, canonical reason và nguồn hiện hành. Leader đã phê duyệt policy; PR #7 có test runtime, còn cần đối chiếu mapping QA/AC và SHA freeze. |
 | Kiểm chứng dự kiến | Giữ public/core/audit/context/error/fixture coverage, 81 Enum/count rows. Kiểm raw normalization, Def/Poss/AllPV/Mixed, chọn rule ưu tiên cao nhất trong Poss và trường hợp rule definite cùng rule ưu tiên cao hơn chỉ possible, numeric crossovers và đủ six approved expected. Sau code cần pytest -q từ clean checkout với business tests và PR CI evidence riêng; không nghiệm thu từ số hàng tài liệu. |
 | Truy vết | Q FR-01–FR-09; NFR-05, NFR-06; A-01–A-09. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D09, Q NFR-05, L; OPEN-06 ngày 08/11/2026 đã được chọn, PENDING PEER TECHNICAL REVIEW. E A-07–A-09, T dòng 9–17, W dòng 1–12 là căn cứ hiện trạng. Hải và Việt Đức review chéo fixture/đường lỗi. |
@@ -231,7 +231,7 @@ Trong bản M2, validator trả về đối tượng lỗi khi chủ động ph�
 | Rủi ro / giảm thiểu | Rule đại diện chỉ là possible; người chỉ đọc `rule_id` có thể hiểu là rule chắc chắn. Leader đã chấp nhận rủi ro, yêu cầu giải thích và kiểm tra không khẳng định sai. Mixed có thể chứa một khả năng phản vệ, nên không diễn đạt kết quả `THEO_DOI` là an toàn. |
 | Kiểm chứng dự kiến | Rà 81 ca logic nội bộ; kiểm null/missing, Def/Poss/AllPV/Mixed, lời giải thích, thứ tự, nhiều UNKNOWN và tối đa 64 khả năng; kiểm cả thiếu tuổi/HATT. Sáu expected §9.4 là thiết kế đã duyệt. Phân tích độc lập 729 trạng thái/18 cấu hình số là bằng chứng thiết kế theo chính sách trước cập nhật; cần đối chiếu lại selector mới, không coi là runtime. Cần test nghiệp vụ, clean checkout/CI và benchmark audit thật. |
 | Truy vết | Requirements FR-02–FR-08, NFR-04/05/07, A-01, A-03–A-05, A-07; Requirements §§3.2, 4.2, 5, 8.2. |
-| Nguồn / trạng thái | D13-E được Huy Đức duyệt ngày 09/11/2026 trong TASK 02G sau khuyến nghị TASK 02F; sau Issue #31, Leader cập nhật cách chọn mã. Issue #15 làm rõ dữ liệu thiếu và phạm vi policy; Issue #31 nêu quy tắc mã đại diện và xác nhận trực tiếp ví dụ MISS-009. Cách nhóm áp dụng cho MISS-013/014 không được TA xác nhận riêng. Chưa có bằng chứng thực thi hoặc peer technical review đầy đủ. |
+| Nguồn / trạng thái | D13-E được Huy Đức duyệt ngày 09/11/2026 trong TASK 02G sau khuyến nghị TASK 02F; sau Issue #31, Leader cập nhật cách chọn mã. Issue #15 làm rõ dữ liệu thiếu và phạm vi policy; Issue #31 nêu quy tắc mã đại diện và xác nhận trực tiếp ví dụ MISS-009. Cách nhóm áp dụng cho MISS-013/014 không được TA xác nhận riêng. PR #7 đã có test thực thi và approval trên PR; chưa có bằng chứng mọi thành viên đã peer technical review đầy đủ. |
 
 #### Quy tắc logic và các khả năng
 
@@ -296,7 +296,7 @@ Ví dụ `MISS-009`: tuổi 15, HATT 110; thiếu `co_di_nguyen_nghi_ngo`; da, h
 
 Với cùng dữ liệu boolean: đủ bằng chứng tụt HATT → `SOC_PHAN_VE / R-SOC`; thiếu HATT → `PHAN_VE` CANONICAL; thiếu tuổi → `THEO_DOI / null`. Với Mixed, ví dụ G hoặc I quyết định một rule có thỏa không, chọn `THEO_DOI / null` và giải thích thiếu thông tin.
 
-**Ví dụ vừa có rule chắc chắn vừa có rule ưu tiên cao hơn có thể thỏa:** Với `MISS-013/014`, R03 chắc chắn và R02 có thể thỏa. Sau Issue #31, Leader chọn `PHAN_VE / R02-PV` CANONICAL; `ly_do` nói R02 là mã đại diện do dữ liệu thiếu và chưa được xác nhận riêng, có thể nêu thêm R03 đã chắc chắn đúng. Issue #31 nêu quy tắc chung và xác nhận trực tiếp MISS-009; thầy chưa xác nhận riêng hai fixture này. [Test Cases hiện hành](TEST_CASES.csv) đã cập nhật expected ở mức thiết kế, chưa phải kết quả chạy. [TA31; L; Q §4.2]
+**Ví dụ vừa có rule chắc chắn vừa có rule ưu tiên cao hơn có thể thỏa:** Với `MISS-013/014`, R03 chắc chắn và R02 có thể thỏa. Sau Issue #31, Leader chọn `PHAN_VE / R02-PV` CANONICAL; `ly_do` nói R02 là mã đại diện do dữ liệu thiếu và chưa được xác nhận riêng, có thể nêu thêm R03 đã chắc chắn đúng. Issue #31 nêu quy tắc chung và xác nhận trực tiếp MISS-009; thầy chưa xác nhận riêng hai fixture này. [Test Cases hiện hành](TEST_CASES.csv) là nguồn expected; kết quả test chạy được ghi riêng trong TEST_REPORT. [TA31; L; Q §4.2]
 
 Trong hai fixture này, trường còn thiếu lần lượt là hô hấp ở `MISS-013` và da/niêm mạc ở `MISS-014`; các trường khác giữ theo [Test Cases ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M1/TEST_CASES.csv). Đây là mốc của fixture, trước cập nhật Requirements tại `45e0870`:
 
@@ -305,7 +305,7 @@ Trong hai fixture này, trường còn thiếu lần lượt là hô hấp ở `
 | `False` | R03 |
 | `True` | R02 và R03 |
 
-Vì R03 thỏa ở cả hai khả năng nên là rule chắc chắn; R02 chỉ có thể thỏa. Theo quyết định cập nhật, R02 ưu tiên cao hơn R03 nên được chọn làm mã đại diện; mức vẫn là `PHAN_VE`. Các expected R03-PV/DIRECT trong CSV tại mốc cũ là thiết kế trước cập nhật, chưa phải kết quả chạy. Các ca `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` đã cập nhật expected và assertion ở mức thiết kế; cần review và thực thi.
+Vì R03 thỏa ở cả hai khả năng nên là rule chắc chắn; R02 chỉ có thể thỏa. Theo quyết định cập nhật, R02 ưu tiên cao hơn R03 nên được chọn làm mã đại diện; mức vẫn là `PHAN_VE`. Các expected R03-PV/DIRECT trong CSV tại mốc cũ là thiết kế trước cập nhật, chưa phải kết quả chạy. Các ca `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` đã cập nhật expected và assertion; test runtime trong PR #7 được ghi theo SHA ở TEST_REPORT, tiếp tục đối chiếu từng ca.
 
 Rủi ro mã đại diện bị hiểu nhầm là rule chắc chắn vẫn cần kiểm soát qua `ly_do` và negative assertions. Nhóm không thêm rule/ngưỡng; kết quả thiết kế và phản hồi thầy không thay cho kiểm thử thực tế hoặc peer review. Các thay đổi policy về sau cần được review và duyệt bởi người phụ trách.
 
@@ -332,7 +332,7 @@ Xem 13 ví dụ `TA-EX-01`–`TA-EX-13` trong [`REQUIREMENTS.md`](REQUIREMENTS.m
 
 ### 8.1. Trạng thái và bảng tóm tắt
 
-Mười hướng OPEN được Leader lựa chọn ngày 08/11/2026; giữ mã OPEN-01–OPEN-10 để truy vết. Các hướng này đã được duyệt nội bộ nhưng vẫn cần **peer technical review** và bằng chứng triển khai, không phải TA phê duyệt. Người phụ trách và người review là phân công dự kiến, không chứng minh đã review.
+Mười hướng OPEN được Leader lựa chọn ngày 08/11/2026; giữ mã OPEN-01–OPEN-10 để truy vết. Các hướng này đã được duyệt nội bộ; PR #7 có triển khai và test liên quan. Phạm vi peer technical review và bằng chứng SHA freeze vẫn cần đối chiếu; đây không phải TA phê duyệt kiến trúc. Người phụ trách và người review là phân công dự kiến, không chứng minh đã review.
 
 TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed và schema audit đã duyệt tiếp tục có hiệu lực. Các phương án khác trong §8.2–8.11 là những lựa chọn đã từng cân nhắc. D13-E được duyệt riêng và cách chọn mã đã được Leader cập nhật tại §5.8; OPEN-08 chỉ là lựa chọn biểu diễn, không tự phê duyệt chính sách chọn mã.
 
@@ -349,7 +349,7 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 | OPEN-09 | Mỗi record open append/write/close bằng cơ chế quản lý tài nguyên. | Việt Đức | Hải, Huy Đức | Write/flush/close, timing thật. |
 | OPEN-10 | `perf_counter_ns`; 100 warm-up; N≥1.000; nearest-rank p50/p95; full-path audit thật. | Việt Đức | Hải, Huy Đức | Chỉ số, đơn vị, protocol và thực đo. |
 
-Đường dẫn audit **mặc định cụ thể khi gọi trực tiếp** ở §5.4.1 đã được Leader chọn về hướng, còn chờ peer review và test; không nhầm với nguyên tắc cấu hình path ngoài input đã chọn tại OPEN-04.
+Đường dẫn audit **mặc định cụ thể khi gọi trực tiếp** ở §5.4.1 đã được Leader chọn, PR #7 đã triển khai và có test; không nhầm với nguyên tắc cấu hình path ngoài input đã chọn tại OPEN-04.
 
 ### 8.2. OPEN-01 — UUID context provider
 
@@ -380,7 +380,7 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 - **Lựa chọn và lý do:** Path cấu hình ngoài PatientInput, vùng dữ liệu sinh của lần chạy, độc lập cwd. Một cấu hình writer nhỏ đáp ứng demo, test và lần chạy tái lập; không mở rộng contract.
 - **Phương án khác:** Path tương đối cố định theo working directory ít cấu hình nhưng phụ thuộc nơi chạy, dễ trộn log hoặc đưa log vào checkout. Không chọn; chưa cần database/logging service.
 - **Đánh đổi và rủi ro:** Cần cung cấp/kiểm tra cấu hình path và quyền ghi; đổi lại test có thể chọn thư mục riêng. Path sai hoặc không ghi được gây fail-closed. Không commit audit runtime; chỉ đề xuất .gitignore ở M2 nếu cần, không sửa trong task này.
-- **Kiểm chứng cần có:** Đổi cwd nhưng dùng cấu hình path vẫn ghi đúng nơi; test path riêng bằng tmp_path; lỗi mở/ghi không trả thành công. Đường dẫn cụ thể sẽ đặt khi triển khai.
+- **Kiểm chứng cần có:** Đổi cwd nhưng dùng cấu hình path vẫn ghi đúng nơi; test path riêng bằng tmp_path; lỗi mở/ghi không trả thành công. Đường dẫn cụ thể đã được triển khai theo §5.4.1; tiếp tục đối chiếu SHA freeze.
 - **Phụ trách/review:** Việt Đức chủ trì; Hải, Huy Đức review.
 
 ### 8.6. OPEN-05 — Phạm vi ghi đồng thời
@@ -411,13 +411,13 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 
 - **Lựa chọn và lý do:** Enum TRUE/FALSE/UNKNOWN nội bộ; AND/OR/NOT tường minh theo D13. Một Enum trạng thái cho kết quả điều kiện boolean/HATT giúp đọc và review theo bảng logic; giữ raw input riêng.
 - **Phương án khác:** Bool kèm sentinel UNKNOWN hoặc tuple giá trị/độ xác định ít cấu trúc nhưng trộn kiểu, dễ đảo nghĩa và dùng nhầm truthiness. Không chọn.
-- **Đánh đổi và rủi ro:** Thêm kiểu/toán tử nội bộ; Enum Python vẫn có truthiness nên phải so sánh trạng thái tường minh, không dùng if state hoặc and/or/not của Python để suy diễn Enum. Raw missing/null khác Enum; UNKNOWN không lọt output. HATT UNKNOWN khác lựa chọn output theo TA; D13-E giữ Def/Poss và canonical provenance, không nói rule đại diện là definite. Peer review/test chưa chứng minh runtime.
+- **Đánh đổi và rủi ro:** Thêm kiểu/toán tử nội bộ; Enum Python vẫn có truthiness nên phải so sánh trạng thái tường minh, không dùng if state hoặc and/or/not của Python để suy diễn Enum. Raw missing/null khác Enum; UNKNOWN không lọt output. HATT UNKNOWN khác lựa chọn output theo TA; D13-E giữ Def/Poss và canonical provenance, không nói rule đại diện là definite. PR #7 đã có test runtime cho các trạng thái; tiếp tục đối chiếu phạm vi review và SHA freeze.
 - **Kiểm chứng cần có:** Giữ AND/OR/NOT/R02 T-U; mapping missing/null→UNKNOWN đã duyệt D13-E; test chọn ưu tiên cao nhất trong Poss khi AllPV, trường hợp definite cùng possible ưu tiên cao hơn, Mixed, canonical explanation và age/BP. TA-EX-01–13/sáu expected §9.4; không field/output/status mới, không truthiness.
 - **Phụ trách/review:** Hải chủ trì; Việt Đức, Huy Đức review.
 
 ### 8.10. OPEN-09 — Vòng đời ghi audit
 
-**JSONL sau ghi dở — Leader chọn hướng Hải, chờ peer review/test:** Writer tuần tự không tự xóa đoạn đuôi. Nếu file không kết thúc newline, thêm newline tách trước record mới; giữ nguyên đuôi, kể cả record JSON hợp lệ thiếu newline. Record mới phải đọc được riêng; file chứa dòng cũ hỏng vẫn không toàn vẹn. Công cụ truy vấn có thể bỏ qua dòng lỗi và báo số/vị trí, không lộ nội dung nhạy cảm. Lỗi ghi/đóng hoặc kiểm đuôi thất bại vẫn fail-closed; không cam kết concurrency hoặc durability sau mất điện. Test file thật với ghi một phần, JSON hợp lệ thiếu newline, file trống, lỗi I/O và context. Thông báo/mã thoát khi file hỏng cần review; không coi truy vấn đọc được một số dòng là toàn file hợp lệ. Benchmark full path sau triển khai.
+**JSONL sau ghi dở — Leader chọn hướng Hải; PR #7 đã triển khai và có test:** Writer tuần tự không tự xóa đoạn đuôi. Nếu file không kết thúc newline, thêm newline tách trước record mới; giữ nguyên đuôi, kể cả record JSON hợp lệ thiếu newline. Record mới phải đọc được riêng; file chứa dòng cũ hỏng vẫn không toàn vẹn. Công cụ truy vấn có thể bỏ qua dòng lỗi và báo số/vị trí, không lộ nội dung nhạy cảm. Lỗi ghi/đóng hoặc kiểm đuôi thất bại vẫn fail-closed; không cam kết concurrency hoặc durability sau mất điện. Test file thật với ghi một phần, JSON hợp lệ thiếu newline, file trống, lỗi I/O và context. Công cụ trả mã 3 khi đọc được một phần và bỏ qua dòng lỗi; không coi việc đọc được một số dòng là toàn file hợp lệ. Benchmark full path có số đo sơ bộ, cần đối chiếu trên SHA freeze.
 
 
 
@@ -431,17 +431,17 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 
 - **Lựa chọn và lý do:** perf_counter_ns; 100 warm-up; N≥1.000; nearest-rank p50/p95; full-path audit thực. Công thức đơn giản, reviewer tính lại được; phù hợp thời gian M2 và yêu cầu A-10, không thêm ngưỡng nghiệm thu.
 - **Phương án khác:** Số warm-up khác có lý do và percentile nội suy tuyến tính là phương án khả thi đã cân nhắc, nhưng có thêm quy ước và khó so tái lập nếu dùng mặc định thư viện. Leader chọn 100/nearest-rank.
-- **Đánh đổi và rủi ro:** Nearest-rank lấy một mẫu nên percentile có bước nhảy. Warm-up cố định không bảo đảm loại mọi nhiễu; phải công bố môi trường/cấu hình và không chọn lọc mẫu. Sai ceil/chỉ số từ 1, tính cả warm-up, chia nhầm ns/ms hoặc bỏ I/O làm sai kết quả. Chưa có benchmark thực hoặc kết luận A-10 đạt.
+- **Đánh đổi và rủi ro:** Nearest-rank lấy một mẫu nên percentile có bước nhảy. Warm-up cố định không bảo đảm loại mọi nhiễu; phải công bố môi trường/cấu hình và không chọn lọc mẫu. Sai ceil/chỉ số từ 1, tính cả warm-up, chia nhầm ns/ms hoặc bỏ I/O làm sai kết quả. Đã có benchmark thực sơ bộ; chưa có kết luận A-10 trên SHA freeze.
 - **Kiểm chứng cần có:** Sắp N mẫu tăng dần, vị trí ceil(p×N) theo chỉ số 1; p=0,50/0,95, ns chia 1.000.000 ra ms. Loại 100 warm-up; đo N≥1.000 full public path có open/write/close thật. Công bố Python, OS, CPU/hardware, số lượt, dữ liệu synthetic và I/O; báo p50/p95, kiểm tra p95<100 ms. Logic thuần báo riêng.
 - **Phụ trách/review:** Việt Đức chủ trì; Hải, Huy Đức review.
 
 ### 8.12. Thời điểm review và bằng chứng
 
-Mười hướng OPEN đã chọn; trước code M2, Hải và Việt Đức cần peer review các ranh giới provider, public path, validation, audit và logic ba trạng thái. Nếu thấy xung đột nguồn hoặc thiết kế, báo Leader để quyết định; việc phân công không phải xác nhận review đã hoàn tất.
+Mười hướng OPEN đã chọn; PR #7 đã triển khai code M2 và có test. Tiếp tục đối chiếu bằng chứng peer review các ranh giới provider, public path, validation, audit và logic ba trạng thái. Nếu thấy xung đột nguồn hoặc thiết kế, báo Leader để quyết định; việc phân công không phải xác nhận review đã hoàn tất.
 
 OPEN-10 đã chốt protocol trong M1; benchmark và bằng chứng đầy đủ có thể thực hiện M3. Coverage, clean-checkout và CI evidence tiếp tục theo kế hoạch nhóm. Concurrency mở rộng không tự trở thành nhiệm vụ M3 bắt buộc.
 
-D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập nhật chọn mã theo §5.8 và cần peer/test review khi triển khai. Default path và lỗi nội bộ đã có hướng Leader chọn, còn cần review theo §5.4.1 và §5.5. Đây là mốc quản lý nội bộ, không tạo AC hoặc deadline mới. Tên helper, exception audit, path cụ thể hoặc UTC dùng `Z`/`+00:00` cần nhất quán khi code; không tự tạo vòng phê duyệt kiến trúc mới nếu giữ chính sách đã duyệt.
+D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập nhật chọn mã theo §5.8; default path và lỗi nội bộ theo §5.4.1 và §5.5 đã có triển khai/test trong PR #7, còn cần review bằng chứng và SHA freeze. Đây là mốc quản lý nội bộ, không tạo AC hoặc deadline mới. Tên helper, exception audit, path cụ thể hoặc UTC dùng `Z`/`+00:00` cần nhất quán khi code; không tự tạo vòng phê duyệt kiến trúc mới nếu giữ chính sách đã duyệt.
 
 ## 9. Ma trận truy vết và bằng chứng kiểm chứng
 
@@ -461,7 +461,7 @@ D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập n
 | D12 | FR-01/07–09; NFR-02/08 | A-04–06/11 | Schema/privacy và disclaimer README |
 | D13 | FR-02–08; NFR-04/05/07 | A-01/03–05/07 | Enum/T-U, Def/Poss/AllPV, Mixed, canonical reason |
 
-**Lưu ý:** Bảng truy vết này không tự chứng minh AC đạt. Riêng A-11 đã được đối chiếu trực tiếp bằng [disclaimer trong README tại commit `4482e4f`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43). A-08/A-09 vẫn cần bằng chứng test/CI nghiệp vụ chạy thật; A-10 cần số liệu benchmark thật.
+**Lưu ý:** Bảng truy vết này không tự chứng minh AC đạt. Riêng A-11 đã được đối chiếu trực tiếp bằng [disclaimer trong README tại commit `4482e4f`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43). A-08 có bằng chứng checkout sạch tại `0d00584`, A-09 có CI PR #7; A-10 có số đo sơ bộ. Cần đối chiếu lại trên SHA freeze, xem TEST_REPORT.
 
 ### 9.1. Những nhóm kiểm thử quan trọng
 
@@ -471,13 +471,13 @@ D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập n
 
 Xem `REQUIREMENTS.md` §5.1 cho `TA-EX-01`–`TA-EX-13`. Các expected 01–11 đối chiếu Issue #15; ca 12 phản ánh Mixed theo policy nhóm. Với ca 13, nhánh thiếu khóa tương ứng MISS-009 đã được thầy xác nhận mức/mã tại Issue #31; nhánh null tương ứng theo policy nhóm. Không coi thầy đã phê duyệt riêng mọi expected. Đầu vào thiếu/null hợp lệ, sau phân loại và audit thành công, dùng `SUCCESS`, không tự `INVALID_INPUT`.
 
-Theo [Integration Test Plan hiện hành](docs/testing/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. [Bản ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md) là nguồn lịch sử. Đây là thiết kế kiểm thử, chưa phải bằng chứng các test đã được thực thi.
+Theo [Integration Test Plan hiện hành](docs/testing/INTEGRATION_TEST_PLAN.md), `INT-018` dự kiến kiểm mức/mã, helper và audit của MISS-009; `INT-021` dự kiến kiểm nội dung `ly_do`. [Bản ghim tại commit `ee409e4`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/ee409e4c06187199fad671da1c5d273d6b1bfcc1/docs/m1-hai/M2/INTEGRATION_TEST_PLAN.md) là nguồn lịch sử. Kế hoạch là thiết kế kiểm thử; kết quả các test thực thi được ghi riêng trong TEST_REPORT theo từng SHA.
 
 ### 9.3. Tình trạng tài liệu kiểm thử M1-02 và QA M1-03
 
-- [PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) đã tích hợp **175 ca thiết kế chính** (từ baseline 157 ca) và **81 ca logic nội bộ**; [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã tích hợp QA Matrix ánh xạ A-01–A-11. Đây là **test design**, chưa phải pytest thực thi.
+- [PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3) đã tích hợp **175 ca thiết kế chính** (từ baseline 157 ca) và **81 ca logic nội bộ**; [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã tích hợp QA Matrix ánh xạ A-01–A-11. Đây là **test design tại M1**, không tự là pytest thực thi. PR #7 sau đó bổ sung bộ pytest; xem TEST_REPORT.
 - Bộ ca được đối chiếu tại mốc có **36 invalid** (28 TypeError, 8 ValueError), **8 ca nullable hợp lệ** `INV-001/017/021/025/029/033/037/043`; riêng `INV-043` kỳ vọng `SOC_PHAN_VE/R-SOC`. `AUD-002` nay dùng chuỗi `"true"` nên là TypeError/INVALID_INPUT nếu audit thành công. Các số lịch sử 35 invalid/9 nullable là bản fixture cũ.
-- Hải là tác giả bản M1-02 gốc; Việt Đức là tác giả QA M1-03 gốc. Huy Đức phụ trách các bản sửa và tích hợp với công cụ AI hỗ trợ. Approval PR và tài liệu đã merge **không** chứng minh Hải/Việt Đức đã review kỹ thuật vòng cuối, hoặc CI/runtime đạt. Cần lưu review thực chất và bằng chứng chạy. Sau cập nhật chọn mã, Test Plan, CSV, QA Matrix và các tài liệu phụ thuộc được cập nhật ở mức thiết kế: bốn ca `MISS-013`, `MISS-014`, `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` dự kiến `R02-PV`/CANONICAL. Review và thực thi vẫn còn chờ.
+- Hải là tác giả bản M1-02 gốc; Việt Đức là tác giả QA M1-03 gốc. Huy Đức phụ trách các bản sửa và tích hợp với công cụ AI hỗ trợ. Approval PR và tài liệu đã merge **không** chứng minh Hải/Việt Đức đã review kỹ thuật vòng cuối, hoặc CI/runtime đạt. Cần lưu review thực chất và bằng chứng chạy. Sau cập nhật chọn mã, Test Plan, CSV, QA Matrix và các tài liệu phụ thuộc được cập nhật ở mức thiết kế: bốn ca `MISS-013`, `MISS-014`, `TA15-BOOL3-NULL` và `TA15-BOOL3-MISSING` dự kiến `R02-PV`/CANONICAL. PR #7 sau đó đã có pytest và CI; đối chiếu bằng chứng từng ca và phạm vi review tại SHA freeze.
 
 **Đối chiếu thiết kế theo selector mới** (chưa phải kết quả test):
 
@@ -489,7 +489,7 @@ A-11 đã được đối chiếu disclaimer tại commit README `4482e4f` (§9)
 
 ### 9.4. Sáu expected D13-E đã được Leader phê duyệt — bàn giao TASK 02E
 
-**Expected theo D13-E được Leader duyệt ngày 09/11/2026**, dựa trên fixture gốc của Hải. Với MISS-009 thiếu khóa, thầy xác nhận mức và mã tại Issue #31. CSV/QA đã tích hợp qua PR #3/#4; chưa có bằng chứng chạy engine hoặc peer technical review đầy đủ.
+**Expected theo D13-E được Leader duyệt ngày 09/11/2026**, dựa trên fixture gốc của Hải. Với MISS-009 thiếu khóa, thầy xác nhận mức và mã tại Issue #31. Tại mốc PR #3/#4, CSV/QA đã tích hợp nhưng chưa có bằng chứng chạy engine hoặc peer technical review đầy đủ. PR #7 sau đó bổ sung test và CI; xem TEST_REPORT.
 
 | Test ID | muc_do | rule_id | Attribution / explanation bắt buộc |
 |---|---|---|---|
@@ -506,11 +506,11 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 
 | Hạng mục | Trạng thái / hành động kiểm chứng |
 |---|---|
-| **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; ca thiết kế đã đồng bộ, còn cần review kỹ thuật và test thực tế. |
-| **Default audit path** | Leader chọn hướng §5.4.1, chưa nghiệm thu; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
-| **Unexpected internal exception** | Leader chọn ghi INTERNAL_ERROR khi validator bất ngờ lỗi hoặc rule lỗi nội bộ, giữ bốn trường; báo RuntimeError nếu ghi thành công, ưu tiên AuditError an toàn nếu ghi thất bại. Không log input; cần peer review và test, kể cả lỗi bất ngờ ở validation/writer. |
+| **Mã đại diện D13-E** | Thầy làm rõ cách chọn mã trong Issue #31. Khi mã chỉ possible được chọn, người đọc có thể hiểu nhầm là rule chắc chắn; `ly_do` và negative tests phải phân biệt. Leader đã cập nhật cách chọn mã cho overlap definite/possible tại §5.8.2; ca thiết kế đã đồng bộ và PR #7 có test thực tế; tiếp tục review kỹ thuật và đối chiếu SHA freeze. |
+| **Default audit path** | PR #7 đã triển khai hướng §5.4.1 và có test path/cwd/fail-closed; tiếp tục review quyền truy cập và đối chiếu SHA freeze. |
+| **Unexpected internal exception** | Leader chọn ghi INTERNAL_ERROR khi validator bất ngờ lỗi hoặc rule lỗi nội bộ, giữ bốn trường; báo RuntimeError nếu ghi thành công, ưu tiên AuditError an toàn nếu ghi thất bại. Không log input; PR #7 đã có test lỗi bất ngờ ở validation/writer, cần tiếp tục đối chiếu phạm vi review và SHA freeze. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |
-| **Kiểm thử/CI/benchmark** | `pytest.ini` theo Issue #16; PR #7 có pytest nghiệp vụ và [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44081899432) đạt 483 test tại HEAD `ebdc573`. [Benchmark sơ bộ](docs/testing/BENCHMARK_REPORT.md) đo trên SHA nêu trong báo cáo; cần xác nhận lại CI và benchmark với SHA freeze. |
+| **Kiểm thử/CI/benchmark** | `pytest.ini` theo Issue #16; PR #7 đã merge và [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) tại `7a8da1e` đạt 490 test, 3 test Windows skip. [Benchmark sơ bộ](docs/testing/BENCHMARK_REPORT.md) đo trên SHA nêu trong báo cáo; cần xác nhận lại CI và benchmark với SHA freeze. |
 | **Review của nhóm** | Leader tiếp tục hậu kiểm thủ công; Hải và Việt Đức đối chiếu core/audit/Test Plan/QA, ghi lại nhận xét thực tế trước các thay đổi tiếp theo. |
 
 **Thực hiện sau M1:** Dev ưu tiên classifier + tests; QA phụ trách audit/privacy/CI/benchmark; Lead kiểm yêu cầu, đối chiếu Rule Design và nghiệm thu thực tế. Không tuyên bố pass chỉ từ tài liệu; các thay đổi policy phải được review và duyệt lại bởi người phụ trách. Không để AI tự merge/phát hành/xác nhận bài đạt.
