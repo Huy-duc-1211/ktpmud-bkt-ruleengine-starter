@@ -11,7 +11,7 @@
 | Chủ trì | Lead (Huy Đức); Dev (Hải); QA (Việt Đức) |
 | Starter | `fossbk-spec/ktpmud-bkt-ruleengine-starter`, tag `bkt-2026-v1`, SHA `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
 | Trạng thái tài liệu | PR #1–#4 đã merge ngày 10/11/2026; mốc tích hợp M1 `9bc4fc186415d7a13cd9d49692c50f3c945ddf7b`. ADR ghi nhận cập nhật chọn mã sau Issue #31, đối chiếu Requirements tại `45e0870e0cae2c95b070c424e0de38e3c763bc9d`. |
-| Phê duyệt và giới hạn | Leader phê duyệt D13-E ngày 09/11 và sau Issue #31 cập nhật cách chọn mã; có approval PR từ `nvldvc` và comment của Leader; chưa có bằng chứng cả Hải và Việt Đức đã review kỹ thuật vòng cuối. Chưa có classifier nghiệp vụ, pytest nghiệp vụ, CI nghiệm thu hay benchmark được kiểm chứng. |
+| Phê duyệt và giới hạn | Leader phê duyệt D13-E ngày 09/11 và sau Issue #31 cập nhật cách chọn mã; có approval PR từ `nvldvc` và comment của Leader trên các PR M1; chưa có bằng chứng cả Hải và Việt Đức đã review kỹ thuật vòng cuối. PR #7 có classifier, test và CI đạt tại HEAD `ebdc573`; benchmark là số đo sơ bộ, chưa nghiệm thu SHA freeze. |
 
 **Thứ tự nguồn:** Đề/Decision Table và làm rõ chính thức tại [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) được ưu tiên trong phạm vi nội dung được làm rõ; tiếp theo là chính sách nhóm đã duyệt và các đề xuất. D01–D03 được TA làm rõ. Issue #31 làm rõ lựa chọn mã đại diện khi thiếu khóa boolean; việc áp dụng vào ca vừa có rule chắc chắn vừa có rule ưu tiên cao hơn chỉ có thể thỏa là quyết định nhóm. Không coi toàn bộ D13-E hoặc kiến trúc audit được TA phê duyệt. Merge PR không đồng nghĩa TA nghiệm thu hoặc mọi AC đạt.
 
@@ -80,7 +80,7 @@ Starter chỉ cung cấp `classify(patient)` còn `NotImplementedError`. Nhóm x
 
 **Phiên và audit:** Các lần gọi trong phiên tường minh dùng chung UUID synthetic; một lần gọi độc lập không có phiên dùng UUID tạm mới rồi reset trong `finally`. UUID/context ở ngoài input. Writer JSONL ghi đúng bốn trường, mở/ghi/đóng theo từng lần; `ContextVar` không bảo đảm nhiều tiến trình/luồng ghi chung file an toàn. Leader đã chọn hướng đường dẫn mặc định và audit lỗi nội bộ (§5.4.1, §5.5); chi tiết cần peer review và test.
 
-Tại mốc đối chiếu, `rule_engine/classifier.py` vẫn là stub; test starter chưa chứng minh nghiệp vụ. Chưa có bằng chứng test/CI nghiệp vụ hoặc benchmark thực tế đạt. A-11 đã được đối chiếu riêng bằng disclaimer trong README (§9).
+Tại mốc thiết kế M1, `rule_engine/classifier.py` vẫn là stub và test starter chưa chứng minh nghiệp vụ. Sau đó PR #7 bổ sung classifier và pytest; [CI của PR](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44081899432) đạt 483 test tại HEAD `ebdc573`. [Benchmark sơ bộ](docs/testing/BENCHMARK_REPORT.md) cần đối chiếu trên SHA freeze. A-11 được kiểm tra riêng bằng disclaimer README (§9).
 
 ## 5. Các quyết định kiến trúc (Architecture Decision Records)
 
@@ -510,7 +510,7 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 | **Default audit path** | Leader chọn hướng §5.4.1, chưa nghiệm thu; review quyền truy cập, vị trí ngoài repo, tính độc lập cwd và hành vi fail-closed trước khi triển khai. |
 | **Unexpected internal exception** | Leader chọn ghi INTERNAL_ERROR khi validator bất ngờ lỗi hoặc rule lỗi nội bộ, giữ bốn trường; báo RuntimeError nếu ghi thành công, ưu tiên AuditError an toàn nếu ghi thất bại. Không log input; cần peer review và test, kể cả lỗi bất ngờ ở validation/writer. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |
-| **Kiểm thử/CI/benchmark** | Đã có [`pytest.ini`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/pytest.ini) theo Issue #16. Chưa có bằng chứng engine nghiệp vụ, pytest nghiệp vụ từ clean checkout, CI nghiệp vụ được kiểm chứng hay số liệu latency. |
+| **Kiểm thử/CI/benchmark** | `pytest.ini` theo Issue #16; PR #7 có pytest nghiệp vụ và [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44081899432) đạt 483 test tại HEAD `ebdc573`. [Benchmark sơ bộ](docs/testing/BENCHMARK_REPORT.md) đo trên SHA nêu trong báo cáo; cần xác nhận lại CI và benchmark với SHA freeze. |
 | **Review của nhóm** | Leader tiếp tục hậu kiểm thủ công; Hải và Việt Đức đối chiếu core/audit/Test Plan/QA, ghi lại nhận xét thực tế trước các thay đổi tiếp theo. |
 
 **Thực hiện sau M1:** Dev ưu tiên classifier + tests; QA phụ trách audit/privacy/CI/benchmark; Lead kiểm yêu cầu, đối chiếu Rule Design và nghiệm thu thực tế. Không tuyên bố pass chỉ từ tài liệu; các thay đổi policy phải được review và duyệt lại bởi người phụ trách. Không để AI tự merge/phát hành/xác nhận bài đạt.
