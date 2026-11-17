@@ -25,59 +25,101 @@ from rule_engine.classifier import (
 _PUBLIC_CASES = read_cases(DEFAULT_CSV)
 _INTERNAL_CASES = read_cases(FIXTURES_DIR / "INTERNAL_STATE_CASES.csv")
 
+_MISSING = r"(?:thiếu|chưa có|không có)"
+_UNCERTAIN = (
+    r"(?:(?:thiếu|chưa đủ|không đủ) (?:thông tin|dữ liệu|dữ kiện)|"
+    r"(?:chưa|không) (?:thể )?(?:kết luận|xác định|đánh giá)(?: được)?)"
+)
+_NO_RULE = r"\bkhông (?:khớp|thỏa|đáp ứng)\b"
+_REPRESENTATIVE = r"\b(?:mã đại diện|canonical)\b"
+_NOT_VERIFIED = r"\b(?:chưa|không)(?: thể)? xác nhận (?:riêng|độc lập)\b"
+_CURRENT_BP = r"(?:hatt|huyết áp(?: tâm thu)?) hiện tại"
+_BASELINE_BP = r"(?:hatt|huyết áp(?: tâm thu)?) nền"
+
+_MISSING_AGE = rf"\b(?:{_MISSING}(?: thông tin về)? tuổi|tuổi(?: của bệnh nhân)? {_MISSING})\b"
+_MISSING_CURRENT_BP = rf"\b(?:{_MISSING}(?: số đo)? {_CURRENT_BP}|{_CURRENT_BP} {_MISSING})\b"
+_MISSING_BASELINE_BP = rf"\b(?:{_MISSING}(?: số đo)? {_BASELINE_BP}|{_BASELINE_BP} {_MISSING})\b"
+
+_REASON_REQUIREMENTS = {
+    "thiếu tuổi": _MISSING_AGE,
+    "thiếu huyết áp": _MISSING_CURRENT_BP,
+    "thiếu huyết áp nền": _MISSING_BASELINE_BP,
+    "chưa đánh giá được tiêu chí sốc": rf"{_UNCERTAIN}[^.!?;]*\bsốc\b",
+    "chưa đánh giá được mức giảm tương đối": rf"{_UNCERTAIN}[^.!?;]*\bgiảm tương đối\b",
+}
+
+
+def _assert_uncertain_reason(reason):
+    assert re.search(_UNCERTAIN, reason) and "phản vệ" in reason
+    # Kiểm mệnh đề độc lập để phân biệt "chưa thể kết luận không có phản vệ"
+    # với một kết luận bị chèn sau phần nêu thiếu thông tin.
+    for clause in re.split(r"[.!?,;]|\b(?:nhưng|tuy nhiên|dù vậy|vì vậy|do đó)\b", reason):
+        assert not re.match(
+            r"\s*(?:(?:người bệnh|bệnh nhân|trường hợp này) )?"
+            r"(?:(?:chắc chắn|đã xác định(?: là)?|(?:đã )?kết luận(?: là)?|có thể) )*"
+            r"(?:không (?:có|bị) phản vệ|đã loại trừ phản vệ|loại trừ phản vệ|không khớp|có phản vệ)\b",
+            clause,
+        ), clause
+
 
 def _assert_reason(result, patient, expected):
-    reason = result["ly_do"]
-    rule = result["rule_id"]
-    assert isinstance(reason, str) and reason.strip()
+    assert isinstance(result["ly_do"], str) and result["ly_do"].strip()
+    reason = " ".join(result["ly_do"].split()).casefold()
+    rule = (result["rule_id"] or "").casefold()
+    level = result["muc_do"]
     assertions = expected.get("explanation_assertions", {})
     kind = assertions.get("attribution_kind")
+    assert not re.search(r"\b\d+(?:[.,]\d+)?\s*mmhg\b", reason)
+    assert not re.search(
+        r"\b(?:dùng|uống|tiêm|truyền|kê|sử dụng|điều trị bằng)\s+(?:thêm\s+)?"
+        r"(?:thuốc\b|adrenalin\w*|epinephrin\w*)",
+        reason,
+    )
 
-    # Kiểm toàn văn các mẫu ly_do cố định để phát hiện cả phần nội dung bị chèn thêm.
-    if result["muc_do"] == "THEO_DOI":
+    if level == "THEO_DOI":
         if patient.get("tuoi") is None:
-            assert reason == "Chưa kết luận vì thiếu tuổi để chọn ngưỡng huyết áp."
+            assert re.search(_MISSING_AGE, reason) and re.search(_UNCERTAIN, reason)
+        elif kind == "MIXED" or (kind != "NO_RULE" and re.search(_UNCERTAIN, reason)):
+            _assert_uncertain_reason(reason)
         else:
-            mixed = "Chưa đủ thông tin để xác định có thỏa quy tắc phản vệ hay không."
-            unmatched = "Các dữ kiện hiện có không khớp quy tắc phản vệ nào trong bảng quyết định."
-            if kind == "MIXED":
-                assert reason == mixed
-            else:
-                assert reason in {mixed, unmatched}
-    elif result["muc_do"] == "SOC_PHAN_VE":
-        assert reason == "Thỏa R-SOC vì đủ tiêu chí phản vệ và tụt huyết áp tâm thu theo tuổi."
+            assert re.search(_NO_RULE, reason) and "phản vệ" in reason
+    elif level == "SOC_PHAN_VE":
+        assert rule in reason and "phản vệ" in reason
+        assert re.search(r"\b(?:tụt|giảm|hạ|thấp)\b", reason)
+        assert re.search(r"\b(?:hatt|huyết áp tâm thu)\b", reason)
     else:
-        suffix = ""
-        if patient.get("huyet_ap_tam_thu") is None:
-            suffix = " Chưa đánh giá được tiêu chí sốc vì thiếu huyết áp tâm thu hiện tại."
-        elif patient["tuoi"] >= 18 and patient.get("huyet_ap_tam_thu_nen") is None:
-            suffix = " Chưa đánh giá được mức giảm tương đối vì thiếu huyết áp nền."
-        assert reason.endswith(suffix)
-        core = reason.removesuffix(suffix)
-        direct = f"Thỏa {rule} theo dữ kiện hiện có."
+        assert rule in reason
+        representative = re.search(_REPRESENTATIVE, reason)
         if kind == "DIRECT":
-            assert core == direct
-        elif kind == "CANONICAL" or core != direct:
-            missing = ", ".join(
-                label for field, label in _BOOLEAN_FIELDS.items() if patient.get(field) is None
+            assert not representative
+        if kind == "CANONICAL" or representative:
+            assert representative and re.search(_NOT_VERIFIED, reason)
+            assert re.search(_MISSING, reason)
+            assert any(
+                label in reason for field, label in _BOOLEAN_FIELDS.items() if patient.get(field) is None
             )
-            assert missing
-            prefix = "Mọi khả năng đều thỏa tiêu chí phản vệ qua ít nhất một trong các rule "
-            ending = (
-                f". {rule} là mã đại diện vì thiếu thông tin về {missing}. "
-                f"Chưa xác nhận riêng {rule}."
+            assert not re.search(
+                rf"\b{re.escape(rule)} (?:đã (?:được )?xác nhận|chắc chắn (?:đúng|thỏa))\b", reason
             )
-            assert core.startswith(prefix) and core.endswith(ending)
-            possible = core[len(prefix):-len(ending)].split(", ")
-            assert possible[0] == rule
-            assert possible == [rule_id for rule_id in _RULE_IDS if rule_id in possible]
+        else:
+            assert re.search(r"\b(?:thỏa|khớp|đáp ứng)\b", reason)
+            assert not re.search(rf"{_NO_RULE} (?:quy tắc )?{re.escape(rule)}\b", reason)
+
+        if patient.get("huyet_ap_tam_thu") is None:
+            assert re.search(_MISSING_CURRENT_BP, reason)
+            assert re.search(_REASON_REQUIREMENTS["chưa đánh giá được tiêu chí sốc"], reason)
+            assert not re.search(rf"{_CURRENT_BP} đã (?:rõ|biết|đo được)", reason)
+        elif patient["tuoi"] >= 18 and patient.get("huyet_ap_tam_thu_nen") is None:
+            assert re.search(_MISSING_BASELINE_BP, reason)
+            assert re.search(_REASON_REQUIREMENTS["chưa đánh giá được mức giảm tương đối"], reason)
+            assert not re.search(rf"{_BASELINE_BP} đã (?:rõ|biết|đo được)", reason)
 
     for phrase in expected.get("reason_must_mention", []):
-        assert phrase in reason.casefold()
+        assert re.search(_REASON_REQUIREMENTS.get(phrase, re.escape(phrase)), reason), phrase
     for pattern in assertions.get("required_patterns_all", []):
-        assert re.search(pattern, reason), pattern
+        assert re.search(pattern, reason, re.IGNORECASE), pattern
     for pattern in assertions.get("forbidden_patterns_any", []):
-        assert not re.search(pattern, reason), pattern
+        assert not re.search(pattern, reason, re.IGNORECASE), pattern
 
 
 @pytest.mark.parametrize("case", _PUBLIC_CASES, ids=[case["Test ID"] for case in _PUBLIC_CASES])
@@ -137,6 +179,32 @@ def test_ly_do_rejects_counterexamples(case_id, bad_reason):
     result["ly_do"] = bad_reason
     with pytest.raises(AssertionError):
         _assert_reason(result, patient, expected)
+
+
+@pytest.mark.parametrize(("case_id", "paraphrase"), [
+    ("PEND-002", "Chưa thể xác định mức phân loại vì chưa có thông tin về tuổi."),
+    ("MISS-012", "Chưa thể kết luận không có phản vệ vì chưa đủ dữ kiện."),
+    ("MISS-012", "Thiếu dữ kiện để đưa ra kết luận về phản vệ."),
+    ("RULE-020", "Dữ kiện hiện tại không đáp ứng quy tắc phản vệ nào."),
+    ("RULE-002", "Dữ liệu đầu vào đáp ứng quy tắc R01-PV."),
+    ("MISS-009", "Mọi khả năng đều đáp ứng tiêu chí phản vệ qua R01-PV hoặc R02-PV. "
+     "Vì thiếu thông tin về dị nguyên nghi ngờ, dùng R01-PV làm mã đại diện. "
+     "Chưa thể xác nhận độc lập R01-PV."),
+    ("D13E-003", "R-SOC áp dụng khi đủ tiêu chí phản vệ và huyết áp tâm thu thấp theo tuổi."),
+    ("PEND-003", "Do chưa có HATT hiện tại, chưa thể đánh giá tiêu chí sốc. "
+     "Các dữ kiện đáp ứng R01-PV."),
+    ("PEND-005", "Thỏa R02-PV. HATT nền chưa có nên chưa thể đánh giá mức giảm tương đối."),
+], ids=[
+    "missing-age", "mixed-no-conclusion", "mixed-insufficient-data", "no-rule", "direct", "canonical",
+    "shock", "missing-current-bp", "missing-baseline-bp",
+])
+def test_ly_do_accepts_equivalent_wording(case_id, paraphrase):
+    case = next(case for case in _PUBLIC_CASES if case["Test ID"] == case_id)
+    patient = load_patient(case)
+    expected = read_json(case["Expected"])
+    result = classify(patient)
+    result["ly_do"] = paraphrase
+    _assert_reason(result, patient, expected)
 
 
 _CASES_WITH_STATES = [
@@ -237,10 +305,11 @@ def test_all_729_boolean_patterns():
         if all(worlds):
             rule_id = next(rule for rule in rule_order if rule in possible)
             assert (result["muc_do"], result["rule_id"]) == ("PHAN_VE", rule_id), pattern
-            assert ("mã đại diện" in result["ly_do"]) == (rule_id not in definite), pattern
+            kind = "DIRECT" if rule_id in definite else "CANONICAL"
         else:
             assert (result["muc_do"], result["rule_id"]) == ("THEO_DOI", None), pattern
-            assert ("Chưa đủ thông tin" in result["ly_do"]) == bool(possible), pattern
+            kind = "MIXED" if possible else "NO_RULE"
+        _assert_reason(result, patient, {"explanation_assertions": {"attribution_kind": kind}})
         states = _rule_states(tuple(map(_Truth, pattern)))
         assert {rule for rule, state in zip(rule_order, states) if state is _Truth.TRUE} == definite
         assert {rule for rule, state in zip(rule_order, states) if state is not _Truth.FALSE} == possible
@@ -258,17 +327,17 @@ def test_missing_and_null_are_equivalent(group):
     assert (first["muc_do"], first["rule_id"]) == (second["muc_do"], second["rule_id"])
 
 
-@pytest.mark.parametrize(("case_id", "explanation"), [
-    ("MISS-009", "R01-PV là mã đại diện vì thiếu thông tin về dị nguyên nghi ngờ. "
-     "Chưa xác nhận riêng R01-PV."),
-    ("MISS-013", "R02-PV là mã đại diện vì thiếu thông tin về triệu chứng hô hấp. "
-     "Chưa xác nhận riêng R02-PV."),
-    ("MISS-014", "R02-PV là mã đại diện vì thiếu thông tin về tổn thương da hoặc niêm mạc. "
-     "Chưa xác nhận riêng R02-PV."),
+@pytest.mark.parametrize(("case_id", "missing_field"), [
+    ("MISS-009", "dị nguyên nghi ngờ"),
+    ("MISS-013", "hô hấp"),
+    ("MISS-014", r"\bda\b|niêm mạc"),
 ])
-def test_canonical_names_the_missing_field_and_limits_attribution(case_id, explanation):
+def test_canonical_names_the_missing_field_and_limits_attribution(case_id, missing_field):
     case = next(case for case in _PUBLIC_CASES if case["Test ID"] == case_id)
-    assert classify(load_patient(case))["ly_do"].endswith(explanation)
+    patient = load_patient(case)
+    result = classify(patient)
+    _assert_reason(result, patient, read_json(case["Expected"]))
+    assert re.search(missing_field, result["ly_do"], re.IGNORECASE)
 
 
 def test_unbounded_integer_pressures_keep_exact_30_percent_boundary():

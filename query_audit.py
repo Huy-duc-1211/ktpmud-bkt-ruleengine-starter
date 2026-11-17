@@ -8,8 +8,15 @@ from pathlib import Path
 from uuid import UUID
 
 
+def _unique_object(pairs):
+    record = dict(pairs)
+    if len(record) != len(pairs):
+        raise ValueError("Bản ghi audit có khóa trùng.")
+    return record
+
+
 def _parse_record(line: bytes) -> dict[str, str]:
-    record = json.loads(line.decode("utf-8"))
+    record = json.loads(line.decode("utf-8"), object_pairs_hook=_unique_object)
     if (
         not isinstance(record, dict)
         or record.keys() != {"Timestamp", "User_UUID", "Action_Type", "Status"}
@@ -56,7 +63,7 @@ def main(argv: list[str] | None = None) -> int:
         f"lỗi tại các dòng: {locations}.",
         file=sys.stderr,
     )
-    return 0
+    return 3 if skipped else 0
 
 
 if __name__ == "__main__":

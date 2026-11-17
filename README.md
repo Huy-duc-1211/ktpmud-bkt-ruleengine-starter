@@ -97,6 +97,15 @@ Dùng đường dẫn tới file cần đọc. Lệnh in các bản ghi hợp l�
 
 Ví dụ báo cáo: “Đọc được 12 bản ghi, bỏ qua 2 dòng lỗi, lỗi tại các dòng: 3, 8.” Số dòng tính từ 1. Các bản ghi hợp lệ sau dòng lỗi vẫn xuất hiện. Nếu bỏ phần `2>`, báo cáo hiện ngay trong cửa sổ lệnh. [Cách xử lý file ghi dở](DECISIONS.md#542-ghi-tiếp-khi-file-audit-đã-tồn-tại)
 
+Một dòng có khóa JSON trùng cũng bị bỏ qua. Nếu gọi từ PowerShell, xem `$LASTEXITCODE` sau khi chạy.
+
+| Mã thoát | Ý nghĩa |
+|---|---|
+| `0` | Đọc xong, không bỏ qua dòng nào. |
+| `1` | Lỗi khi mở hoặc đọc file. |
+| `2` | Tham số lệnh sai hoặc thiếu. |
+| `3` | Đọc xong, có dòng bị bỏ qua. Các bản ghi hợp lệ vẫn được in ra. |
+
 ## Cấu trúc hồ sơ nộp bài
 
 Theo §11.2, nhóm nộp PR trên `fossbk-spec/ktpmud-project`, dùng thư mục dưới đây. [Mẫu Track A](https://github.com/fossbk-spec/ktpmud-project/tree/main/submissions/_TEMPLATE_BKT_RULEENGINE) · [Bổ sung cho PC-2](https://github.com/fossbk-spec/ktpmud-project/issues/28)

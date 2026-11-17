@@ -348,7 +348,7 @@ def test_bad_audit_tail_is_preserved_as_its_own_line(audit_file, tail, capsys):
     assert contents.startswith(before + separator)
     assert contents.endswith(b"\n") and contents.count(b"\n") == 4
     assert _session_uuid.get() is None
-    assert query_audit.main([str(audit_file)]) == 0
+    assert query_audit.main([str(audit_file)]) == 3
     result = capsys.readouterr()
     assert [json.loads(line)["Status"] for line in result.out.splitlines()] == ["SUCCESS"] * 3
     assert result.err == "Đọc được 3 bản ghi, bỏ qua 1 dòng lỗi, lỗi tại các dòng: 3.\n"
@@ -402,7 +402,7 @@ def test_partial_write_to_real_file_keeps_next_record_readable(
     assert contents.startswith(damaged + b"\n") and contents.endswith(b"\n")
     assert _session_uuid.get() is None
 
-    assert query_audit.main([str(audit_file)]) == 0
+    assert query_audit.main([str(audit_file)]) == 3
     result = capsys.readouterr()
     assert [json.loads(line) for line in result.out.splitlines()] == [
         json.loads(original_line), json.loads(new_line)
@@ -420,7 +420,7 @@ def test_query_audit_reports_multiple_bad_lines_and_reads_valid_eof(audit_file, 
     before = valid + b"\xff\n" + valid + json.dumps(invalid).encode() + b"\n" + valid.rstrip(b"\n")
     audit_file.write_bytes(before)
 
-    assert query_audit.main([str(audit_file)]) == 0
+    assert query_audit.main([str(audit_file)]) == 3
     result = capsys.readouterr()
     assert [json.loads(line) for line in result.out.splitlines()] == [json.loads(valid)] * 3
     assert result.err == "Đọc được 3 bản ghi, bỏ qua 2 dòng lỗi, lỗi tại các dòng: 2, 4.\n"
@@ -437,3 +437,25 @@ def test_query_audit_reports_empty_and_missing_file(audit_file, capsys):
     assert capsys.readouterr() == (
         "", "Đọc được 0 bản ghi, bỏ qua 0 dòng lỗi, lỗi tại các dòng: không có.\n"
     )
+
+
+def test_query_audit_skips_duplicate_keys_and_preserves_surrounding_records(audit_file, capsys):
+    classify({})
+    with pytest.raises(TypeError):
+        classify({"tuoi": "invalid"})
+    first, last = audit_file.read_bytes().splitlines(keepends=True)
+    expected_records = [json.loads(first), json.loads(last)]
+    assert query_audit.main([str(audit_file)]) == 0
+    clean = capsys.readouterr()
+    assert [json.loads(line) for line in clean.out.splitlines()] == expected_records
+    assert clean.err == "Đọc được 2 bản ghi, bỏ qua 0 dòng lỗi, lỗi tại các dòng: không có.\n"
+
+    duplicate = first.replace(b'"Status": "SUCCESS"', b'"Status": "INVALID_INPUT", "Status": "SUCCESS"')
+    contents = first + duplicate + last
+    audit_file.write_bytes(contents)
+
+    assert query_audit.main([str(audit_file)]) == 3
+    output = capsys.readouterr()
+    assert [json.loads(line) for line in output.out.splitlines()] == expected_records
+    assert output.err == "Đọc được 2 bản ghi, bỏ qua 1 dòng lỗi, lỗi tại các dòng: 2.\n"
+    assert audit_file.read_bytes() == contents
