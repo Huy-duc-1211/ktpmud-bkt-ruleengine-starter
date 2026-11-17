@@ -205,12 +205,12 @@ Cả hai khả năng đều phản vệ: AllPV đúng, nhưng R01/R02 mỗi rule
 | D05 | Public classify(patient) điều phối audit; helper rule tách I/O | APPROVED BY LEAD — FR-01/NFR-04 |
 | D06 | Explanation tất định, thêm giải thích unavailable theo TA; không raw input/điều trị | APPROVED BY LEAD + TA — FR-08 |
 | D07 | JSONL writer, ContextVar, explicit/single-call UUID ngoài input | APPROVED BY LEAD — FR-09/NFR-03 |
-| D08 | CLASSIFY; SUCCESS/INVALID_INPUT; fail-closed/error precedence; allowed unavailable không tự là INVALID_INPUT | APPROVED BY LEAD, áp dụng theo TA — FR-09 |
+| D08 | CLASSIFY; SUCCESS/INVALID_INPUT/INTERNAL_ERROR; fail-closed/error precedence; allowed unavailable không tự là INVALID_INPUT | APPROVED BY LEAD, áp dụng theo TA — FR-09 |
 | D09 | Thay/chỉnh stub M2; kiểm overlap, null/missing, context, failures, isolation, D13 | APPROVED BY LEAD, cập nhật expected theo TA — NFR-05 |
 | D10 | perf_counter_ns, 100 warm-up, N≥1.000, nearest-rank, full-path I/O thật | APPROVED BY LEAD — NFR-01 |
 | D13 | `UNKNOWN`, AllPV, ưu tiên rule có thể thỏa, Mixed và mã đại diện theo §4.2 | Leader đã cập nhật cách chọn mã sau Issue #31; cách cũ ưu tiên definite trước là lịch sử. Thiết kế M1/M2/QA đã cập nhật, còn cần peer review; chưa có bằng chứng runtime. |
 
-D11 giữ clinical rules/ngưỡng; D12 giữ chín tên input, ba output, bốn audit fields và privacy. Các phương án OPEN đã được Leader lựa chọn trong phạm vi ghi ở ADR; không tự thay đổi khi triển khai mà chưa đối chiếu quyết định. Đường dẫn audit mặc định vẫn là đề xuất chờ peer review; cách xử lý lỗi nội bộ bất ngờ vẫn là điểm cần review. [TA; L]
+D11 giữ clinical rules/ngưỡng; D12 giữ chín tên input, ba output, bốn audit fields và privacy. Các phương án OPEN đã được Leader lựa chọn trong phạm vi ghi ở ADR; không tự thay đổi khi triển khai mà chưa đối chiếu quyết định. Leader đã chọn hướng đường dẫn audit mặc định và ghi INTERNAL_ERROR cho lỗi nội bộ; chi tiết còn chờ peer review và kiểm thử. [TA; L]
 
 ### 4.4. Nghĩa vụ audit và hành vi lỗi đã phê duyệt
 
@@ -223,7 +223,7 @@ Audit JSONL giữ đúng bốn trường sau, không trường thứ năm. Allow
 | Timestamp | ISO 8601 có timezone UTC |
 | User_UUID | UUID hợp lệ, synthetic theo scope phiên người thao tác, không phải định danh bệnh nhân/danh tính thật |
 | Action_Type | CLASSIFY |
-| Status | `SUCCESS`, `INVALID_INPUT` hoặc `INTERNAL_ERROR` theo quyết định nhóm. Thầy chưa xác nhận riêng status của INT-013. |
+| Status | SUCCESS, INVALID_INPUT hoặc INTERNAL_ERROR |
 
 ContextVar là hướng triển khai đã được chọn ngoài PatientInput. Các call trong cùng phiên tường minh dùng chung UUID, reset khi kết thúc scope. Không có phiên tường minh thì mỗi call độc lập tạo UUID tạm mới, dùng để audit và reset trong finally kể cả exception; không tái sử dụng giữa hai call độc lập. Không thêm UUID vào chín input keys hoặc đổi chữ ký classify(patient). [L OPEN-01–OPEN-02]
 
@@ -233,18 +233,16 @@ ContextVar là hướng triển khai đã được chọn ngoài PatientInput. C
 | Validation lỗi thực sự theo D04, audit thành công | Có record INVALID_INPUT, raise TypeError/ValueError đúng D04; không trả THEO_DOI |
 | Validation thành công, audit lỗi | Raise lỗi audit vận hành an toàn, không trả thành công và không mặc định record đã lưu |
 | Validation và audit cùng lỗi | Ưu tiên lỗi audit an toàn ra public boundary, không giả định record INVALID_INPUT tồn tại; message/chaining không lộ raw input |
-| Validator hoặc logic phân loại bất ngờ lỗi, audit thành công | Ghi `INTERNAL_ERROR` rồi báo `RuntimeError` với thông báo chung |
-| Lỗi nội bộ và audit cùng thất bại | Ưu tiên `AuditError` với thông báo chung, không khẳng định bản ghi đã lưu |
-
-**INT-013:** Validator trả về lỗi khi chủ động phát hiện input sai theo D04. Exception ngoài dự kiến, kể cả `TypeError` hay `ValueError` phát sinh trong validator, đi theo nhánh lỗi nội bộ. Cả hai nhánh đều giữ bốn trường audit. Test dùng chuỗi đánh dấu synthetic để dò input và lỗi gốc trong bản ghi, thông báo, traceback có chain và log. [Ca kiểm thử](docs/testing/INTEGRATION_TEST_PLAN.md)
+| Validator lỗi bất ngờ hoặc xử lý rule lỗi nội bộ; ghi audit thành công | Thử ghi INTERNAL_ERROR, không trả phân loại; báo RuntimeError an toàn. Phân biệt với input invalid thực sự |
+| Validator hoặc xử lý rule lỗi nội bộ và ghi audit thất bại | Ưu tiên AuditError an toàn; không khẳng định record đã được lưu |
 
 Fail-closed có kiểm soát chỉ áp dụng module bài thi synthetic; không mặc nhiên áp dụng sản phẩm y tế thực tế. Path audit cấu hình ngoài input, trong vùng dữ liệu sinh của lần chạy, độc lập working directory; test dùng file/thư mục riêng, không commit runtime log. V1 ghi tuần tự, quyền sở hữu writer/file rõ; không cam kết thread/process-safe khi ghi chung file. [L OPEN-03–OPEN-06]
 
-Writer M2 hoàn tất open append/write/close theo từng record trước khi public call báo thành công; lỗi write/flush/close phải được nhận biết theo fail-closed. Không retry vô hạn, không tạo thêm trường hay status riêng cho lỗi writer, không mặc định fsync/durability sau mất điện. [L OPEN-09]
+**JSONL sau ghi dở — Leader chọn hướng Hải:** Với writer một tiến trình ghi tuần tự, giữ nguyên phần đuôi cũ; nếu byte cuối chưa là newline thì thêm dấu phân cách trước record mới, không tự xóa đuôi. Record mới phải đọc được riêng; file có dòng hỏng vẫn không toàn vẹn. Công cụ đọc có thể bỏ qua dòng sai, báo số/vị trí dòng lỗi không tiết lộ nội dung, tiếp tục đọc dòng khác. Lỗi I/O vẫn fail-closed; không cam kết concurrency. Cần peer review, test file thật và xác minh tác động benchmark; đây là chính sách nhóm, không phải quy định riêng của thầy.
 
-Mỗi bản ghi audit mới kết thúc bằng `\n`. Khi file có nội dung và thiếu dấu xuống dòng ở cuối, writer thêm dấu phân cách trước bản ghi mới. Nếu không kiểm tra hoặc ghi được file, writer báo `AuditError`. Công cụ truy vấn đọc từng dòng, bỏ qua dòng hỏng và báo số bản ghi đọc được, số dòng lỗi cùng vị trí. [ADR §5.4.2](DECISIONS.md)
+Writer M2 hoàn tất open append/write/close theo từng record trước khi public call báo thành công; lỗi write/flush/close phải được nhận biết theo fail-closed. Không retry vô hạn, không thêm trường audit hoặc mặc định fsync/durability sau mất điện. [L OPEN-09]
 
-**INT-010:** Leader chọn đặt file audit mặc định dưới thư mục người dùng, ngoài repository và độc lập với working directory. Test kiểm đường mặc định, tùy chọn override ngoài PatientInput và hành vi fail-closed. Cơ chế vẫn cần peer review trước khi nghiệm thu. Giữ nguyên signature và chín input keys. [ADR §5.4.1](DECISIONS.md)
+**Kiểm chứng tích hợp M2 — còn cần peer review:** direct `classify(patient)` khi chưa cấu hình audit path phải được đưa vào kế hoạch kiểm chứng. Cơ chế chọn path mặc định ổn định ngoài repository, không phụ thuộc working directory, đã được Leader chọn về nguyên tắc, còn chờ peer review và kiểm thử; cần kiểm tra override ngoài PatientInput cho test/demo, fail-closed khi không tạo/ghi được file và hướng dẫn nơi lưu/cấu hình trong README khi triển khai. Giữ nguyên signature và chín input keys. [TASK 02C.4 Patch A]
 
 ## 5. Đặc tả dữ liệu đầu ra
 
@@ -310,7 +308,7 @@ Trạng thái dưới đây phản ánh bằng chứng của từng tiêu chí. 
 | A-03 | Đủ mức phân loại | SOC_PHAN_VE/PHAN_VE/THEO_DOI theo bảng và TA | Tầng 1/2, overlap, missing/null và TA-EX | E A-03; D; TA | NOT IMPLEMENTED |
 | A-04 | Policy dữ liệu công bố và thực thi | Giữ missing/null theo TA và strict D04 cho invalid thực sự. D13-E cập nhật: UNKNOWN, coverage, chọn rule ưu tiên cao nhất trong Poss khi AllPV, Mixed fallback và canonical disclosure. | Policy/source review; test null/missing, invalid, sáu ca §8.2 và overlap definite/possible | E A-04; TA; TA31; D04/D13-E; L | NOT IMPLEMENTED — policy đã được Leader cập nhật, chưa có implementation evidence |
 | A-05 | Explanation truy vết | ly_do DIRECT/CANONICAL đúng §4.2/§5; canonical không giả rule đã xác nhận độc lập, không raw input/điều trị. | Output/negative explanation assertions cho TA và D13-E | E A-05; D; TA; D06/D13-E | NOT IMPLEMENTED |
-| A-06 | Audit an toàn đúng schema | Bốn trường; CLASSIFY, SUCCESS/INVALID_INPUT theo nghĩa thao tác; không INVALID_INPUT chỉ vì allowed unavailable | Schema/UTC/UUID/status, failure paths, dữ liệu cấm | E A-06; D07/D08; TA §5 | NOT IMPLEMENTED |
+| A-06 | Audit an toàn đúng schema | Bốn trường; CLASSIFY, SUCCESS/INVALID_INPUT/INTERNAL_ERROR theo nghĩa thao tác; không INVALID_INPUT chỉ vì allowed unavailable | Schema/UTC/UUID/status, failure paths, dữ liệu cấm | E A-06; D07/D08; TA §5 | NOT IMPLEMENTED |
 | A-07 | Test nghiệp vụ đủ nhóm | Normal/boundary/invalid/missing/null; thay/chỉnh test stub | Bộ test được review và map TA-EX/FR | E A-07; T | PARTIALLY AVAILABLE — mới có test minh họa NotImplementedError; chưa có bộ test nghiệp vụ đạt |
 | A-08 | Chạy đạt từ clean checkout | pytest -q đạt với test nghiệp vụ đã thay/chỉnh stub | Lệnh, môi trường, kết quả thực chạy; [pytest.ini](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/pytest.ini) là bằng chứng cấu hình | E A-08; R | PARTIALLY AVAILABLE — có cấu hình và lệnh, chưa có bằng chứng test nghiệp vụ clean checkout đạt |
 | A-09 | CI trên PR | GitHub Actions thực sự chạy bộ test cho PR | PR run URL và bước test thực tế | E A-09; W | PARTIALLY AVAILABLE — có workflow, chưa có bằng chứng CI chạy đạt với bộ test nghiệp vụ |
@@ -383,7 +381,7 @@ TA-05 bắt buộc missing/null boolean không tự gây exception và không h�
 
 **D13-E hiện hành:** Leader đã duyệt normalization, coverage, Mixed fallback và canonical attribution trong M1 ngày 09/11/2026. Sau Issue #31, Leader cập nhật cách chọn mã: khi AllPV và chưa xác nhận sốc, chọn rule ưu tiên cao nhất trong Poss; nếu rule đó chưa chắc chắn đúng thì công bố mã đại diện theo §4.2, kể cả khi rule ưu tiên thấp hơn đã chắc chắn đúng. Cách chọn definite trước được giữ trong lịch sử, không còn là chính sách chọn mã hiện hành. Issue #31 xác nhận trực tiếp ca MISS-009 và nêu quy tắc áp dụng chung; ví dụ overlap definite/possible là cách nhóm áp dụng quy tắc và chưa được thầy xác nhận riêng. ADR và thiết kế test liên quan đã cập nhật; còn cần peer review và test tự động. Phê duyệt và phản hồi không phải bằng chứng triển khai.
 
-Các quyết định ContextVar, UUID scope, JSONL, fail-closed, error precedence, isolation, Enum và benchmark vẫn giữ nguyên ngoài phần bị TA thay thế. Tên helper/exception audit và path cụ thể là chi tiết triển khai. Default path vẫn đề xuất chờ peer review; unexpected internal exception vẫn residual review item. Các tài liệu M1 hiện hành đã nằm cùng nhánh `track-a-development`, gồm `DECISIONS.md`; giữ liên kết pin commit cho nguồn lịch sử và sử dụng đường dẫn hiện hành khi điều hướng trong fork.
+Các quyết định ContextVar, UUID scope, JSONL, fail-closed, error precedence, isolation, Enum và benchmark vẫn giữ nguyên ngoài phần bị TA thay thế. Tên helper/exception audit và path cụ thể là chi tiết triển khai. Leader đã chọn hướng default path và xử lý lỗi nội bộ; chi tiết còn chờ peer review và kiểm thử. Các tài liệu M1 hiện hành đã nằm cùng nhánh `track-a-development`, gồm `DECISIONS.md`; giữ liên kết pin commit cho nguồn lịch sử và sử dụng đường dẫn hiện hành khi điều hướng trong fork.
 
 Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_nguyen_nghi_ngo; tiếp tục giữ biểu thức và chín tên khóa như D. Không suy thêm khóa hoặc rule. [D; TA]
 
@@ -396,8 +394,8 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | Ép UNKNOWN thành False hoặc hiểu nhầm mã đại diện | Với AllPV, chọn rule ưu tiên cao nhất trong Poss; nếu mã chưa definite thì công bố là mã đại diện và nêu thông tin thiếu, kể cả khi rule khác đã definite. QA cần assertion kiểm tra không gọi rule đại diện là đã xác nhận độc lập. |
 | Sai ngoặc/ngưỡng hoặc suy BP mặc định | Đối chiếu biểu thức gốc, boundary và >30% nghiêm ngặt; không tạo rule y khoa mới |
 | Audit SUCCESS/INVALID_INPUT bị dùng nhầm | Allowed missing/null không tự là lỗi; giữ D04 cho invalid thực sự, bốn trường và error precedence |
-| Direct call chưa cấu hình audit path | Tiếp tục review đề xuất ở ADR, không tự chọn/duyệt path trong task này |
-| Lỗi nội bộ trước khi ghi audit | Hải và Việt Đức review `INTERNAL_ERROR` theo §4.4, gồm ca ghi thành công, lỗi kép và kiểm rò input. |
+| Direct call chưa cấu hình audit path | Leader đã chọn hướng mặc định ngoài repo; tiếp tục peer review chi tiết path, quyền ghi và kiểm thử theo ADR |
+| Unexpected internal exception trước audit thành công | Residual implementation risk / review item: Leader chọn thử ghi INTERNAL_ERROR cho lỗi bất ngờ ở validator hoặc rule, giữ bốn trường; ghi thành công thì báo RuntimeError, audit thất bại ưu tiên AuditError an toàn; không log payload, cần peer review và test |
 | Nhầm review tài liệu với nghiệm thu | Ghi nhận `VERIFIED` cho A-11 theo README tại §7. A-01 đến A-10 tiếp tục cần bằng chứng theo từng tiêu chí. Nghiệm thu phạm vi của TA cần xác nhận riêng. |
 | Nguồn snapshot lịch sử hoặc tài liệu liên quan còn policy cũ | Giữ snapshot là lịch sử. ADR, Test Plan, test cases và QA Matrix đã cập nhật chính sách chọn mã ở mức thiết kế; tiếp tục review và không dùng expected cũ làm chính sách hiện hành. |
 | AI-use hoặc phối hợp thiếu bằng chứng | Ghi công cụ/phạm vi/kiểm chứng/quyết định và người chịu trách nhiệm thực tế; Huy review nguồn, Hải M1-02, Việt Đức M1-03 |
@@ -419,7 +417,7 @@ Tiêu đề R03 nói dị nguyên đã biết nhưng biểu thức dùng co_di_n
 | I | [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15), câu hỏi và trả lời của fossbk-spec ngày 08/11/2026, áp dụng chung cho Track A; không thay thế Decision Table V1. |
 | L | Quyết định Leader trong quá trình M1, gồm TASK 02G ngày 09/11/2026 phê duyệt D13-E và chấp nhận residual risk canonical attribution; sau Issue #31, Leader cập nhật cách chọn mã theo §4.2. TASK 02F chỉ là tư vấn; D13 pending ở Revision 03 là lịch sử. Các PR #1–#4 đã merge ngày 10/11 theo quyết định tích hợp của Leader; chưa có bằng chứng thực thi code/test/CI/benchmark. Phần sử dụng AI, hậu kiểm của con người và đóng góp được ghi trung thực trong hồ sơ `AI_USE.md`/`CONTRIBUTIONS.md` khi hoàn thiện. |
 
-Nguồn D, TA và TA31 là các nguồn quy định/làm rõ theo phạm vi tương ứng; G/P là snapshot phân công và lịch sử. D13-E là policy nhóm đã duyệt và được Leader cập nhật cách chọn mã theo §4.2; Issue #31 xác nhận trực tiếp tình huống MISS-009 và nêu quy tắc chọn mã đại diện, không gán toàn bộ chi tiết D13-E cho TA. Đường dẫn audit mặc định và lỗi nội bộ giữ trạng thái review riêng. Việc duyệt D13 không tự thay miền validation hoặc các quyết định OPEN.
+Nguồn D, TA và TA31 là các nguồn quy định/làm rõ theo phạm vi tương ứng; G/P là snapshot phân công và lịch sử. D13-E là policy nhóm đã duyệt và được Leader cập nhật cách chọn mã theo §4.2; Issue #31 xác nhận trực tiếp tình huống MISS-009 và nêu quy tắc chọn mã đại diện, không gán toàn bộ chi tiết D13-E cho TA. Đường dẫn audit mặc định và lỗi nội bộ đã có hướng Leader chọn, còn cần review kỹ thuật và kiểm thử. Việc duyệt D13 không tự thay miền validation hoặc các quyết định OPEN.
 
 ### 10.1. Lịch sử thay đổi
 

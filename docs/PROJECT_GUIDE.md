@@ -162,7 +162,7 @@ D13-E là chính sách nội bộ đã công bố theo phạm vi TA cho phép. I
 - Bằng chứng phản vệ từ Def hoặc AllPV kết hợp bằng chứng tụt HATT theo bảng và tuổi đã biết → `SOC_PHAN_VE / R-SOC`. Ưu tiên kiểm tra tuổi theo D02 và xử lý HATT thiếu theo D03.
 - **Mixed**, tức có cả khả năng khớp và không khớp Tầng 2 → `THEO_DOI / null` với lý do chưa đủ thông tin. Nếu mọi khả năng đều không khớp, dùng cùng mức/mã với lý do không khớp rule.
 
-Các lựa chọn về validation số, ContextVar/UUID, fail-closed, thứ tự lỗi kép và protocol benchmark đã có trong ADR Rev04. Cơ chế đường dẫn audit mặc định vẫn là đề xuất chờ review. Xử lý lỗi nội bộ ngoài dự kiến vẫn là mục cần review riêng.
+Các lựa chọn về validation số, ContextVar/UUID, fail-closed, thứ tự lỗi kép và protocol benchmark đã có trong ADR Rev04. Leader đã chọn hướng đường dẫn audit mặc định; chi tiết triển khai, quyền ghi và kiểm thử còn cần peer review. Xử lý lỗi nội bộ ngoài dự kiến vẫn là mục cần review riêng.
 
 ## 6. A-01 đến A-11: cần làm gì để đạt?
 
