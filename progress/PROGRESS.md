@@ -84,46 +84,62 @@ Lead phụ trách các bản sửa M1-02 và M1-03 với công cụ AI hỗ tr�
 
 ## PC-2 — 18/11/2026
 
-*Chưa đến lượt cập nhật PC-2. Điền các mục dưới đây tại buổi PC-2 ngày 18/11/2026.*
+*Bản chuẩn bị ngày 17/11, đối chiếu repo code tại commit `925cea676f4962f9318e7dc35aad6017d4f80bd3`; cần kiểm tra lại trước khi xác nhận PC-2.*
 
 ### 2.1. Đối chiếu timeline PC-1
 
-| Việc (theo bảng 1.3) | Kế hoạch | Thực tế | Lệch & lý do |
+| Việc theo PC-1 | Kế hoạch | Thực tế tại mốc chuẩn bị | Lệch & lý do |
 |---|---|---|---|
-| Sẽ cập nhật 18/11 | — | — | — |
+| Classifier, validation và audit | M2, 12–15/11 | Đã tích hợp qua [PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/7). | Merge ngày 17/11; nghiệm thu cuối còn tiếp tục. |
+| Pytest và CI | Dự kiến trước 15/11 | CI sau merge đạt 490 test, 3 test Windows bỏ qua: [run](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44111237320). | CI đã được bật và chạy ngày 17/11; chưa xác minh demo nội bộ ngày 15/11. |
+| Audit/privacy và benchmark | M3, 16–19/11 | Đã kiểm tra audit ở phạm vi test; có [benchmark sơ bộ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/docs/testing/BENCHMARK_REPORT.md). | Cần hoàn thiện báo cáo và kiểm tra trên SHA freeze. |
+| Hồ sơ, Draft PR nộp bài | Trước 11:30 18/11 | Đang chuẩn bị; chưa xác minh có Draft PR. | Cần mở PR và xác nhận validate xanh trước hạn. |
 
-### 2.2. Tiến độ theo acceptance criteria (cập nhật toàn bộ bảng 1.1)
-
-*Sẽ đánh giá lại đầy đủ A-01 đến A-11 tại PC-2, kèm bằng chứng thực thi.*
+### 2.2. Tiến độ theo acceptance criteria
 
 | Mã | Trạng thái | Bằng chứng | Ghi chú |
 |---|---|---|---|
-| A-01 đến A-11 | Chưa cập nhật PC-2 | — | — |
+| A-01 | Đang | [Classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/rule_engine/classifier.py), [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44111237320) | Đã có triển khai và test; còn review contract và SHA cuối. |
+| A-02 | Đang | [Classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/rule_engine/classifier.py) | Đã đọc source; cần bổ sung kiểm tra synthetic độc lập. |
+| A-03 | Đang | [Test classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/tests/test_classifier.py), [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44111237320) | Có ca cho ba mức; cần hoàn tất mapping và review. |
+| A-04 | Đang | [Test classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/tests/test_classifier.py), [Requirements](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/REQUIREMENTS.md) | Có policy và test missing/null/invalid; còn đối chiếu SHA cuối. |
+| A-05 | Đang | [Test ly_do](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/tests/test_classifier.py) | Đã review ca thiết kế và giữ cách giải thích; còn đối chiếu nghiệm thu. |
+| A-06 | Đang | [Test audit](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/tests/test_audit.py), [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44111237320) | Có test schema, lỗi và privacy; không suy rộng sang mọi môi trường. |
+| A-07 | Đang | [Test classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/tests/test_classifier.py), [test audit](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/tests/test_audit.py) | Có test nghiệp vụ; còn hoàn thiện mapping QA. |
+| A-08 | Đang | [CI sau merge](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44111237320) | CI đạt 490 test, 3 test Windows bỏ qua; clean checkout độc lập trước đó tại 0d00584 đạt 483. Cần chạy lại SHA cuối. |
+| A-09 | Xong | [CI PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44106490534) | Workflow PR chạy test thành công; cần xác minh lại SHA freeze. |
+| A-10 | Đang | [Benchmark sơ bộ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/docs/testing/BENCHMARK_REPORT.md) | Có số đo sơ bộ; cần lưu mẫu và đối chiếu SHA freeze. |
+| A-11 | Xong | [README](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/README.md) | Có disclaimer bắt buộc; kiểm lại SHA freeze. |
 
-### 2.3. Sẵn sàng nộp bài (đề thi Mục 6)
+### 2.3. Sẵn sàng nộp bài
 
-| Deliverable | Có / Chưa | Đường dẫn |
+| Deliverable | Có / Chưa | Đường dẫn / ghi chú |
 |---|---|---|
-| README.md (cài đặt / chạy / test) | — | — |
-| REQUIREMENTS.md | — | — |
-| DECISIONS.md / ADR | — | — |
-| Test tự động + CI xanh | — | — |
-| TEST_REPORT.md | — | — |
-| SECURITY_PRIVACY_CHECKLIST.md | — | — |
-| AI_USE.md | — | — |
-| CONTRIBUTIONS.md | — | — |
-| Slide / demo script ≤ 7 phút | — | — |
-| Draft PR vào `ktpmud-project`, check `validate` xanh | — | — |
+| README.md | Có | [README](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/README.md) |
+| REQUIREMENTS.md | Có | [Requirements](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/REQUIREMENTS.md) |
+| DECISIONS.md / ADR | Có | [Decisions](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/925cea676f4962f9318e7dc35aad6017d4f80bd3/DECISIONS.md) |
+| Test tự động + CI xanh | Có | [CI PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44106490534); 3 test Windows bỏ qua trên Linux. |
+| TEST_REPORT.md | Chưa | Chưa có trên nhánh tích hợp tại mốc đối chiếu; bản nộp đang chuẩn bị. |
+| SECURITY_PRIVACY_CHECKLIST.md | Chưa | Chưa có trên nhánh tích hợp tại mốc đối chiếu; bản nộp đang chuẩn bị. |
+| AI_USE.md | Chưa | Chưa có trên nhánh tích hợp tại mốc đối chiếu; cần hoàn thiện nhật ký. |
+| CONTRIBUTIONS.md | Chưa | Chưa có trên nhánh tích hợp tại mốc đối chiếu; cần đối chiếu đóng góp. |
+| Slide / demo script ≤ 7 phút | Chưa | Chưa xác minh bản hoàn chỉnh. |
+| Draft PR nộp bài + validate xanh | Chưa | Chưa xác minh có Draft PR tại mốc chuẩn bị. |
 
-### 2.4. Việc còn lại đến Freeze (23:59 19/11)
+### 2.4. Việc còn lại đến Freeze
 
-| Việc | Vai trò phụ trách | Hạn |
+| Việc | Vai trò phụ trách | Hạn dự kiến |
 |---|---|---|
-| Sẽ cập nhật tại PC-2 | — | — |
+| Mở Draft PR nộp bài và kiểm validate | Lead | Trước 11:30 18/11 |
+| Hoàn thiện QA/AC, CI và bằng chứng báo cáo | Lead, Dev hỗ trợ | 19/11 |
+| Benchmark lại/đối chiếu trên SHA freeze; lưu mẫu và môi trường | Lead, Dev review | 19/11 |
+| Hoàn thiện test report, privacy, AI use, contributions | Lead, các thành viên đối chiếu | 19/11 |
+| Chốt SHA, tag, chuẩn bị demo | Lead và nhóm | 23:59 19/11 |
 
-### 2.5. Rủi ro / câu hỏi cho GV
+### 2.5. Rủi ro
 
-- Sẽ cập nhật tại PC-2.
+- Ba test riêng cho Windows chưa chạy trong CI Linux; cần xác minh trên Windows.
+- Benchmark và hồ sơ nộp chưa nghiệm thu trên SHA freeze; còn phải xác nhận Draft PR và validate.
 
 ---
 
