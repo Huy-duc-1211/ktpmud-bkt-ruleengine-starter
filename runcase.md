@@ -13,7 +13,7 @@
 
 Với `MISS-009`, bạn sẽ thấy `muc_do` là `PHAN_VE`, `rule_id` là `R01-PV` và `ly_do` giải thích vì sao R01 là mã đại diện. Để đối chiếu, tìm cùng mã ca trong CSV rồi đọc cột `Expected`. Phần `ly_do_contract` mô tả yêu cầu đối với câu giải thích.
 
-- Nếu đường dẫn sai hoặc file không tồn tại, chương trình in `null` rồi dừng.
+- Nếu không tìm thấy file CSV, chương trình báo đường dẫn bị lỗi trên `stderr` và trả mã thoát `1`. Điều này áp dụng cả khi nhập đường dẫn tương tác lẫn khi dùng `--csv`.
 - Nếu gõ nhầm mã ca hoặc bấm Enter khi chưa nhập mã, bạn có thể nhập lại.
 - Với ca đầu vào bị từ chối, chương trình in loại lỗi và thông báo. Bạn vẫn có thể tra mã khác.
 

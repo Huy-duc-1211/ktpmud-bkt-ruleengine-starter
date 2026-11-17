@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 import math
+import sys
 from pathlib import Path
 
 from rule_engine.classifier import classify
@@ -105,12 +106,14 @@ def main():
         csv_path = ROOT / entered
     if csv_path is None:
         csv_path = DEFAULT_CSV
-    if not csv_path.is_file():
-        print("null")
-        return 0
 
     try:
+        if not csv_path.is_file():
+            raise FileNotFoundError
         cases = read_cases(csv_path)
+    except (FileNotFoundError, IsADirectoryError):
+        print(f"Không tìm thấy file CSV tại đường dẫn {csv_path}.", file=sys.stderr)
+        return 1
     except (OSError, csv.Error, ValueError):
         parser.error("Không đọc được file CSV. Kiểm tra đường dẫn và cấu trúc file.")
 
