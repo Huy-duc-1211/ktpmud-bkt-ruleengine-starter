@@ -81,10 +81,26 @@ def _classify_case(cases, case_id):
         return {"exception_class": type(error).__name__, "message": str(error)}, 1
 
 
+def _csv_list_separator():
+    if sys.platform != "win32":
+        return ","
+
+    import winreg
+
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Control Panel\International") as key:
+            separator, _ = winreg.QueryValueEx(key, "sList")
+    except OSError:
+        return ","
+    return separator if separator in (",", ";") else ","
+
+
 def _export_csv(path, results):
+    if path.suffix.lower() != ".csv" and path.name:
+        path = path.with_name(f"{path.name}.csv")
     try:
         with path.open("x", encoding="utf-8-sig", newline="") as output:
-            writer = csv.DictWriter(output, fieldnames=RESULT_COLUMNS)
+            writer = csv.DictWriter(output, fieldnames=RESULT_COLUMNS, delimiter=_csv_list_separator())
             writer.writeheader()
             writer.writerows(results)
     except FileExistsError:
@@ -139,8 +155,8 @@ def main():
                 if case_id.strip().upper() == "/CSV":
                     if results:
                         destination = input("Nhập đường dẫn file CSV kết quả: ").strip()
-                        if destination:
-                            _export_csv(Path(destination), results)
+                        if destination and not _export_csv(Path(destination), results):
+                            exit_status = 1
                     else:
                         print("Chưa có kết quả để xuất.")
                     continue
@@ -164,8 +180,9 @@ def main():
 
         print(json.dumps(result, ensure_ascii=False, indent=2))
         results.append({"test_id": case_id, **result})
-        if not interactive:
+        if status:
             exit_status = status
+        if not interactive:
             break
 
     if args.export_csv is not None and results:
@@ -175,4 +192,7 @@ def main():
 
 
 if __name__ == "__main__":
+    if sys.platform == "win32":
+        for stream in (sys.stdin, sys.stdout, sys.stderr):
+            stream.reconfigure(encoding="utf-8")
     raise SystemExit(main())

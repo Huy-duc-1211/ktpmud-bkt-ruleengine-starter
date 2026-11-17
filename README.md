@@ -57,7 +57,7 @@ Trên Windows, bấm đúp [`run_case.cmd`](run_case.cmd) rồi nhập `TEST_CAS
 
 [Hướng dẫn tra mã ca và xuất CSV](runcase.md)
 
-Nếu đang mở PowerShell ở thư mục gốc của repo, bạn cũng có thể truyền mã ca thẳng vào lệnh.
+Trong CMD, mở thư mục gốc của repo và chạy `run_case.cmd MISS-009`. Trong PowerShell, dùng lệnh sau.
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 .\run_case.py MISS-009
@@ -65,7 +65,7 @@ Nếu đang mở PowerShell ở thư mục gốc của repo, bạn cũng có th�
 
 Đổi `MISS-009` thành mã ca muốn xem. Lệnh tìm mã trong `TEST_CASES.csv`, lấy `Input` rồi in kết quả của `classify()`. Có thể thêm `--csv "đường-dẫn-tới-file.csv"` để dùng file ca giả lập khác. Nếu ca bị từ chối, lệnh in loại lỗi và thông báo. Dùng pytest khi cần tự động so kết quả với `Expected`.
 
-Để lưu kết quả, nhập `/CSV` ở ô mã ca hoặc thêm `--export-csv ket_qua.csv` khi chạy từ PowerShell.
+Để lưu kết quả, nhập `/CSV` ở ô mã ca hoặc thêm `--export-csv ket_qua.csv` vào lệnh CMD hay PowerShell.
 
 Để gọi hàm với input tự nhập, dùng Python như sau.
 
