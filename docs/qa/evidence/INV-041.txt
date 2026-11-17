@@ -1,0 +1,4 @@
+﻿{
+  "exception_class": "ValueError",
+  "message": "Đầu vào có khóa ngoài bảng quyết định."
+}

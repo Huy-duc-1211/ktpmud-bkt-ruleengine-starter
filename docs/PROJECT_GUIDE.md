@@ -43,7 +43,7 @@
 - [phản hồi chính thức tại Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248) (D01–D03 và cách xử lý dữ liệu thiếu).
 - [Phản hồi Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) về chọn mã đại diện khi thiếu khóa boolean.
 - [Erratum pytest của starter (Issue #16)](https://github.com/fossbk-spec/ktpmud-project/issues/16).
-- Nguồn nhóm hiện hành: [Requirements](../REQUIREMENTS.md), [ADR](../DECISIONS.md), [Rule Design và Test Plan](m1-hai/M1/README.md), [QA Matrix](m1-qa/QA_MATRIX.xlsx).
+- Nguồn nhóm hiện hành: [Requirements](../REQUIREMENTS.md), [ADR](../DECISIONS.md), [Rule Design và Test Plan](design/README.md), [QA Matrix](qa/QA_MATRIX.xlsx).
 - [Mẫu hồ sơ Track A](https://github.com/fossbk-spec/ktpmud-project/tree/main/submissions/_TEMPLATE_BKT_RULEENGINE).
 
 **Định danh:** Lớp `173820`, nhóm `27`, mã dự kiến `173820_n27`; slug Track A `may_day_sprint`. Nhóm cần xác nhận mã từ đồ án chính có dùng chung cho Hack Marathon hay không.
@@ -120,11 +120,11 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 |---|---|
 | Tích hợp | [PR #1](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/1), [PR #2](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/2), [PR #3](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/3), [PR #4](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/4) đã merge vào `track-a-development` ngày 10/11/2026. Mốc tích hợp [`9bc4fc1`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/commit/9bc4fc186415d7a13cd9d49692c50f3c945ddf7b). |
 | M1-01 / M1-04 | [Requirements](../REQUIREMENTS.md) và [ADR](../DECISIONS.md) đã tích hợp. D01–D03 được giảng viên làm rõ. Leader phê duyệt chính sách nhóm D13-E ngày 09/11/2026. |
-| M1-02 | [Rule Design](m1-hai/M1/RULE_DESIGN.md), [Test Plan](m1-hai/M1/TEST_PLAN.md), [175 ca thiết kế chính](m1-hai/M1/TEST_CASES.csv) và [81 ca logic nội bộ](m1-hai/M2/INTERNAL_STATE_CASES.csv). Hải đóng góp bản gốc, Huy Đức phụ trách bản sửa TASK 02E với Codex hỗ trợ. |
-| M1-03 | [QA Matrix](m1-qa/QA_MATRIX.xlsx) và báo cáo audit thiết kế gồm 11 AC, 64 ca QA, 60 mục checklist và 15 phát hiện. Các mục thực thi vẫn `NOT RUN`. |
+| M1-02 | [Rule Design](design/RULE_DESIGN.md), [Test Plan](testing/TEST_PLAN.md), [175 ca thiết kế chính](../TEST_CASES.csv) và [81 ca logic nội bộ](../tests/fixtures/INTERNAL_STATE_CASES.csv). Hải đóng góp bản gốc, Huy Đức phụ trách bản sửa TASK 02E với Codex hỗ trợ. |
+| M1-03 | [QA Matrix](qa/QA_MATRIX.xlsx) và báo cáo audit thiết kế gồm 11 AC, 64 ca QA, 60 mục checklist và 15 phát hiện. Các mục thực thi vẫn `NOT RUN`. |
 | Review và nghiệm thu | GitHub ghi Leader self-review và approval từ `nvldvc` trên bốn PR. Chưa thấy bằng chứng review kỹ thuật cuối của cả hai thành viên hoặc TA nghiệm thu phạm vi. |
 
-[Classifier](../rule_engine/classifier.py) vẫn raise `NotImplementedError`. [Test hiện có](../tests/test_classifier.py) chỉ kiểm tra stub. [Workflow CI](../.github/workflows/test.yml) đã cấu hình, chưa có bằng chứng bộ test nghiệp vụ chạy đạt trên CI. Chưa có kết quả benchmark. Hồ sơ tích hợp là đầu ra phân tích và thiết kế M1.
+Tại mốc M1, classifier và test starter còn là stub. Trên [PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/7), classifier, test nghiệp vụ và audit đã được triển khai để review; CI của PR với HEAD `ebdc573` chạy đạt 483 test ([run](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44081899432)). [Benchmark sơ bộ](testing/BENCHMARK_REPORT.md) đã có số đo trên SHA được ghi trong báo cáo; cần đối chiếu SHA freeze. PR #7 chưa phải nghiệm thu cuối.
 
 ## 5. Các quyết định đã thống nhất và đang chờ
 

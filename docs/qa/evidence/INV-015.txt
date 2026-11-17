@@ -1,0 +1,4 @@
+﻿{
+  "exception_class": "TypeError",
+  "message": "huyet_ap_tam_thu_nen phải là số nguyên."
+}

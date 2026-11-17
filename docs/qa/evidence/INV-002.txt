@@ -1,0 +1,4 @@
+﻿{
+  "exception_class": "ValueError",
+  "message": "Tuổi phải hữu hạn và không âm."
+}

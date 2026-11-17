@@ -1,0 +1,4 @@
+﻿{
+  "exception_class": "TypeError",
+  "message": "co_trieu_chung_tieu_hoa_nang phải là boolean."
+}

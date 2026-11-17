@@ -1,0 +1,5 @@
+﻿{
+  "muc_do": "PHAN_VE",
+  "rule_id": "R01-PV",
+  "ly_do": "Mọi khả năng đều thỏa tiêu chí phản vệ qua ít nhất một trong các rule R01-PV, R02-PV, R03-PV. R01-PV là mã đại diện vì thiếu thông tin về dị nguyên nghi ngờ, đường hít, triệu chứng tuần hoàn, triệu chứng tiêu hóa nặng. Chưa xác nhận riêng R01-PV. Chưa đánh giá được mức giảm tương đối vì thiếu huyết áp nền."
+}

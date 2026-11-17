@@ -1,0 +1,5 @@
+﻿{
+  "muc_do": "PHAN_VE",
+  "rule_id": "R01-PV",
+  "ly_do": "Thỏa R01-PV theo dữ kiện hiện có. Chưa đánh giá được tiêu chí sốc vì thiếu huyết áp tâm thu hiện tại."
+}

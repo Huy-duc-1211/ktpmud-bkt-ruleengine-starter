@@ -1,0 +1,5 @@
+﻿{
+  "muc_do": "THEO_DOI",
+  "rule_id": null,
+  "ly_do": "Chưa đủ thông tin để xác định có thỏa quy tắc phản vệ hay không."
+}
