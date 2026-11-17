@@ -55,7 +55,7 @@ pytest -q
 
 Trên Windows, bấm đúp [`run_case.cmd`](run_case.cmd) rồi nhập `TEST_CASES.csv` hoặc đường dẫn đầy đủ tới file. Lệnh cũng nhận đường dẫn dán kèm tiền tố `cd `. Nếu file tồn tại, nhập mã ca như `MISS-009`. Sau mỗi kết quả, bạn có thể nhập tiếp mã khác trong cùng file. Gõ `END` rồi nhấn Enter để kết thúc. Nếu không tìm thấy file CSV, chương trình báo đường dẫn bị lỗi và dừng với mã thoát `1` trước khi hỏi mã ca. Cửa sổ chờ bạn nhấn thêm một phím trước khi đóng. File dùng Python trong `.venv` nếu có, hoặc chạy qua Python Launcher (`py`).
 
-[Hướng dẫn tra mã ca và đọc kết quả](runcase.md)
+[Hướng dẫn tra mã ca và xuất CSV](runcase.md)
 
 Nếu đang mở PowerShell ở thư mục gốc của repo, bạn cũng có thể truyền mã ca thẳng vào lệnh.
 
@@ -64,6 +64,8 @@ Nếu đang mở PowerShell ở thư mục gốc của repo, bạn cũng có th�
 ```
 
 Đổi `MISS-009` thành mã ca muốn xem. Lệnh tìm mã trong `TEST_CASES.csv`, lấy `Input` rồi in kết quả của `classify()`. Có thể thêm `--csv "đường-dẫn-tới-file.csv"` để dùng file ca giả lập khác. Nếu ca bị từ chối, lệnh in loại lỗi và thông báo. Dùng pytest khi cần tự động so kết quả với `Expected`.
+
+Để lưu kết quả, nhập `/CSV` ở ô mã ca hoặc thêm `--export-csv ket_qua.csv` khi chạy từ PowerShell.
 
 Để gọi hàm với input tự nhập, dùng Python như sau.
 

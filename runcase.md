@@ -7,6 +7,8 @@
 3. Nhập mã ca trong cột `Test ID` của CSV, ví dụ `MISS-009`. Chương trình lấy dữ liệu trong cột `Input`, gọi `classify()` và in kết quả.
 4. Nhập mã khác để tra tiếp trong cùng file. Gõ `END` rồi nhấn Enter để kết thúc. Cửa sổ chờ bạn nhấn thêm một phím trước khi đóng.
 
+Để lưu các kết quả đã tra, nhập `/CSV` ở ô mã ca, rồi nhập tên file mới như `ket_qua.csv` hoặc đường dẫn đầy đủ. Sau khi xuất, bạn có thể tra tiếp. Tên file tương đối được tính từ thư mục đang chạy lệnh.
+
 [Mở TEST_CASES.csv](TEST_CASES.csv)
 
 ## Đọc kết quả
@@ -26,3 +28,15 @@ Mở PowerShell ở thư mục gốc của dự án rồi chạy lệnh sau. Đ�
 ```
 
 Để chỉ rõ file CSV, thêm `--csv "D:\đường-dẫn\ca-test.csv"` vào cuối lệnh. Nếu chưa có `.venv`, xem [cách cài đặt trong README](README.md#cài-đặt-và-kiểm-thử).
+
+## Xuất kết quả ra CSV
+
+Thêm `--export-csv` để lưu kết quả khi chạy từ PowerShell.
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 .\run_case.py MISS-009 --export-csv ket_qua.csv
+```
+
+Nếu bỏ `MISS-009`, chương trình vào chế độ tương tác và lưu các kết quả đã tra khi kết thúc. Có thể dùng `--csv` để chọn file ca test và `--export-csv` để chọn file kết quả trong cùng lệnh.
+
+File kết quả có các cột `test_id`, `muc_do`, `rule_id`, `ly_do`, `exception_class` và `message`. Mỗi lần chạy một ca tạo một dòng. Ca bị từ chối có loại lỗi và thông báo. Mã không tìm thấy trong file ca test sẽ không tạo dòng. CSV dùng UTF-8 có BOM để giữ dấu tiếng Việt khi mở bằng Excel. Hãy chọn tên file mới vì chương trình giữ nguyên file đã có.

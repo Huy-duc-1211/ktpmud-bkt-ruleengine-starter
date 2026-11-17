@@ -1,4 +1,4 @@
-"""Chạy classify() với một ca giả lập trong CSV."""
+"""Chạy classify() với ca giả lập và xuất kết quả ra CSV khi cần."""
 
 import argparse
 import csv
@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_CSV = ROOT / "TEST_CASES.csv"
 FIXTURES_DIR = ROOT / "tests" / "fixtures"
 NONFINITE_REGISTRY = FIXTURES_DIR / "NONFINITE_INPUTS.json"
+RESULT_COLUMNS = ("test_id", "muc_do", "rule_id", "ly_do", "exception_class", "message")
 _FLOAT_VALUES = {
     "NAN": math.nan,
     "POSITIVE_INFINITY": math.inf,
@@ -64,7 +65,7 @@ def load_patient(case):
     return dict(registry["base_patient"], tuoi=_FLOAT_VALUES[fixture["float_token"]])
 
 
-def _run_case(cases, case_id):
+def _classify_case(cases, case_id):
     matching = [case for case in cases if case.get("Test ID") == case_id]
     if len(matching) != 1:
         raise ValueError(f"Cần đúng một dòng có mã {case_id}, tìm thấy {len(matching)}.")
@@ -75,22 +76,33 @@ def _run_case(cases, case_id):
         raise ValueError("Không đọc được ca từ CSV. Kiểm tra cấu trúc file.") from None
 
     try:
-        result = classify(patient)
+        return classify(patient), 0
     except (RuntimeError, TypeError, ValueError) as error:
-        print(json.dumps(
-            {"exception_class": type(error).__name__, "message": str(error)},
-            ensure_ascii=False,
-            indent=2,
-        ))
-        return 1
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0
+        return {"exception_class": type(error).__name__, "message": str(error)}, 1
+
+
+def _export_csv(path, results):
+    try:
+        with path.open("x", encoding="utf-8-sig", newline="") as output:
+            writer = csv.DictWriter(output, fieldnames=RESULT_COLUMNS)
+            writer.writeheader()
+            writer.writerows(results)
+    except FileExistsError:
+        print(f"File {path} đã tồn tại. Hãy chọn tên khác.", file=sys.stderr)
+        return False
+    except (OSError, csv.Error, ValueError):
+        print(f"Không ghi được file CSV tại đường dẫn {path}.", file=sys.stderr)
+        return False
+
+    print(f"Đã xuất {len(results)} kết quả vào {path}.", file=sys.stderr)
+    return True
 
 
 def main():
     parser = argparse.ArgumentParser(description="Chạy classify() theo mã ca trong CSV giả lập.")
     parser.add_argument("case_id", nargs="?", help="Mã ca, ví dụ MISS-009")
     parser.add_argument("--csv", type=Path, help="Đường dẫn tới CSV ca test")
+    parser.add_argument("--export-csv", type=Path, help="Đường dẫn tới file CSV kết quả mới")
     args = parser.parse_args()
     interactive = args.case_id is None
     csv_path = args.csv
@@ -117,30 +129,49 @@ def main():
     except (OSError, csv.Error, ValueError):
         parser.error("Không đọc được file CSV. Kiểm tra đường dẫn và cấu trúc file.")
 
+    results = []
+    exit_status = 0
     while True:
         case_id = args.case_id
         if interactive:
             try:
-                case_id = input("Nhập mã ca (ví dụ MISS-009, nhập END để kết thúc): ")
+                case_id = input("Nhập mã ca (ví dụ MISS-009, /CSV để xuất, END để kết thúc): ")
+                if case_id.strip().upper() == "/CSV":
+                    if results:
+                        destination = input("Nhập đường dẫn file CSV kết quả: ").strip()
+                        if destination:
+                            _export_csv(Path(destination), results)
+                    else:
+                        print("Chưa có kết quả để xuất.")
+                    continue
             except (EOFError, KeyboardInterrupt):
-                return 0
+                break
         case_id = case_id.strip().upper()
         if case_id == "END":
-            return 0
+            break
         if not case_id:
             if interactive:
                 continue
             return 0
 
         try:
-            status = _run_case(cases, case_id)
+            result, status = _classify_case(cases, case_id)
         except ValueError as error:
             if not interactive:
                 parser.error(str(error))
             print(error)
-        else:
-            if not interactive:
-                return status
+            continue
+
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        results.append({"test_id": case_id, **result})
+        if not interactive:
+            exit_status = status
+            break
+
+    if args.export_csv is not None and results:
+        if not _export_csv(args.export_csv, results):
+            return 1
+    return exit_status
 
 
 if __name__ == "__main__":
