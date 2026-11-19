@@ -485,7 +485,7 @@ Theo [Integration Test Plan hiện hành](docs/testing/INTEGRATION_TEST_PLAN.md)
 - **Rule Design và kế hoạch M2:** selector trong `RULE_DESIGN.md` và public oracle trong `INTERNAL_STATE_TEST_PLAN.md` được cập nhật; giữ 81 ca helper do phép toán và expected helper không đổi. Giữ phạm vi `INT-018` cho MISS-009; bổ sung bốn ca overlap vào kiểm `ly_do` của `INT-021`.
 - **QA Matrix:** các mục `QA-044/045`, `CHK-056`, selector ở `AC_MATRIX` và `QA-063` được cập nhật; giữ kết quả DIRECT của `D13E-014` và CANONICAL của `QA-020` khi fixture không đổi. Giữ trạng thái thực thi theo bằng chứng, không đánh dấu PASS chỉ vì sửa thiết kế.
 
-A-11 đã được đối chiếu disclaimer tại commit README `4482e4f` (§9), còn dòng A-11 trong QA Matrix tại mốc này vẫn `NOT RUN` cho việc kiểm README ở SHA nghiệm thu. Cần đối chiếu phạm vi và cập nhật bằng chứng phù hợp khi đồng bộ, không tự coi hai trạng thái là một kết quả chạy.
+A-11 đã được đối chiếu disclaimer tại commit README `4482e4f` (§9). Dòng `NOT RUN` là trạng thái ở mốc thiết kế M1; [QA Matrix hiện hành](docs/qa/QA_MATRIX.xlsx) và [đối chiếu 19/11](docs/qa/EXECUTION_REVIEW.md) ghi `PASS` trên ứng viên. Các bước đòi permalink SHA cuối vẫn `BLOCKED`, chưa biến kết quả ứng viên thành nghiệm thu Freeze.
 
 ### 9.4. Sáu expected D13-E đã được Leader phê duyệt — bàn giao TASK 02E
 

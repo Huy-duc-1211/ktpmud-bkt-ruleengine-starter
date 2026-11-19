@@ -6,11 +6,11 @@ Tôi chuyển các ca thiết kế sang pytest để kiểm tra `classify()`. Ph
 - Gọi trực tiếp `classify()`, kiểm UUID theo phiên, đường lỗi audit và file riêng cho từng test. [Kế hoạch test tích hợp](INTEGRATION_TEST_PLAN.md)
 - Cách tạo fixture NaN và Infinity cho pytest. [Quy ước fixture](FIXTURE_CONTRACT.md) · [Dữ liệu fixture](../../tests/fixtures/NONFINITE_INPUTS.json)
 - Cách đo hiệu năng ở M3. [Kế hoạch benchmark](BENCHMARK_PLAN.md)
-- Phép đo trên ứng viên Freeze `4be2751`: [báo cáo benchmark](BENCHMARK_REPORT.md) và [1.000 mẫu thời gian](benchmark_4be_timings.json). Đây chưa phải xác nhận trên SHA/tag cuối.
+- Hai lượt đo trên ứng viên Freeze `4be2751`: [báo cáo benchmark](BENCHMARK_REPORT.md), [mẫu lượt đầu](benchmark_4be_timings.json) và [mẫu rà QA](benchmark_4be_recheck.json), mỗi lượt 1.000 mẫu sau 100 warm-up. Đây chưa phải xác nhận trên SHA/tag cuối.
 
 Pytest đọc input và expected của 175 ca từ [CSV ở thư mục gốc](../../TEST_CASES.csv), dùng mã ca gốc.
 
-PR #7 đã merge bộ test M2. [CI ứng viên `4be2751`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44134696873) thành công trên Linux; ba test Windows được skip. Workbook QA giữ trạng thái thiết kế riêng. Cần đối chiếu lại các bằng chứng trên SHA/tag Freeze.
+PR #7 đã merge bộ test M2. [CI PR #10](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44479428343) thành công trên Linux; ba test Windows được skip. [Workbook QA](../qa/QA_MATRIX.xlsx) đã được cập nhật theo [đối chiếu ứng viên](../qa/EXECUTION_REVIEW.md), các gate SHA/tag cuối và peer review còn tách riêng. Cần đối chiếu lại các bằng chứng trên SHA/tag Freeze.
 
 ## Các điểm cần review
 
