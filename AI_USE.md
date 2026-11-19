@@ -17,11 +17,15 @@ Các dòng dưới dựa trên bản chuẩn bị PC-2. Tên công cụ đã bi�
 
 ## SV2 — Hải bổ sung hoặc xác nhận không dùng AI
 
-Hải tự ghi từng tác vụ AI thực tế khi làm Rule Engine, test, runner/CSV hoặc review. Nếu không dùng AI cho phần việc của mình, ghi rõ “SV2 không dùng AI cho phần việc riêng” và xác nhận. Không suy đoán tên model khi không biết. Mỗi dòng cần đủ sáu cột:
+Dùng OpenAI Codex để hỗ trợ phần Rule Engine, test, audit và runner trong phạm vi công việc đã trao đổi. Codex trực tiếp, viết và sửa code, chạy kiểm tra, soạn tài liệu theo yêu cầu và logic của tôi.
 
 | Công cụ/model | Mục đích | Phạm vi file/module/commit | Kiểm chứng cụ thể | Giữ/sửa/loại đầu ra AI và lý do | Người review/chấp thuận |
 |---|---|---|---|---|---|
-| *SV2 điền sau khi tự đối chiếu; chưa có xác nhận* |  |  |  |  |  |
+| OpenAI Codex, model 6.1 Sol high | Triển khai classifier, validation, theo logic của tôi | [classifier.py](rule_engine/classifier.py). | Codex đối chiếu Decision Table, Requirements, ADR và chạy pytest với các ca thiết kế, ca biên và trạng thái nội bộ. | Giữ phần triển khai phù hợp contract. Sửa tiếp theo quyết định của nhóm về AllPV, Mixed, ưu tiên rule và lời giải thích để code khớp đặc tả hiện hành. | SV2 phụ trách kiểm tra kết quả
+| OpenAI Codex, model 6.1 Sol high | Viết test classifier và bổ sung đối chứng cho lời giải thích sai. | [test_classifier.py](tests/test_classifier.py), các commit `ecb6eed`, [b6d544d](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/commit/b6d544d). | Chạy các test phân loại và test đối chứng cho Mixed tự mâu thuẫn, thiếu ý cần nêu hoặc có lời khuyên điều trị. | Giữ kiểm tra ý nghĩa và các ca đối chứng để chấp nhận câu khác chữ nhưng đủ ý, đồng thời phát hiện câu sai. | SV2 phụ trách.|
+| OpenAI Codex, model 6.1 Sol high | Tái hiện và sửa lỗi audit/privacy, xử lý lỗi validator và writer. | [audit.py](rule_engine/audit.py), [classifier.py](rule_engine/classifier.py), [test_audit.py](tests/test_audit.py), các commit `69e0b8c`, [eaca642](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/commit/eaca642). | Dùng dữ liệu synthetic và mô phỏng lỗi để kiểm tra thông báo, traceback, nội dung audit và trường hợp lỗi nội bộ xảy ra cùng lỗi ghi audit. | Sửa cách công khai lỗi để tránh lộ input. Giữ TypeError/ValueError cho input sai, ghi INTERNAL_ERROR theo quyết định nhóm và ưu tiên AuditError an toàn khi ghi audit thất bại. | SV2 phụ trách phần sửa theo trao đổi. |
+| OpenAI Codex, model 6.1 Sol high | Xử lý audit ghi dở dang và truy vấn file có dòng hỏng. | [audit.py](rule_engine/audit.py), [query_audit.py](query_audit.py), [test_audit.py](tests/test_audit.py), các commit `eaca642`, `b6d544d`. | Bổ sung test dòng lỗi, khóa JSON trùng và mã thoát khi đọc một phần. | Giữ hướng kiểm soát newline khi ghi. Khi đọc, bỏ qua dòng lỗi, báo số bản ghi đọc được và số/vị trí dòng bỏ qua. Sửa mã thoát thành `3` khi có dòng bị bỏ qua để phản ánh tình trạng đọc một phần. | SV2 phụ trách logic code. |
+| OpenAI Codex, model 6.1 Sol high | Sắp xếp repo theo chức năng và đồng bộ tài liệu sau PR #6. | [README.md](README.md), `docs/`, `tests/fixtures/`, các commit `6a2af32`, `bc08910`. | Codex đối chiếu đường dẫn, dữ liệu ca thử và tài liệu của Leader sau PR #6. | Giữ cấu trúc một project chung theo yêu cầu của tôi, chuyển TEST_CASES.csv về gốc repo.| SV2 phụ trách kiểm tra, chấp thuận. |
 
 ## SV3 — Việt Đức bổ sung hoặc xác nhận không dùng AI
 
