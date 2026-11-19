@@ -133,7 +133,10 @@ submissions/may_day_sprint_173820_n27/
 
 - [Decision Table](docs/decision-table.md), [Requirements](REQUIREMENTS.md), [ADR](DECISIONS.md).
 - [Project Guide](docs/PROJECT_GUIDE.md), [Team Plan](docs/TEAM_PLAN.md).
-- [Rule Design](docs/design/RULE_DESIGN.md), [Test Plan](docs/testing/TEST_PLAN.md), [QA Matrix](docs/qa/QA_MATRIX.xlsx).
+- [Rule Design](docs/design/RULE_DESIGN.md), [Test Plan](docs/testing/TEST_PLAN.md), [QA Matrix](docs/qa/QA_MATRIX.xlsx) và [đối chiếu thực thi QA](docs/qa/EXECUTION_REVIEW.md).
+- [Nhật ký AI đã tổng hợp trên PR #10](AI_USE.md); Leader đã đối chiếu nội dung ứng viên, còn xác nhận review cá nhân và đồng bộ vào artifact của Draft PR #39 theo SHA/tag cuối.
+
+**Trạng thái trước Freeze (19/11):** PR #7 đã tích hợp code và pytest. [CI PR #10 trên ứng viên](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44479428343) thành công trên Linux; lượt kiểm tra local đạt 490 test, ba test Windows bị skip. [Benchmark ứng viên](docs/testing/BENCHMARK_REPORT.md) lưu 1.000 mẫu full-path và công bố giới hạn `/tmp` tmpfs. QA Matrix đã được đối chiếu theo phạm vi ứng viên; các gate SHA cuối và peer review còn ghi `BLOCKED`. Hồ sơ PC-1/PC-2 trong `progress/PROGRESS.md` là ảnh chụp tại các mốc đã nộp; chỉ điền phần Freeze khi chốt SHA/tag thật. Artifact `AI_USE.md` trong PR #39 vẫn phải đồng bộ từ bản repo code.
 
 ## An toàn và giới hạn
 
