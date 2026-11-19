@@ -20,10 +20,10 @@ Nguồn lịch sử của các ô nguồn rút gọn: [Requirements cũ](https:/
 
 ## Đọc trạng thái QA
 
-Ca thiết kế mô tả dữ liệu và kết quả dự kiến. Các mục thực thi trong workbook đang là `NOT RUN`. Bằng chứng chạy nghiệp vụ, CI và benchmark cần lấy từ lần chạy tương ứng. Peer review của thành viên và nghiệm thu của TA cần xác nhận riêng.
+Ca thiết kế mô tả dữ liệu và kết quả dự kiến. Trong workbook, 11 AC, 64 ca QA và 60 mục checklist vẫn ghi `NOT RUN` theo lớp thiết kế, không tự chuyển thành `PASS` vì có test ở nơi khác. [PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/7) đã đưa code/test vào nhánh tích hợp; [CI ứng viên `4be2751`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44134696873) thành công và [benchmark ứng viên](../testing/BENCHMARK_REPORT.md) có 1.000 mẫu. Đây là bằng chứng thực thi tách khỏi workbook M1; đối chiếu QA theo SHA/tag Freeze, peer review cá nhân và nghiệm thu TA vẫn cần xác nhận riêng.
 
 A-11 trong Requirements ghi `VERIFIED` cho disclaimer trong README gốc. Phạm vi bằng chứng là A-11. [Requirements hiện hành](../../REQUIREMENTS.md#7-tiêu-chí-nghiệm-thu) · [README tại commit bằng chứng](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43)
 
 Đối chiếu rule, ca thiết kế và kế hoạch kiểm thử qua [chỉ mục M1-02](../design/README.md).
 
-**Cập nhật quyết định M2:** Leader chọn thử ghi `INTERNAL_ERROR` cho lỗi bất ngờ ở validator hoặc rule; phân biệt lỗi input sai thực sự, giữ bốn trường và ưu tiên lỗi audit khi ghi thất bại. Xem [Integration Test Plan](../testing/INTEGRATION_TEST_PLAN.md#2-các-tình-huống-cần-kiểm-thử). Các ô workbook mô tả lỗi rule chưa bao phủ riêng lỗi validator; bổ sung test/review theo kế hoạch này, không suy ra kết quả chạy. Leader đã chọn hướng xử lý đuôi JSONL theo phương án Hải; phần triển khai và kiểm thử còn cần peer review.
+**Cập nhật quyết định M2:** Leader chọn thử ghi `INTERNAL_ERROR` cho lỗi bất ngờ ở validator hoặc rule; phân biệt lỗi input sai thực sự, giữ bốn trường và ưu tiên lỗi audit khi ghi thất bại. Xem [Integration Test Plan](../testing/INTEGRATION_TEST_PLAN.md#2-các-tình-huống-cần-kiểm-thử). Các ô workbook mô tả lỗi rule chưa bao phủ riêng lỗi validator; PR #7 đã bổ sung test audit/validator để đối chiếu riêng. Leader đã chọn hướng xử lý đuôi JSONL theo phương án Hải; code và test đã tích hợp, còn cần review độc lập và đối chiếu SHA/tag Freeze.

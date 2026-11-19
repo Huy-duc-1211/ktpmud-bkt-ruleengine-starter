@@ -7,8 +7,8 @@
 | Người phụ trách | Huy Đức |
 | Mốc bàn giao | M1-01, Checkpoint 1, ngày 08/11/2026 |
 | Phiên bản | Revision 04 — cập nhật cách trình bày và nguồn Issue #31 |
-| Mốc đối chiếu | Code tích hợp tại `925cea6`; bản chuẩn bị PC-2 trên fork code tại `7a8da1e`, đối chiếu 17/11/2026. Mốc `ee409e4c` là lần đối chiếu thiết kế ngày 12/11. |
-| Trạng thái | M1 đã tích hợp; PR #7 đã merge và có bằng chứng test/CI. Các tiêu chí vẫn được đối chiếu theo phạm vi từng bằng chứng; chưa có xác nhận TA nghiệm thu scope hoặc kết quả nghiệm thu trên SHA freeze. |
+| Mốc đối chiếu | Ứng viên Freeze: `4be2751f76e540a563de9f09f24935753f80a2e7`, đối chiếu 19/11/2026; chưa phải SHA/tag cuối. Mốc PC-2 `7a8da1e`, mốc thiết kế `ee409e4c` được giữ để truy vết. |
+| Trạng thái | M1 và PR #7 đã tích hợp; có test, CI và phép đo trên ứng viên `4be2751`. Các tiêu chí vẫn được đối chiếu theo phạm vi bằng chứng; chưa có xác nhận TA nghiệm thu scope hoặc kết quả nghiệm thu trên SHA/tag Freeze. |
 | Mốc nguồn starter | `bkt-2026-v1` → `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
 | Mốc nguồn tích hợp | `track-a-development` tại `9bc4fc186415d7a13cd9d49692c50f3c945ddf7b` (merge commit PR #4, hoàn tất tích hợp M1 ngày 10/11/2026) |
 | Baseline trước Revision 04 | `c855c6d4f2135a14ad94485734d4d2e604cb9cff` trên `docs/m1-requirements-huy`; snapshot Revision 03, không phải HEAD sau patch này |
@@ -284,7 +284,7 @@ NFR (*Non-functional Requirement*) mô tả chất lượng và ràng buộc khi
 
 | ID | Yêu cầu | Bằng chứng kiểm chứng dự kiến | Nguồn |
 |---|---|---|---|
-| NFR-01 | Dùng time.perf_counter_ns(); 100 warm-up ngoài mẫu, N≥1.000 lượt đo; nearest-rank p50/p95, p95 <100 ms. Phép đo chính là full public classify() có open/write/close audit thực; logic thuần báo riêng. | Protocol tái lập, mẫu thực, Python/OS/CPU-hardware, số lượt, dữ liệu synthetic và cấu hình I/O; đã có số đo sơ bộ, cần đo/lưu mẫu trên SHA freeze | E §7.3 A-10; G D10; L OPEN-09/10 |
+| NFR-01 | Dùng time.perf_counter_ns(); 100 warm-up ngoài mẫu, N≥1.000 lượt đo; nearest-rank p50/p95, p95 <100 ms. Phép đo chính là full public classify() có open/write/close audit thực; logic thuần báo riêng. | [Báo cáo và 1.000 mẫu](docs/testing/BENCHMARK_REPORT.md) trên ứng viên `4be2751`, công bố Python/OS/CPU và I/O `/tmp` tmpfs; cần đối chiếu SHA/tag cuối trước nghiệm thu | E §7.3 A-10; G D10; L OPEN-09/10 |
 | NFR-02 | Chỉ dùng dữ liệu synthetic. Không có PII, dữ liệu bệnh nhân thật, thông tin xác thực hoặc secret trong input, dữ liệu test, log và hồ sơ bàn giao. | Review bảo mật/riêng tư trên file được theo dõi và bằng chứng sinh ra | D dòng 22–23; E §§5, 7 |
 | NFR-03 | Audit bốn trường/giá trị §4.4, UUID đúng scope, fail-closed/error precedence. Allowed missing/null không tự thành INVALID_INPUT. Message/chaining/log không lộ raw input. | Kiểm schema/UTC/UUID, SUCCESS cho unavailable hợp lệ, INVALID_INPUT cho invalid thực sự, writer failure/lỗi kép | E A-06; D07/D08; TA §5 |
 | NFR-04 | Giữ classify(patient), ranh giới rule/I/O, Enum/Kleene/T-U không truthiness. D13-E phân biệt definite/possible, DIRECT/CANONICAL và TA bắt buộc/team policy đã duyệt. | Review interface, source hierarchy, coverage/selection/provenance | E §§7.1,9; D05/D13-E; L. |
@@ -293,11 +293,11 @@ NFR (*Non-functional Requirement*) mô tả chất lượng và ràng buộc khi
 | NFR-07 | Explanation ngắn gắn rule/kết quả; DIRECT có definite evidence; CANONICAL công bố mã đại diện/uncertainty, không claim independently confirmed; Mixed không khẳng định an toàn. Missing numeric đúng TA; không raw input/điều trị. | Review template và negative assertions cho cả sáu ca §8.2, unavailable BP/age và canonical risk | D; TA; D06/D13-E. |
 | NFR-08 | Có hướng dẫn cài/chạy/test tái lập, disclaimer chính xác trong README và hồ sơ tài liệu/bàn giao theo các mốc đề yêu cầu. | README và tài liệu yêu cầu, quyết định, kiểm thử, bảo mật/riêng tư, AI-use, đóng góp | E §§4–6, 7.3 A-11, 11 |
 
-Protocol D10 đã được Leader chốt: sắp N mẫu tăng dần, lấy phần tử tại vị trí `ceil(p × N)` theo chỉ số bắt đầu từ 1; p50 dùng p=0,50 và p95 dùng p=0,95. Chuyển nanosecond sang millisecond bằng chia 1.000.000. Loại 100 warm-up khỏi mẫu; không mock writer trong phép đo full-path. p95 <100 ms là ngưỡng của đề; [kết quả sơ bộ](docs/testing/BENCHMARK_REPORT.md) chưa phải nghiệm thu SHA freeze. [L OPEN-10; E A-10]
+Protocol D10 đã được Leader chốt: sắp N mẫu tăng dần, lấy phần tử tại vị trí `ceil(p × N)` theo chỉ số bắt đầu từ 1; p50 dùng p=0,50 và p95 dùng p=0,95. Chuyển nanosecond sang millisecond bằng chia 1.000.000. Loại 100 warm-up khỏi mẫu; không mock writer trong phép đo full-path. p95 <100 ms là ngưỡng của đề; [kết quả trên ứng viên `4be2751`](docs/testing/BENCHMARK_REPORT.md) đạt ngưỡng trong môi trường đã khai báo, chưa phải nghiệm thu SHA/tag Freeze. [L OPEN-10; E A-10]
 
 ## 7. Tiêu chí nghiệm thu
 
-Bảng dưới được cập nhật cho PC-2: PR #7 đã merge tại `925cea6`; [CI nhánh tiến độ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) tại `7a8da1e` đạt 490 test, 3 test Windows bị skip. Đây chưa phải nghiệm thu cuối hoặc bằng chứng trên SHA freeze. Xem hướng dẫn chạy tại [README](README.md).
+Bảng dưới giữ bằng chứng PC-2: PR #7 đã merge tại `925cea6`; [CI nhánh tiến độ](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) tại `7a8da1e` đạt 490 test, 3 test Windows bị skip. [CI ứng viên `4be2751`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44134696873) cũng thành công; [benchmark ứng viên](docs/testing/BENCHMARK_REPORT.md) có 1.000 mẫu. Đây chưa phải nghiệm thu cuối hoặc bằng chứng trên SHA/tag Freeze. Xem hướng dẫn chạy tại [README](README.md).
 
 Trạng thái dưới đây phản ánh bằng chứng của từng tiêu chí. `NOT IMPLEMENTED` là chưa có chức năng hoặc tài liệu cần thiết. `PARTIALLY AVAILABLE` là đã có một phần triển khai hoặc bằng chứng nhưng còn việc cần xác minh hoặc nghiệm thu. `TA CONFIRMED` ghi nhận yêu cầu đã được TA làm rõ. `VERIFIED` ghi nhận điều kiện nghiệm thu của tiêu chí đã được đối chiếu trực tiếp với bằng chứng được dẫn. A-11 được kiểm tra bằng README; A-09 có CI chạy trên PR. Các tiêu chí khác có bằng chứng theo phạm vi trong `TEST_REPORT.md` trong hồ sơ nộp bài, còn cần đối chiếu từng AC và SHA freeze.
 
@@ -312,10 +312,10 @@ Trạng thái dưới đây phản ánh bằng chứng của từng tiêu chí. 
 | A-07 | Test nghiệp vụ đủ nhóm | Normal/boundary/invalid/missing/null; thay/chỉnh test stub | Bộ test được review và map TA-EX/FR | E A-07; T | PARTIALLY AVAILABLE — CI tại `7a8da1e` có 490 test đạt, 3 test Windows skip; còn mapping QA |
 | A-08 | Chạy đạt từ clean checkout | pytest -q đạt với test nghiệp vụ đã thay/chỉnh stub | Lệnh, môi trường, kết quả thực chạy; [pytest.ini](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/pytest.ini) là bằng chứng cấu hình | E A-08; R | PARTIALLY AVAILABLE — checkout sạch `0d00584` đạt 483 test; CI checkout `7a8da1e` đạt 490 test, 3 skip; cần xác nhận SHA freeze |
 | A-09 | CI trên PR | GitHub Actions thực sự chạy bộ test cho PR | PR run URL và bước test thực tế | E A-09; W | VERIFIED — [CI PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44106490534) thành công tại HEAD `59f5ac4`; cần đối chiếu SHA freeze |
-| A-10 | Benchmark đúng protocol | N≥1.000 sau 100 warm-up; nearest-rank p50/p95; p95 <100 ms, công bố máy và I/O full-path | Phương pháp và số liệu thật | E A-10; D10 | PARTIALLY AVAILABLE — có benchmark sơ bộ; cần báo cáo nghiệm thu SHA freeze |
+| A-10 | Benchmark đúng protocol | N≥1.000 sau 100 warm-up; nearest-rank p50/p95; p95 <100 ms, công bố máy và I/O full-path | [Báo cáo](docs/testing/BENCHMARK_REPORT.md) và [1.000 mẫu](docs/testing/benchmark_4be_timings.json) của `4be2751` | E A-10; D10 | PARTIALLY AVAILABLE — p50 0.107712 ms, p95 0.301703 ms trên ứng viên; `/tmp` là tmpfs, cần đối chiếu SHA/tag Freeze |
 | A-11 | Disclaimer README | Có chính xác educational/synthetic — not for clinical use | Đã đối chiếu nguyên văn tại [README.md dòng 43 ở commit `4482e4f`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43). | E A-11; R | VERIFIED — disclaimer trong README |
 
-Test stub tại mốc M1 không chứng minh nghiệp vụ. PR #7 đã có pytest nghiệp vụ, kiểm thử audit và CI; QA Matrix có ghi chú bằng chứng theo SHA đã kiểm. Các kết quả này chưa thay thế review từng AC, benchmark và kiểm tra trên SHA freeze. [P; L]
+Test stub tại mốc M1 không chứng minh nghiệp vụ. PR #7 đã có pytest nghiệp vụ, kiểm thử audit và CI; QA Matrix có ghi chú bằng chứng theo SHA đã kiểm. Benchmark ứng viên có mẫu thô và giới hạn môi trường ghi rõ. Các kết quả này chưa thay thế review từng AC và kiểm tra trên SHA/tag Freeze. [P; L]
 
 ## 8. Ma trận truy vết yêu cầu
 

@@ -1,7 +1,7 @@
 # PROJECT GUIDE — ĐỌC TRƯỚC KHI NHẬN VIỆC
 
 > **Nhóm 173820_n27 | Hack Marathon 2026 | Track A — Dr May Day**  
-> Hướng dẫn nội bộ sau tích hợp M1. Đề thi và bảng quyết định là nguồn bắt buộc của Track A.
+> Hướng dẫn nội bộ; các mục M1 bên dưới giữ bối cảnh lịch sử. Đề thi và bảng quyết định là nguồn bắt buộc của Track A.
 
 ## 1. Bắt đầu từ đâu? (10–15 phút)
 
@@ -46,7 +46,7 @@
 - Nguồn nhóm hiện hành: [Requirements](../REQUIREMENTS.md), [ADR](../DECISIONS.md), [Rule Design và Test Plan](design/README.md), [QA Matrix](qa/QA_MATRIX.xlsx).
 - [Mẫu hồ sơ Track A](https://github.com/fossbk-spec/ktpmud-project/tree/main/submissions/_TEMPLATE_BKT_RULEENGINE).
 
-**Định danh:** Lớp `173820`, nhóm `27`, mã dự kiến `173820_n27`; slug Track A `may_day_sprint`. Nhóm cần xác nhận mã từ đồ án chính có dùng chung cho Hack Marathon hay không.
+**Định danh:** Lớp `173820`, nhóm `27`, mã `173820_n27`; slug Track A `may_day_sprint`. Mã này đã dùng trong hồ sơ PC-1/PC-2 và Draft PR nộp bài.
 
 **Hai repository có vai trò khác nhau:** Fork starter để phát triển và test chương trình; fork `ktpmud-project` để chuẩn bị hồ sơ cuối cùng, sau đó PR vào repo đích của thầy. Không tạo bài nộp hoặc release khi chưa được leader phê duyệt.
 
@@ -124,7 +124,7 @@ Dấu `<` và `>` là **nghiêm ngặt**. Đúng bằng ngưỡng **không đạ
 | M1-03 | [QA Matrix](qa/QA_MATRIX.xlsx) và báo cáo audit thiết kế gồm 11 AC, 64 ca QA, 60 mục checklist và 15 phát hiện. Các mục thực thi vẫn `NOT RUN`. |
 | Review và nghiệm thu | GitHub ghi Leader self-review và approval từ `nvldvc` trên bốn PR. Chưa thấy bằng chứng review kỹ thuật cuối của cả hai thành viên hoặc TA nghiệm thu phạm vi. |
 
-Tại mốc M1, classifier và test starter còn là stub. Trên [PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/7), classifier, test nghiệp vụ và audit đã được triển khai để review; CI của PR với HEAD `ebdc573` chạy đạt 483 test ([run](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44081899432)). [Benchmark sơ bộ](testing/BENCHMARK_REPORT.md) đã có số đo trên SHA được ghi trong báo cáo; cần đối chiếu SHA freeze. PR #7 chưa phải nghiệm thu cuối.
+Tại mốc M1, classifier và test starter còn là stub. [PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/7) đã merge ngày 17/11, đưa classifier, test nghiệp vụ và audit vào nhánh tích hợp. [CI tại ứng viên `4be2751`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44134696873) thành công; [benchmark cùng ứng viên](testing/BENCHMARK_REPORT.md) có 1.000 mẫu, p95 dưới 100 ms trong môi trường `/tmp` tmpfs. Chưa có SHA/tag Freeze và nghiệm thu cuối; ba test Windows bị skip trên CI Linux.
 
 ## 5. Các quyết định đã thống nhất và đang chờ
 
@@ -162,7 +162,7 @@ D13-E là chính sách nội bộ đã công bố theo phạm vi TA cho phép. I
 - Bằng chứng phản vệ từ Def hoặc AllPV kết hợp bằng chứng tụt HATT theo bảng và tuổi đã biết → `SOC_PHAN_VE / R-SOC`. Ưu tiên kiểm tra tuổi theo D02 và xử lý HATT thiếu theo D03.
 - **Mixed**, tức có cả khả năng khớp và không khớp Tầng 2 → `THEO_DOI / null` với lý do chưa đủ thông tin. Nếu mọi khả năng đều không khớp, dùng cùng mức/mã với lý do không khớp rule.
 
-Các lựa chọn về validation số, ContextVar/UUID, fail-closed, thứ tự lỗi kép và protocol benchmark đã có trong ADR Rev04. Leader đã chọn hướng đường dẫn audit mặc định; chi tiết triển khai, quyền ghi và kiểm thử còn cần peer review. Xử lý lỗi nội bộ ngoài dự kiến vẫn là mục cần review riêng.
+Các lựa chọn về validation số, ContextVar/UUID, fail-closed, thứ tự lỗi kép và protocol benchmark đã có trong ADR Rev04. PR #7 triển khai đường dẫn audit mặc định và `INTERNAL_ERROR`/`RuntimeError` cho lỗi nội bộ ngoài dự kiến theo quyết định nhóm; test đã có, còn cần đối chiếu quyền ghi, peer review và SHA/tag Freeze.
 
 ## 6. A-01 đến A-11: cần làm gì để đạt?
 

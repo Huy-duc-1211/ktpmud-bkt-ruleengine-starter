@@ -1,7 +1,7 @@
 # TEAM PLAN — PHÂN CÔNG, BÀN GIAO & REVIEW
 
 > **Nhóm 173820_n27 | Track A — Dr May Day**  
-> Trạng thái sau tích hợp M1. Phân công và tiêu chí review ghi theo vai trò, kết quả ghi theo bằng chứng.
+> Kế hoạch M1–M4 và phân công theo thời điểm lập; mục “Đối chiếu 19/11” bên dưới ghi trạng thái ứng viên Freeze.
 > Đọc [`PROJECT_GUIDE.md`](PROJECT_GUIDE.md) trước tài liệu này.
 
 Đối chiếu D01–D03 theo [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248). Chính sách D13-E do Leader phê duyệt ngày 09/11/2026. Dùng [Requirements](../REQUIREMENTS.md) và [ADR](../DECISIONS.md) hiện hành khi triển khai hoặc review.
@@ -118,9 +118,15 @@ Bảng lưu lại các mốc quản lý nội bộ đã đề xuất trước Ch
 | **M4 · 20/11 · Submit** | Cập nhật `source-ref.json` và artifacts trên cùng nhánh, chuyển chính Draft PR từ PC-2 sang **Ready for review** và kiểm tra `validate` xanh | Đối chiếu source release, hỗ trợ blocker | Rà schema, hồ sơ QA và đóng góp |
 | **Demo/Viva · 21/11** | Chuẩn bị demo và giải thích kiến trúc | Giải thích code, rule và test | Giải thích audit, CI, privacy và benchmark |
 
+### Đối chiếu 19/11/2026 — trước Freeze
+
+Kế hoạch trên là phân công ban đầu, không tự chứng minh ai đã thực hiện từng phần. [PR #7](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/pull/7) đã merge code và test M2; [CI ứng viên `4be2751`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44134696873) thành công. [Benchmark ứng viên](testing/BENCHMARK_REPORT.md) lưu 1.000 mẫu, p50 0.107712 ms, p95 0.301703 ms trên `/tmp` tmpfs. [Draft PR nộp bài #39](https://github.com/fossbk-spec/ktpmud-project/pull/39) đã mở cho PC-2. SHA/tag cuối, đối chiếu CI/benchmark trên SHA đó và chuyển Draft PR sang Ready vẫn chờ.
+
+Việt Đức là tác giả QA M1-03 gốc; Huy Đức nhận phần review audit/privacy, đối chiếu QA Matrix và benchmark trong M2/M3. Attribution chi tiết phải theo việc thực tế và bằng chứng ở hồ sơ đóng góp, không suy từ bảng phân công. `AI_USE.md` vẫn chờ Hải và Việt Đức bổ sung phần dùng AI của cá nhân, rồi Leader rà và chốt.
+
 ### Bàn giao M2 từ thiết kế M1
 
-**Nguồn bàn giao:** [175 ca chính](../TEST_CASES.csv), [81 ca logic nội bộ](../tests/fixtures/INTERNAL_STATE_CASES.csv), [Test Plan](testing/TEST_PLAN.md), [Integration Test Plan có INT-021](testing/INTEGRATION_TEST_PLAN.md) và [QA Matrix](qa/QA_MATRIX.xlsx). Đây là đầu vào thiết kế. Kết quả runtime, CI nghiệp vụ và benchmark cần được thu riêng.
+**Nguồn bàn giao:** [175 ca chính](../TEST_CASES.csv), [81 ca logic nội bộ](../tests/fixtures/INTERNAL_STATE_CASES.csv), [Test Plan](testing/TEST_PLAN.md), [Integration Test Plan có INT-021](testing/INTEGRATION_TEST_PLAN.md) và [QA Matrix](qa/QA_MATRIX.xlsx). Đây là đầu vào thiết kế M2. Kết quả runtime, CI nghiệp vụ và benchmark được lưu riêng trong bằng chứng kiểm thử và [báo cáo benchmark](testing/BENCHMARK_REPORT.md); workbook thiết kế không tự đổi trạng thái `NOT RUN`.
 
 - **Hải** dự kiến triển khai validation và selector D13-E, chạy ca rule, biên và trạng thái nội bộ. Kiểm tra ưu tiên trong Poss, phân biệt DIRECT/CANONICAL, overlap definite/possible, AllPV, Mixed, ưu tiên sốc và thiếu tuổi/HATT. Review logic giải thích trong INT-021 cùng Việt Đức.
 - **Việt Đức** đối chiếu QA Matrix A-01–A-11 với ID ca, test thực thi, nguồn bằng chứng và khoảng trống. Với INT-021/CHK-058, áp dụng `explanation_assertions` lên `ly_do` thực tế của DIRECT/CANONICAL/MIXED. Kiểm tra cả mẫu phải khớp và mẫu sai phải bị loại, rồi đọc lại ý nghĩa và privacy cùng Hải. Ghi kết quả chạy và nguồn bằng chứng tách khỏi mapping thiết kế. Kiểm tra gọi trực tiếp `classify(patient)`, validation, JSONL bốn trường, UUID/context theo phiên và việc dọn context, cô lập file test, đường lỗi audit/fail-closed và privacy ở output, audit, message và exception chaining.

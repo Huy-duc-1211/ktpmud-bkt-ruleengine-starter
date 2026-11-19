@@ -26,7 +26,7 @@ Nguồn hiện hành: [Requirements](../../REQUIREMENTS.md) (Q), [ADR](../../DEC
 | R02/D13 | Internal assertions +81 hàng INTERNAL_STATE_CASES.csv | Enum identity trước selection, count T/U và AND S; không nhìn output để suy helper đúng |
 | Regression T15 | TEST_CASES.csv (nhóm Equivalence group), 22 ca/11 cặp | Ba trường số +sáu bool null/missing, không hạ sốc, fallback phụ thuộc missing và coverage S |
 | Audit/context | AUD +INT kế hoạch | Direct call audit SUCCESS với nullable hợp lệ, UUID/session/reset, lỗi thật/failure stages/privacy/isolation |
-| Benchmark | BENCH-001–006 | 100 warm-up, N>=1.000, nearest-rank/ns-ms, full-path audit I/O thật, chưa thực đo |
+| Benchmark | BENCH-001–006 | 100 warm-up, N>=1.000, nearest-rank/ns-ms, full-path audit I/O thật; kết quả thực đo ứng viên `4be2751` lưu riêng trong [báo cáo](BENCHMARK_REPORT.md), chưa đối chiếu SHA/tag Freeze |
 
 ## 3. D13-E đã duyệt và explanation contract
 

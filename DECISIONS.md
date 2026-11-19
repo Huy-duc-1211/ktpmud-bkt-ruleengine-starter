@@ -11,7 +11,7 @@
 | Chủ trì | Lead (Huy Đức); Dev (Hải); QA (Việt Đức) |
 | Starter | `fossbk-spec/ktpmud-bkt-ruleengine-starter`, tag `bkt-2026-v1`, SHA `1c0a5b11fe8ea2b8a3126665cfe13ff551ad3469` |
 | Trạng thái tài liệu | PR #1–#4 đã merge ngày 10/11/2026; mốc tích hợp M1 `9bc4fc186415d7a13cd9d49692c50f3c945ddf7b`. ADR ghi nhận cập nhật chọn mã sau Issue #31, đối chiếu Requirements tại `45e0870e0cae2c95b070c424e0de38e3c763bc9d`. |
-| Phê duyệt và giới hạn | Leader phê duyệt D13-E ngày 09/11 và sau Issue #31 cập nhật cách chọn mã; có approval PR từ `nvldvc` và comment của Leader trên các PR M1; chưa có bằng chứng cả Hải và Việt Đức đã review kỹ thuật vòng cuối. PR #7 đã merge; [CI tại `7a8da1e`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) đạt 490 test, 3 test Windows skip. Benchmark là số đo sơ bộ, chưa nghiệm thu SHA freeze. |
+| Phê duyệt và giới hạn | Leader phê duyệt D13-E ngày 09/11 và sau Issue #31 cập nhật cách chọn mã; có approval PR từ `nvldvc` và comment của Leader trên các PR M1; chưa có bằng chứng cả Hải và Việt Đức đã review kỹ thuật vòng cuối. PR #7 đã merge; [CI tại `7a8da1e`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) đạt 490 test, 3 test Windows skip. [Benchmark ứng viên `4be2751`](docs/testing/BENCHMARK_REPORT.md) có 1.000 mẫu và p95 dưới ngưỡng trong môi trường khai báo; chưa nghiệm thu SHA/tag Freeze. |
 
 **Thứ tự nguồn:** Đề/Decision Table và làm rõ chính thức tại [Issue #15](https://github.com/fossbk-spec/ktpmud-project/issues/15#issuecomment-6722429248), [Issue #31](https://github.com/fossbk-spec/ktpmud-project/issues/31#issuecomment-6796604002) được ưu tiên trong phạm vi nội dung được làm rõ; tiếp theo là chính sách nhóm đã duyệt và các đề xuất. D01–D03 được TA làm rõ. Issue #31 làm rõ lựa chọn mã đại diện khi thiếu khóa boolean; việc áp dụng vào ca vừa có rule chắc chắn vừa có rule ưu tiên cao hơn chỉ có thể thỏa là quyết định nhóm. Không coi toàn bộ D13-E hoặc kiến trúc audit được TA phê duyệt. Merge PR không đồng nghĩa TA nghiệm thu hoặc mọi AC đạt.
 
@@ -214,7 +214,7 @@ Trong bản M2, validator trả về đối tượng lỗi khi chủ động ph�
 | Lý do lựa chọn | Hai phép đo tách nhãn cho phép biết chi phí ở rule hay phần hỗ trợ, đồng thời giữ số liệu nghiệm thu gắn đường chạy thực tế. Warm-up và môi trường được khai báo giúp người khác tái lập phép đo. |
 | Hệ quả / đánh đổi | Full-path phản ánh overhead và biến thiên I/O/máy. Nearest-rank dễ tái tính nhưng có bước nhảy theo mẫu; 100 warm-up cố định giúp protocol rõ. Công bố Python version, OS, CPU/hardware, số lượt warm-up/mẫu, dữ liệu synthetic và cấu hình I/O. Không tạo ngưỡng nghiệm thu mới. |
 | Rủi ro / giảm thiểu | Bỏ chi phí open/close, dùng writer giả, chọn lọc mẫu hoặc sai chỉ số/đơn vị làm sai kết quả. Giữ toàn bộ public path, loại 100 warm-up, kiểm tra công thức độc lập. Protocol đã chốt; nếu tối ưu cần dữ liệu và review riêng, không tự thay semantics ghi. |
-| Kiểm chứng dự kiến | Review instrumentation, timing boundary và nearest-rank trên tập mẫu kiểm tra có kết quả tính tay; chạy benchmark full-path thực với N ≥1.000, môi trường công bố, báo p50/p95. Protocol đã duyệt nhưng chưa thực đo; không có số liệu hoặc A-10 PASSED. |
+| Kiểm chứng dự kiến | Review instrumentation, timing boundary và nearest-rank trên tập mẫu kiểm tra có kết quả tính tay; chạy benchmark full-path thực với N ≥1.000, môi trường công bố, báo p50/p95. [Đã đo ứng viên `4be2751`](docs/testing/BENCHMARK_REPORT.md) với 1.000 mẫu; đối chiếu SHA/tag cuối trước khi kết luận A-10 ở Freeze. |
 | Truy vết | Q NFR-01; A-10. Phụ thuộc D05, D07, D08 và đường gọi FR-01/FR-09. |
 | Nguồn / trạng thái | APPROVED BY LEAD theo G D10, Q NFR-01 và L; OPEN-09/10 được chốt ngày 08/11/2026, PENDING PEER TECHNICAL REVIEW. E A-10 là nguồn tối thiểu mẫu, p50/p95 và p95 <100 ms; 100 warm-up/nearest-rank là protocol nội bộ đã duyệt. |
 
@@ -439,7 +439,7 @@ TypeError/ValueError cho invalid thực sự, public orchestration, fail-closed 
 
 Mười hướng OPEN đã chọn; PR #7 đã triển khai code M2 và có test. Tiếp tục đối chiếu bằng chứng peer review các ranh giới provider, public path, validation, audit và logic ba trạng thái. Nếu thấy xung đột nguồn hoặc thiết kế, báo Leader để quyết định; việc phân công không phải xác nhận review đã hoàn tất.
 
-OPEN-10 đã chốt protocol trong M1; benchmark và bằng chứng đầy đủ có thể thực hiện M3. Coverage, clean-checkout và CI evidence tiếp tục theo kế hoạch nhóm. Concurrency mở rộng không tự trở thành nhiệm vụ M3 bắt buộc.
+OPEN-10 đã chốt protocol trong M1; phép đo M3 tại ứng viên `4be2751` và mẫu thô có trong [báo cáo benchmark](docs/testing/BENCHMARK_REPORT.md). Coverage, clean-checkout, CI và benchmark cần được đối chiếu với SHA/tag cuối. Concurrency mở rộng không tự trở thành nhiệm vụ M3 bắt buộc.
 
 D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập nhật chọn mã theo §5.8; default path và lỗi nội bộ theo §5.4.1 và §5.5 đã có triển khai/test trong PR #7, còn cần review bằng chứng và SHA freeze. Đây là mốc quản lý nội bộ, không tạo AC hoặc deadline mới. Tên helper, exception audit, path cụ thể hoặc UTC dùng `Z`/`+00:00` cần nhất quán khi code; không tự tạo vòng phê duyệt kiến trúc mới nếu giữ chính sách đã duyệt.
 
@@ -461,7 +461,7 @@ D01–D03 đã được TA làm rõ trong phạm vi Issue #15. D13-E có cập n
 | D12 | FR-01/07–09; NFR-02/08 | A-04–06/11 | Schema/privacy và disclaimer README |
 | D13 | FR-02–08; NFR-04/05/07 | A-01/03–05/07 | Enum/T-U, Def/Poss/AllPV, Mixed, canonical reason |
 
-**Lưu ý:** Bảng truy vết này không tự chứng minh AC đạt. Riêng A-11 đã được đối chiếu trực tiếp bằng [disclaimer trong README tại commit `4482e4f`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43). A-08 có bằng chứng checkout sạch tại `0d00584`, A-09 có CI PR #7; A-10 có số đo sơ bộ. Cần đối chiếu lại trên SHA freeze, xem TEST_REPORT.
+**Lưu ý:** Bảng truy vết này không tự chứng minh AC đạt. Riêng A-11 đã được đối chiếu trực tiếp bằng [disclaimer trong README tại commit `4482e4f`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/4482e4f61ee6e949705abbbda06b22480bbba8d6/README.md#L43). A-08 có bằng chứng checkout sạch tại `0d00584`, A-09 có CI PR #7; A-10 có [1.000 mẫu ở ứng viên `4be2751`](docs/testing/BENCHMARK_REPORT.md). Cần đối chiếu lại trên SHA/tag Freeze, xem TEST_REPORT.
 
 ### 9.1. Những nhóm kiểm thử quan trọng
 
@@ -510,7 +510,7 @@ SUCCESS chỉ khi thao tác phân loại hợp lệ và writer hoàn tất. Các
 | **Default audit path** | PR #7 đã triển khai hướng §5.4.1 và có test path/cwd/fail-closed; tiếp tục review quyền truy cập và đối chiếu SHA freeze. |
 | **Unexpected internal exception** | Leader chọn ghi INTERNAL_ERROR khi validator bất ngờ lỗi hoặc rule lỗi nội bộ, giữ bốn trường; báo RuntimeError nếu ghi thành công, ưu tiên AuditError an toàn nếu ghi thất bại. Không log input; PR #7 đã có test lỗi bất ngờ ở validation/writer, cần tiếp tục đối chiếu phạm vi review và SHA freeze. |
 | **UUID/concurrency, writer failure** | Kiểm reset, không rò context và không hứa thread/process-safe; kiểm open/write/flush/close, lỗi kép và privacy. |
-| **Kiểm thử/CI/benchmark** | `pytest.ini` theo Issue #16; PR #7 đã merge và [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) tại `7a8da1e` đạt 490 test, 3 test Windows skip. [Benchmark sơ bộ](docs/testing/BENCHMARK_REPORT.md) đo trên SHA nêu trong báo cáo; cần xác nhận lại CI và benchmark với SHA freeze. |
+| **Kiểm thử/CI/benchmark** | `pytest.ini` theo Issue #16; PR #7 đã merge và [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44114089165) tại `7a8da1e` đạt 490 test, 3 test Windows skip. [CI ứng viên `4be2751`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44134696873) thành công; [benchmark](docs/testing/BENCHMARK_REPORT.md) có 1.000 mẫu và p95 dưới ngưỡng trên `/tmp` tmpfs. Cần xác nhận lại trên SHA/tag Freeze. |
 | **Review của nhóm** | Leader tiếp tục hậu kiểm thủ công; Hải và Việt Đức đối chiếu core/audit/Test Plan/QA, ghi lại nhận xét thực tế trước các thay đổi tiếp theo. |
 
 **Thực hiện sau M1:** Dev ưu tiên classifier + tests; QA phụ trách audit/privacy/CI/benchmark; Lead kiểm yêu cầu, đối chiếu Rule Design và nghiệm thu thực tế. Không tuyên bố pass chỉ từ tài liệu; các thay đổi policy phải được review và duyệt lại bởi người phụ trách. Không để AI tự merge/phát hành/xác nhận bài đạt.
