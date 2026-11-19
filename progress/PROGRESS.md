@@ -145,9 +145,34 @@ Lead phụ trách các bản sửa M1-02 và M1-03 với công cụ AI hỗ tr�
 
 ## Kết quả cuối — Freeze 19/11/2026
 
-*Chưa đến lượt cập nhật Freeze.*
+- **Tag đã tạo:** [`bkt-2026-173820_n27-rc1`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/tree/bkt-2026-173820_n27-rc1), trỏ tới đúng SHA bên dưới.
+- **SHA code/hồ sơ đã freeze:** [`7af8d47fd410b96dcdb4b7caccd48580ce07cf4a`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/commit/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a) — commit merge PR #10 trên `track-a-development`. Tag giữ snapshot này; commit cập nhật phần báo cáo Freeze sau khi tạo tag không làm đổi SHA đã gắn tag.
+- **CI trên đúng SHA:** [run 44525947180](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44525947180) `success`; bộ pytest có **490 passed, 3 skipped** trên Linux. Ba test Windows chỉ được skip, chưa có bằng chứng chạy trên Windows.
+- **Hồ sơ nộp:** [Draft PR #39](https://github.com/fossbk-spec/ktpmud-project/pull/39) đã cập nhật `source-ref.json` đến SHA và CI này; [`validate` tại commit `8a71a8d`](https://github.com/fossbk-spec/ktpmud-project/actions/runs/44527053887) xanh. Trạng thái Ready for review và nghiệm thu GV/TA là các bước riêng.
 
-- **Tag dự kiến:** `bkt-2026-173820_n27-rc1`
-- **SHA cuối:** Chưa chốt.
-- **Trạng thái cuối từng mã AC:** Chưa đánh giá tại Freeze.
-- **Những việc trong timeline chưa hoàn thành và lý do:** Sẽ cập nhật khi Freeze.
+### Trạng thái cuối từng acceptance criterion
+
+Đây là **tự đánh giá của nhóm trên snapshot đã gắn tag**, không phải kết luận nghiệm thu của GV/TA. `Xong` được dùng khi có triển khai và bằng chứng tương ứng; giới hạn của môi trường thử được ghi bên dưới.
+
+| AC | Trạng thái | Bằng chứng tại SHA freeze và phạm vi |
+|---|---|---|
+| A-01 | Xong | [Classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/rule_engine/classifier.py) có `classify(patient)` trả contract ba khóa; [CI](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44525947180) chạy test nghiệp vụ. |
+| A-02 | Xong | [Đối chiếu QA](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/docs/qa/EXECUTION_REVIEW.md) có input synthetic ngoài CSV và đảo thứ tự khóa, cùng kết quả giữ nguyên theo input. |
+| A-03 | Xong | [Test classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/tests/test_classifier.py) kiểm `THEO_DOI`, `PHAN_VE`, `SOC_PHAN_VE` và thứ tự rule. |
+| A-04 | Xong | [Requirements](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/REQUIREMENTS.md), [test classifier](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/tests/test_classifier.py) kiểm missing/null, sai kiểu, sai miền và khóa lạ theo chính sách nhóm. |
+| A-05 | Xong | [Test lời giải thích](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/tests/test_classifier.py) gồm kiểm ý nghĩa `ly_do` và đối chứng sai; [đối chiếu QA](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/docs/qa/EXECUTION_REVIEW.md). |
+| A-06 | Xong | [Audit writer](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/rule_engine/audit.py) và [61 test audit](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/tests/test_audit.py) kiểm schema bốn trường, lỗi và privacy trên dữ liệu synthetic. |
+| A-07 | Xong | [175 ca input/expected](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/TEST_CASES.csv), [81 ca helper](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/tests/fixtures/INTERNAL_STATE_CASES.csv) được pytest dùng; 175 snapshot output QA chỉ là bằng chứng truy vết, không tự thành 175 test độc lập. |
+| A-08 | Xong | [CI đúng SHA](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44525947180) checkout và chạy pytest: 490 passed, 3 skipped trên Linux. |
+| A-09 | Xong | [Workflow](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/.github/workflows/test.yml) và [run sau merge](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44525947180) `success`. |
+| A-10 | Xong trong môi trường đo | [Benchmark report](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/docs/testing/BENCHMARK_REPORT.md) có hai lượt 100 warm-up + 1.000 mẫu, p95 lần lượt **0.301703 ms** và **0.349306 ms**; cả hai dưới 100 ms trên `/tmp` tmpfs. Kết quả không đại diện I/O ổ vật lý và không có `fsync`. |
+| A-11 | Xong | [README tại SHA freeze](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/README.md) có nguyên văn `educational/synthetic — not for clinical use`. |
+
+### Việc chưa hoàn thành hoặc chưa có bằng chứng
+
+- Demo nội bộ dự kiến 15/11 trong PC-1: chưa xác minh có diễn ra đúng ngày; không hồi tố thành đã hoàn thành.
+- Ba test launcher riêng cho Windows chưa chạy trong CI Linux. Kịch bản demo đã có trên PR nộp, nhưng chưa có biên bản nhóm chạy thử.
+- [QA Matrix tại tag](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/blob/7af8d47fd410b96dcdb4b7caccd48580ce07cf4a/docs/qa/QA_MATRIX.xlsx) là snapshot rà trước tag: 11 AC PASS trên ứng viên, 63/64 QA case và 55/60 checklist PASS. `QA-033` và `CHK-029/045` đang ghi BLOCKED vì lúc điền workbook chưa có permalink SHA cuối; hiện đã có tag nhưng chưa sửa hồi tố snapshot. `CHK-039/042/060` chờ bằng chứng review kỹ thuật cá nhân và đối chiếu mapping. Không biến nội dung AI-use hoặc Leader tự review thành xác nhận của từng thành viên.
+- [Draft PR #39](https://github.com/fossbk-spec/ktpmud-project/pull/39) cần chuyển **Ready for review ngày 20/11** và kiểm `validate` vẫn xanh sau cập nhật cuối. Việc GV/TA nghiệm thu phạm vi/kết quả chưa được ghi nhận.
+
+Bảng PC-1 và PC-2 phía trên giữ nguyên trạng thái tại thời điểm báo cáo; phần Freeze này là cập nhật sau khi tag được tạo.
