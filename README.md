@@ -134,6 +134,7 @@ submissions/may_day_sprint_173820_n27/
 - [Decision Table](docs/decision-table.md), [Requirements](REQUIREMENTS.md), [ADR](DECISIONS.md).
 - [Project Guide](docs/PROJECT_GUIDE.md), [Team Plan](docs/TEAM_PLAN.md).
 - [Rule Design](docs/design/RULE_DESIGN.md), [Test Plan](docs/testing/TEST_PLAN.md), [QA Matrix](docs/qa/QA_MATRIX.xlsx).
+- [Nhật ký AI bản làm việc trước Freeze](AI_USE.md); Hải và Việt Đức bổ sung phần của mình trên PR #10, sau đó Leader đối chiếu và đồng bộ vào artifact của Draft PR #39.
 
 **Trạng thái trước Freeze (19/11):** PR #7 đã tích hợp code và pytest. [CI trên ứng viên `4be2751`](https://github.com/Huy-duc-1211/ktpmud-bkt-ruleengine-starter/actions/runs/44134696873) thành công trên Linux; ba test Windows bị skip. [Benchmark ứng viên](docs/testing/BENCHMARK_REPORT.md) lưu 1.000 mẫu full-path và công bố giới hạn `/tmp` tmpfs. Hồ sơ PC-1/PC-2 trong `progress/PROGRESS.md` là ảnh chụp tại các mốc đã nộp; chỉ điền phần Freeze khi chốt SHA/tag thật. `AI_USE.md` trong hồ sơ nộp bài chờ thành viên bổ sung và Leader duyệt.
 
